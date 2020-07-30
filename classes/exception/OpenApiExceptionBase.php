@@ -7,6 +7,7 @@ class OpenApiExceptionBase extends \Exception
     $this->serverData = NULL;
     $this->serverHeader = NULL;
     $this->serverRawResponse = NULL;
+    $this->httpCode = NULL;
   }
   public function __toString() {
     return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
@@ -23,10 +24,11 @@ class OpenApiExceptionBase extends \Exception
    * 
    * @return [type]
    */
-  function setServerResponse(object $serverData, string $serverHeader, string $serverRawResponse){
+  function setServerResponse(object $serverData, string $serverHeader, string $serverRawResponse, $httpCode = NULL){
     $this->serverData = $serverData;
     $this->serverHeader = $serverHeader;
     $this->serverRawResponse = $serverRawResponse;
+    $this->httpCode = $httpCode;
   }
 
   /**
@@ -56,5 +58,9 @@ class OpenApiExceptionBase extends \Exception
    */
   function getServerRawResponse(){
     return $this->serverRawResponse;
+  }
+
+  function getHttpCode(){
+    return $this->httpCode;
   }
 }

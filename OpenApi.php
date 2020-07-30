@@ -1,5 +1,5 @@
 <?php namespace OpenApi;
-if (session_status() == PHP_SESSION_NONE) {session_start();}
+
 class OpenApi {
 
   
@@ -9,12 +9,16 @@ class OpenApi {
    * @param string $apikey             ApiKey openapi
    * @param mixed $environment='test'  uno tra: dev, test (default), production  
    */
-  function __construct(array $scopes, string $username, string $apikey, $environment='test'){
-    
+  function __construct(array $scopes, string $username, string $apikey, $environment='test', $store = NULL){
+    if($store == NULL)  {
+      $store = new \OpenApi\classes\utility\sessionStoreToken;
+    }
     $this->cache = new \OpenApi\classes\utility\DummyCache;
+    $this->store = $store;
     $this->header = null;
     $this->rawResponse = null;
     $realScopes = [];
+    $domainsRealScopes = [];
     $prefix = $environment=="production"?"":$environment.".";
     $domains = [];
     foreach($scopes as $s){
@@ -28,37 +32,57 @@ class OpenApi {
       }
       if(!in_array($domain, $domains)){
         $domains[] = $domain;
+        $domainsRealScopes[$domain] = [];
       }
+      
       if(!in_array($realScope,$realScopes)){
         $realScopes[] = $realScope;
+        $domainsRealScopes[$domain][] = $realScope;
       }
+      
     }
+    
     $this->username = $username;
     $this->apikey = $apikey;
     $this->prefix = $prefix;
     $this->scopes = $realScopes;
+
     $token = $this->getToken();
-
-
-    $moduli['ws.ufficiopostale.com'] = "\\OpenApi\\classes\\UfficioPostale";
-    $nomi['ws.ufficiopostale.com'] = "ufficiopostale";
-    $moduli['imprese.altravia.com'] = "\\OpenApi\\classes\\Imprese";
-    $nomi['imprese.altravia.com'] = "imprese";
-    $clients = [];
+    //var_dump($token);exit;
+    list($moduli,$nomi) = $this->getListaModuli();
+    $this->clients = [];
     foreach($domains as $d){
       if(isset($moduli[$d])){
         $modulo = $moduli[$d];
         $nome = $nomi[$d];
-        $this->$nome = new $modulo($token->token, $this->cache);
-        $clients[] = $this->$nome;
+        $this->$nome = new $modulo($token->token, $domainsRealScopes[$d], $this->cache, $prefix);
+        $this->clients[] = $nome;
       }
     }
   }
 
+    /**
+     * 
+     * Restituisce la lista dei moduli disponibili
+     * 
+     * @return array
+     */
+    private function getListaModuli(){
+      $moduli = [];
+      $nomi = [];
+      $moduli['ws.ufficiopostale.com'] = "\\OpenApi\\classes\\UfficioPostale";
+      $nomi['ws.ufficiopostale.com'] = "ufficiopostale";
+      $moduli['imprese.altravia.com'] = "\\OpenApi\\classes\\Imprese";
+      $nomi['imprese.altravia.com'] = "imprese";
+
+      $moduli['visengine2.altravia.com'] = "\\OpenApi\\classes\\VisEngine";
+      $nomi['visengine2.altravia.com'] = "visengine";
+      return array($moduli,$nomi);
+    }
   
   /**
    * Imposta la calsse da utilizzare sistema di cache, deve essere una classe che estende
-   * {@see OpenApi\clasess\utility\DummyCache}
+   * {@see OpenApi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
    * 
    * @param mixed $cacheSys Istanza della classe da usare come sistema di cache
    * @return void
@@ -66,11 +90,11 @@ class OpenApi {
   function setCacheSystem($cacheSys){
     $this->cache = $cacheSys;
     foreach($this->clients as $c){
-      $c->setCacheSystem($cacheSys);
+      $this->$c->setCacheSystem($cacheSys);
     }
   }
   
-  
+ 
   /**
    * 
    * Restituisce il token attualemnte in sessione, se non presente o non più valido lo rigenera
@@ -81,20 +105,19 @@ class OpenApi {
   function getToken($force=FALSE){
     if(!$force && !$this->isTokenCompatible()){
       
-      //TODO: Controllare se il token è ancora valido
       if(!$this->mustRfreshToken()){
-        return $_SESSION['openapi']['token'];
+        return $this->store->get()['token'];
       }
       $this->renewToken();
      
-      return $_SESSION['openapi']['token'];
+      return $this->store->get()['token'];
     }
     if($this->getOldToken()){
       if(!$this->mustRfreshToken()){
-        return $_SESSION['openapi']['token'];
+        return $this->store->get()['token'];
       }
       $this->renewToken();
-      return $_SESSION['openapi']['token'];
+      return $this->store->get()['token'];
     }
     return $this->generateNewToken();
   }
@@ -106,13 +129,13 @@ class OpenApi {
    * @return object
    */
   private function renewToken(){
-    $param = ["expire" => 86400, "scopes" => $this->scopes];
+    $param = ["expire" => time() + 86400, "scopes" => $this->scopes];
     //var_dump($param);exit;
 
-    $token = $this->connect("token/".$_SESSION['openapi']['token']->token,$param,"PUT");
+    $token = $this->connect("token/".$this->store->get()['token']->token,$param,"PUT");
 
     if($token == NULL){
-      throw new \OpenApi\classes\exception\OpenApiTokenException("REnew Token: Connection Error",40001);
+      throw new \OpenApi\classes\exception\OpenApiTokenException("Renew Token: Connection Error",40001);
     }
     if($token->success == false){
       $message = "REnew Token: unknow error";
@@ -127,7 +150,7 @@ class OpenApi {
     if(isset($token->data) && isset($token->data[0]))
     {
       $token = $token->data[0];
-      $_SESSION['openapi']['token'] = $token;
+      $this->store->get()['token'] = $token;
       return $token;
     }
     
@@ -140,7 +163,7 @@ class OpenApi {
    * @return bool
    */
   private function mustRfreshToken(){
-    $token = $_SESSION['openapi']['token'];
+    $token = $this->store->get()['token'];
     $diff = $token->expire-date("U");
     if($diff <= 6000){
       return TRUE;
@@ -157,8 +180,9 @@ class OpenApi {
    * @return boolean
    */
   function getOldToken(){
-    $param = ["scopes" => $this->scopes];
+    $param = ["scope" => $this->scopes];
     $token = $this->connect("token",$param,"GET");
+
     $finded_token = NULL;
 
     if($token != NULL && isset($token->data)){
@@ -170,11 +194,12 @@ class OpenApi {
       }
       
       if($finded_token != NULL){
-        $_SESSION['openapi']['token'] = $finded_token;
-        $_SESSION['openapi']['apikey'] = $this->apikey;
-        $_SESSION['openapi']['scopes'] = serialize($this->scopes);
-        $_SESSION['openapi']['username'] = $this->username;
-        $_SESSION['openapi']['prefix'] = $this->prefix;
+        $tostore['token'] = $finded_token;
+        $tostore['apikey'] = $this->apikey;
+        $tostore['scopes'] = serialize($this->scopes);
+        $tostore['username'] = $this->username;
+        $tostore['prefix'] = $this->prefix;
+        $this->session->save($tostore);
         return TRUE;
       }
       return FALSE;
@@ -227,11 +252,14 @@ class OpenApi {
       $except->setServerResponse($token, $this->header, $this->rawResponse);
       throw $except;
     }
-    $_SESSION['openapi']['token'] = $token;
-    $_SESSION['openapi']['apikey'] = $this->apikey;
-    $_SESSION['openapi']['scopes'] = serialize($this->scopes);
-    $_SESSION['openapi']['username'] = $this->username;
-    $_SESSION['openapi']['prefix'] = $this->prefix;
+    $tostore['token'] = $token;
+    $tostore['apikey'] = $this->apikey;
+    $tostore['scopes'] = serialize($this->scopes);
+    $tostore['username'] = $this->username;
+    $tostore['prefix'] = $this->prefix;
+
+    $this->store->save($tostore);
+
     return $token;
   }
 
@@ -243,13 +271,13 @@ class OpenApi {
    * @return boolean
    */
   private function isTokenCompatible() {
-    if(!isset($_SESSION['openapi'])|| !isset($_SESSION['openapi']['token'])){
+    if(!$this->store->isset()|| !isset($this->store->get()['token'])){
       return TRUE;
     }
-    if($_SESSION['openapi']['prefix'] != $this->prefix || $_SESSION['openapi']['apikey'] != $this->apikey  || $_SESSION['openapi']['username'] != $this->username){
+    if($this->store->get()['prefix'] != $this->prefix || $this->store->get()['apikey'] != $this->apikey  || $this->store->get()['username'] != $this->username){
       return TRUE;
     }
-    $sessionScopes = unserialize($_SESSION['openapi']['scopes']);
+    $sessionScopes = unserialize($this->store->get()['scopes']);
     if(!is_array($sessionScopes)){
       return TRUE;
     }
@@ -276,7 +304,12 @@ class OpenApi {
     $this->rawResponse = null;
     $basePath = "https://".$this->prefix."oauth.altravia.com";
     $url = $basePath."/".$endpoint;
-    
+    if($mode == "GET")
+    {
+      $param = http_build_query($param);
+      $param = preg_replace('/(%5B)\d+(%5D=)/i', '$1$2', $param);
+      $url .= "?".$param;
+    }
 
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $mode);
@@ -284,12 +317,8 @@ class OpenApi {
 		{
 			curl_setopt($ch, CURLOPT_POST, TRUE); 
     }
-    if($mode == "GET")
+    if($mode != "GET")
     {
-      $param = http_build_query($param);
-      $url .= "?".$param;
-
-    }else{
       $param = json_encode($param);
       
       curl_setopt($ch, CURLOPT_POSTFIELDS, $param); 
@@ -298,7 +327,7 @@ class OpenApi {
     $baseauth = base64_encode($this->username.":".$this->apikey);
     $headers = array(
       'Content-Type:application/json',
-      'Authorization: Basic '. $baseauth // <---
+      'Authorization: Basic '. $baseauth
     );
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     
@@ -309,10 +338,10 @@ class OpenApi {
     curl_setopt($ch, CURLOPT_HEADER, 1);
     $response = curl_exec($ch);
     $this->rawResponse = $response;
+    
     $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
     $this->header = substr($response, 0, $header_size);
     $return = substr($response, $header_size);
-   
     curl_close($ch);
     return json_decode($return);
   }

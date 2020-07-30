@@ -1,6 +1,10 @@
 <?php
 namespace OpenApi\classes\utility;
-class DummyCache {
+
+use CodeIgniter\Cache\CacheInterface;
+
+class DummyCache implements CacheSystemInterface { 
+  
   function get(string $key){
     return false;
   }
