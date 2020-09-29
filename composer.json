@@ -1,6 +1,6 @@
 {
-    "name": "openapi/openapi",
-    "description": "Librerie OpenApi PHP (https://openapi.it)",
+    "name": "altravia/openapi",
+    "description": "OpenApi PHP Libraries (https://openapi.it)",
     "authors": [
         {
             "name": "Altravia",
