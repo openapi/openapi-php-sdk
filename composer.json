@@ -7,13 +7,13 @@
             "email": "info@altravia.com"
         }
     ],
-    "minimum-stability": "production",
+    "minimum-stability": "stable",
     "require": {
         "php": ">=7.2.0"
     },
     "autoload": {
         "psr-0": {
-            "OpenApi": "OpenApi/"
+            "OpenApi": "src"
         }
     }
 }
