@@ -20,6 +20,8 @@ class VisRequest {
     $this->id = NULL;
     $this->statoRichiesta = NULL;
     $this->ricerche = [];
+    $this->document = NULL;
+    $this->format_errror = [];
     foreach($visura->data->json_struttura->campi as $k => $v){
       $this->variables[$k] = FALSE;
     }
@@ -45,13 +47,15 @@ class VisRequest {
       if(!isset($this->variables[$k])){
         throw new \OpenApi\classes\exception\OpenApiVisEngineException("Visengine you are setting $k json key, but $k key is not presente for {$this->visura->data->nome_visura}",40006);
       }
-      $this->variables[$k] = TRUE;
+      $this->variables[$k] = $v!=NULL;
     }
     $this->json = $data;
     
     $this->validaJSON();
     return $this->jsonValido;
   }
+  
+  
 
 
 
@@ -143,6 +147,39 @@ class VisRequest {
     return $this->email_target;
   }
 
+  function hasSearchResult(){
+    return $this->visura->data->ricerca == 1 && $this->getStatoRichiesta() == "In ricerca" && $this->getStatoRicerca() == "Ricerca evasa";
+  }
+
+  function getSearchResult(){
+    if(count($this->ricerche) == NULL){
+      return FALSE;
+    }
+    return json_decode($this->ricerche[count($this->ricerche) - 1]->json_risultato);
+  }
+  function getSearchId(){
+    if(count($this->ricerche) == NULL){
+      return FALSE;
+    }
+    return $this->ricerche[count($this->ricerche) - 1]->id_ricerca;
+  }
+  
+  function getSearchCount(){
+    return count($this->ricerche);
+  }
+
+  function setDocument($document){
+    $this->document = $document;
+  }
+
+  function getDocument(){
+    return $this->document;
+  }
+
+  function getHash(){
+    return $this->visura->data->hash_visura;
+  }
+
   
   /**
    * 
@@ -171,12 +208,178 @@ class VisRequest {
    * @return boolean
    */
   private function validaJSON(){
+    if(!$this->validaPresenzaCampi()){
+      $this->format_errror = [];
+      $this->jsonValido = FALSE;
+      return;
+    }
+    $this->format_errror = [];
+    if(!$this->validaFormatoCampi()){
+      $this->jsonValido = FALSE;
+      return;
+    }
+    $this->jsonValido = TRUE;
+
+  }
+
+  private function validaFormatoCampi(){
+    $error = FALSE;
+//    var_dump($this->visura->data->json_struttura->campi);exit;
+
+    //cod_comune
+      //cod_provincia
+      //codice_fiscale_persona_fisica
+    foreach($this->visura->data->json_struttura->campi as $key => $campo){
+      if(!isset($this->json->$key)  || $this->json->$key == ""){
+        continue;
+      }
+      if(isset($campo->tipo) && $campo->tipo == 'codice_fiscale_persona_fisica'){
+        $val = new \OpenApi\classes\utility\Plugins\Validations();
+        if(!$val->italianFiscalCode($this->json->$key)){
+          $this->format_errror[$key] = 'codice_fiscale_persona_fisica';
+          $error = TRUE;
+        }
+      }
+
+      if(isset($campo->tipo) && $campo->tipo == 'partita_iva'){
+        $val = new \OpenApi\classes\utility\Plugins\Validations();
+        if(!$val->italianFiscalCode($this->json->$key) && !$val->italianVat($this->json->$key)){
+          $this->format_errror[$key] = 'partita_iva';
+          $error = TRUE;
+        }
+      }
+
+      if(isset($campo->tipo) && $campo->tipo == 'codice_fiscale'){
+        $val = new \OpenApi\classes\utility\Plugins\Validations();
+        if(!$val->italianFiscalCode($this->json->$key) && !$val->italianVat($this->json->$key)){
+          $this->format_errror[$key] = 'codice_fiscale';
+          $error = TRUE;
+        }
+      }
+      if(isset($campo->tipo) && $campo->tipo == 'cod_comune'){
+        $re = '/^[a-zA-Z]{1}[0-9]{3}$/m';
+       
+        preg_match_all($re, $this->json->$key, $matches, PREG_SET_ORDER, 0);
+        if(count($matches) == 0){
+          $this->format_errror[$key] = 'cod_comune';
+          $error = TRUE;
+        }
+      }
+
+      if(isset($campo->tipo) && $campo->tipo == 'cod_provincia'){
+        $re = '/^[a-zA-Z]{2}$/m';
+       
+        preg_match_all($re, $this->json->$key, $matches, PREG_SET_ORDER, 0);
+        if(count($matches) == 0){
+          $this->format_errror[$key] = 'cod_provincia';
+          $error = TRUE;
+        }
+      }
+      if(isset($campo->tipo) && $campo->tipo == 'data_iso8601'){
+        $d = \DateTime::createFromFormat("d-m-Y", $this->json->$key);
+        
+        if(!($d && $d->format('d-m-Y') === $this->json->$key)){
+          $this->format_errror[$key] = 'data_iso8601';
+          $error = TRUE;
+        }
+      }
+    }
+    return !$error;
+  }
+
+  private function validaPresenzaCampi(){
     $re = '/\$(\d)+/m';
     $validazione = $this->visura->data->json_struttura->validazione;
     $subst = '$this->variables[\'$0\']';
-
-    $validazione = '$this->jsonValido = ' .preg_replace($re, $subst, $validazione).";";
+    $valida = TRUE;
+    $validazione = '$valida = ' .preg_replace($re, $subst, $validazione).";";
     eval($validazione);
+    return $valida;
+  }
+
+  public function getErrors(){
+    if(count($this->format_errror) != 0){
+      $ret['error_type'] = "format";
+      $ret['error'] = $this->format_errror;
+      return $ret;
+    }
+    $this->expr = [];
+    $validazione = $this->visura->data->json_struttura->validazione;
+
+    list($validazione, $expr) =$this->createExpression($validazione);
+    
+   //var_dump($validazione);exit;
+    $errori = $this->valida($validazione, $expr);
+
+    $ret['error_type'] = "empty_fields";
+    $ret['error'] = $errori;
+    return $ret;
+    
+  }
+
+  private function valida($validazione,$expr, $errori = []){
+    //var_dump($this->variables);
+    $errori = ["type"=>"and","list"=>[]];
+    $and = explode('&&',$validazione);
+    foreach($and as $andItem){
+      $andItem = trim($andItem);
+      $or = explode('||',$andItem);
+      if(count($or) == 1){
+          $orItem = $or[0];
+          if(substr($orItem,0,1)=='$'){
+            if(!$this->variables[$orItem]){
+              $errori['list'][] = $orItem;
+            }
+          }else{
+            $errors = $this->valida($expr[str_replace("e","",$orItem)], $expr);
+            if(count($errors)){
+
+              $errori['list'] = array_merge($errori['list'], $errors['list']);
+              
+            }
+          }
+      }else{
+        $errore = false;
+        $item = array();
+        $hasError = true;
+        foreach($or as $orItem){
+          $orItem = trim($orItem);
+          if(substr($orItem,0,1)=='$'){
+            $item[] = $orItem;
+            if($this->variables[$orItem]){
+    
+              $hasError = FALSE;
+            }
+          }else{
+            $errors = $this->valida($expr[str_replace("e","",$orItem)], $expr);
+            if(count($errors['list'])){
+              $item[] = $errors;
+            }else{
+              $hasError = FALSE;
+            }
+          }
+        }
+        
+        if($hasError){
+          $errori['list'][] = ["type"=>"or","list"=>$item];
+        }
+      }
+    }
+
+    return $errori;
+  }
+
+  private function createExpression($validazione, $expr = []){
+    $preg = "/\(([$\d&| e]*?)\)/";
+    preg_match($preg, $validazione, $matches, PREG_OFFSET_CAPTURE, 0);
+    if(isset($matches[0]) && isset($matches[1])){
+      $expr[] = $matches[1][0];
+      $expn = count($expr)-1;
+      $validazione = str_replace($matches[0],"e{$expn}",$validazione);
+      return $this->createExpression($validazione, $expr);
+    }
+    return array($validazione, $expr);
+    
   }
 
 	function getId() { 
@@ -197,7 +400,7 @@ class VisRequest {
 
 	function getRicerche() { 
  		return $this->ricerche; 
-	} 
+  } 
 
 	function setRicerche($ricerche) {  
 		$this->ricerche = $ricerche; 
@@ -208,5 +411,9 @@ class VisRequest {
       return FALSE;
     }
     return $this->ricerche[count($this->ricerche) - 1]->stato_ricerca;
+  }
+
+  function getValidation(){
+    return $validazione = $this->visura->data->json_struttura->validazione;;
   }
 }

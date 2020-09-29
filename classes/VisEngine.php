@@ -29,7 +29,7 @@ class VisEngine extends OpenApiBase {
     $url = $this->basePath;
     $url = str_replace("https://","https://".$this->prefix,$url);
     $url = str_replace("http://","http://".$this->prefix,$url);
-    $url .= "/visura/formTool/{$this->hash}.hs";
+    $url .= "/visura/formTool/{$this->hash}.js";
     return $url;
   }
 
@@ -59,7 +59,11 @@ class VisEngine extends OpenApiBase {
    * @return object
    */
   function sendRequest(\OpenApi\classes\utility\VisEngine\VisRequest $req) {
-    $params = new \stdClass();
+    
+    
+
+    if($req->getNew()){
+      $params = new \stdClass();
     $params->state = $req->getState();
     $params->test = $req->getTest();
     $params->hash_visura = $this->hash;
@@ -72,8 +76,31 @@ class VisEngine extends OpenApiBase {
     if($req->getTargetEmail() != NULL){
       $params->email_target = $req->getTargetEmail();
     }
-    if($req->getNew()){
       $data = $this->connect("richiesta", "POST", $params);
+ 
+      $req->setNew(FALSE);
+      $req->setId($data->data->_id);
+      $req->setStatoRichiesta($data->data->stato_richiesta);
+      if(isset($data->data->ricerche)){
+        $req->setRicerche($data->data->ricerche);
+      }
+      return $req;
+    }else{
+
+      $params = new \stdClass();
+      $params->state = $req->getState();
+     // $params->test = $req->getTest();
+    
+      if($req->getJson() != NULL){
+        $params->json_visura = $req->getJson();
+      }
+    
+      $id_visura = $req->getId();
+      //echo json_encode($params);exit;
+     //var_dump($params);exit;
+      $data = $this->connect("richiesta/$id_visura", "PUT", $params);
+     
+     
       $req->setNew(FALSE);
       $req->setId($data->data->_id);
       $req->setStatoRichiesta($data->data->stato_richiesta);
@@ -82,16 +109,15 @@ class VisEngine extends OpenApiBase {
       }
       return $req;
     }
-
-    
   }
 
   function getRequestByIdVisura($id_visura){
     $visura = $this->connect("richiesta/$id_visura", "GET");
-    return $this->getRequetByData($visura);
+    return $this->getRequestByData($visura);
   }
 
-  function getRequetByData($visura){
+  function getRequestByData($visura){
+    
     $this->visura = $this->connect("visure/{$visura->data->hash_visura}", "GET", [], 0);
     $this->hash = $visura->data->hash_visura;
     defined("OPENAPI_CREATING_REQUEST") OR define("OPENAPI_CREATING_REQUEST", TRUE);
@@ -99,10 +125,36 @@ class VisEngine extends OpenApiBase {
     $request->setNew(FALSE);
     $request->setId($visura->data->_id);
     $request->setStatoRichiesta($visura->data->stato_richiesta);
+    
     if(isset($visura->data->ricerche)){
       $request->setRicerche($visura->data->ricerche);
+    }else{
+      $request->setRicerche([]);
     }
     return $request;
+  }
+
+  function getDocument($id_visura){
+    $request = $this->getRequestByIdVisura($id_visura);
+    $documento = $this->connect("documento/{$id_visura}", "GET", [], 0);
+    if($request->getStatoRichiesta() == "Dati disponibili" || $request->getStatoRichiesta() == "Visura evasa"){
+
+      $request->setDocument($documento->data);
+    }
+    return $request;
+  }
+
+  function setRicerca($id_visura, $id_ricerca, $index){
+    $index = str_replace("indice_","",$index);
+    $request = $this->getRequestByIdVisura($id_visura);
+    $hash_visura = $request->visura->data->hash_visura;
+    $param = ["id_ricerca"=>$id_ricerca, "indice"=> $index];
+    
+    $visura = $this->connect("richiesta/{$id_visura}/ricerche", "PUT", $param, 0);
+    
+    $request->setStatoRichiesta($visura->data->stato_richiesta);
+    return $request;
+
   }
 
 }

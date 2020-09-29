@@ -38,6 +38,57 @@ class Imprese extends OpenApiBase {
     
   }
 
+  function getClosed(string $partitaIva, $ttr = 86400){
+    $partitaIva = trim($partitaIva);
+    try{
+      $data = $this->connect("closed/$partitaIva", "GET", [], $ttr);
+      return $data->data;
+    }catch (\OpenApi\classes\exception\OpenApiConnectionsException $e){
+      
+      if($e->getHTTPCode() == 404){
+        return null;
+      }
+      throw $e;
+      
+      
+      exit;
+    }
+  }
+
+  function getVatGroup(string $partitaIva, $ttr = 86400){
+    $partitaIva = trim($partitaIva);
+    try{
+      $data = $this->connect("gruppoIva/$partitaIva", "GET", [], $ttr);
+      return $data->data;
+    }catch (\OpenApi\classes\exception\OpenApiConnectionsException $e){
+      
+      if($e->getHTTPCode() == 404){
+        return null;
+      }
+      throw $e;
+      
+      
+      exit;
+    }
+  }
+
+  function getPec(string $partitaIva, $ttr = 86400){
+    $partitaIva = trim($partitaIva);
+    try{
+      $data = $this->connect("pec/$partitaIva", "GET", [], $ttr);
+      return $data->data;
+    }catch (\OpenApi\classes\exception\OpenApiConnectionsException $e){
+      
+      if($e->getHTTPCode() == 404){
+        return null;
+      }
+      throw $e;
+      
+      
+      exit;
+    }
+  }
+
   /**
    * 
    * Cerca un'azienda o più utilizzando vari parametri
@@ -53,7 +104,7 @@ class Imprese extends OpenApiBase {
   function getBySearch(string $denominazione, string $provincia,  $partitaIva= NULL ,  $codiceFiscale=NULL, $ttr = 86400){
     $params=[];
     if($denominazione != NULL){
-      $params['denominazione'] = $denominazione;
+      $params['denominazione'] = trim($denominazione);
     }
     if($provincia != NULL){
       $params['provincia'] = $provincia;

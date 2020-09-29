@@ -59,6 +59,8 @@ class OpenApi {
         $this->clients[] = $nome;
       }
     }
+
+    $this->validations = new \OpenApi\classes\utility\Plugins\Validations();
   }
 
     /**
@@ -77,6 +79,10 @@ class OpenApi {
 
       $moduli['visengine2.altravia.com'] = "\\OpenApi\\classes\\VisEngine";
       $nomi['visengine2.altravia.com'] = "visengine";
+
+
+      $moduli['comuni.openapi.it'] = "\\OpenApi\\classes\\Comuni";
+      $nomi['comuni.openapi.it'] = "comuni";
       return array($moduli,$nomi);
     }
   

@@ -89,12 +89,15 @@ class OpenApiBase {
    * 
    * @return mixed
    */
-  protected function connect(string $endpoint, $type = "GET", $param = [], $ttr = 0){
+  protected function connect(string $endpoint, $type = "GET", $param = [], $ttr = 0, $force = false){
     $url = $this->basePath;
     $url = str_replace("https://","https://".$this->prefix,$url);
     $url = str_replace("http://","http://".$this->prefix,$url);
     $url .= "/".$endpoint;
-    $this->checkHasScope($url, $type);
+    if(!$force){
+      $this->checkHasScope($url, $type);
+    }
+    
     if($type == "GET" && $ttr > 0 && $ret = $this->getCacheObject($url)) {
       return $ret;
     }
@@ -108,11 +111,7 @@ class OpenApiBase {
         $url .= "?".$param;
 
       }else{
-        if($type == "PUT") {
-          $param = json_encode($param);
-        }else{
-          $param = json_encode($param);
-        }
+        $param = json_encode($param);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $param); 
       }
     }
@@ -122,6 +121,7 @@ class OpenApiBase {
     curl_setopt($ch,CURLOPT_HTTPHEADER,array("Authorization: Bearer ".$this->token));
     curl_setopt($ch, CURLOPT_HEADER, 1);
     $response = curl_exec($ch);
+    //var_dump($response);exit;
     $this->rawResponse = $response;
     $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
     $this->header = substr($response, 0, $header_size);

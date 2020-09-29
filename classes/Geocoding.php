@@ -1,6 +1,6 @@
 <?php
 namespace OpenApi\classes;
-class UfficioPostale extends OpenApiBase {
+class Geocoding extends OpenApiBase {
 
   /**
    * @param string $token   Il token da utilizzare per il collegamento
@@ -9,10 +9,13 @@ class UfficioPostale extends OpenApiBase {
    */
   function __construct(string $token,  array $scopes, object $cache, string $prefix){
     parent::__construct($token,  $scopes, $cache, $prefix);
-    $this->basePath = "https://ws.ufficiopostale.com";
+    $this->basePath = "https://geocoding.realgest.it";
   }
 
-  
+  function geocode(string $address, $ttl = 86400){
+    $data = $this->connect("geocode", "POST", ["address" => $address], $ttl, TRUE);
 
-  
+    return $data;
+  }
+
 }
