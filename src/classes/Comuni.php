@@ -73,15 +73,20 @@ class Comuni extends OpenApiBase {
     return $province;
   }
 
+  
+  /**
+   * Restituisce la lista comuni a partire dalla provincia
+   * @param mixed $provincia provincia Es.: RM
+   * @param int $ttl time to reload cache
+   * 
+   * @return array
+   */
   function getComuni($provincia, $ttl = 86400){
     
     $provincia = trim(\strtolower($provincia));
     $data = $this->connect("province/$provincia", "GET", [], $ttl);
     
-  
     $comuni = $data->data;
-    //sort($comuni->comuni);
-    //usort($comuni->dettaglio_comuni,[$this, 'sortComune']);
     return $comuni;
  
   }

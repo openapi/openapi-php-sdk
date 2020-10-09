@@ -46,9 +46,7 @@ class OpenApi {
     $this->apikey = $apikey;
     $this->prefix = $prefix;
     $this->scopes = $realScopes;
-
     $token = $this->getToken();
-    //var_dump($token);exit;
     list($moduli,$nomi) = $this->getListaModuli();
     $this->clients = [];
     foreach($domains as $d){
@@ -61,6 +59,8 @@ class OpenApi {
     }
 
     $this->validations = new \OpenApi\classes\utility\Plugins\Validations();
+    $this->fiscalCode = new \OpenApi\classes\utility\Plugins\FiscalCode();
+    //$this->geocoding = new \OpenApi\classes\Geocoding($token->token, [], $this->cache, "");
   }
 
     /**
@@ -83,6 +83,21 @@ class OpenApi {
 
       $moduli['comuni.openapi.it'] = "\\OpenApi\\classes\\Comuni";
       $nomi['comuni.openapi.it'] = "comuni";
+
+
+      $moduli['ws.marchetemporali.com'] = "\\OpenApi\\classes\\MarcheTemporali";
+      $nomi['ws.marchetemporali.com'] = "marcheTemporali";
+
+
+      $moduli['geocoding.realgest.it'] = "\\OpenApi\\classes\\Geocoding";
+      $nomi['geocoding.realgest.it'] = "geocoding";
+
+      $moduli['ws.messaggisms.com'] = "\\OpenApi\\classes\\Sms";
+      $nomi['ws.messaggisms.com'] = "SMS";
+
+
+      $moduli['ws.firmadigitale.com'] = "\\OpenApi\\classes\\FirmaDigitale";
+      $nomi['ws.firmadigitale.com'] = "FirmaDigitale";
       return array($moduli,$nomi);
     }
   
@@ -205,7 +220,7 @@ class OpenApi {
         $tostore['scopes'] = serialize($this->scopes);
         $tostore['username'] = $this->username;
         $tostore['prefix'] = $this->prefix;
-        $this->session->save($tostore);
+        $this->store->save($tostore);
         return TRUE;
       }
       return FALSE;

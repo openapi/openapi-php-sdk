@@ -97,6 +97,7 @@ class OpenApiBase {
     if(!$force){
       $this->checkHasScope($url, $type);
     }
+   
     
     if($type == "GET" && $ttr > 0 && $ret = $this->getCacheObject($url)) {
       return $ret;
@@ -121,7 +122,7 @@ class OpenApiBase {
     curl_setopt($ch,CURLOPT_HTTPHEADER,array("Authorization: Bearer ".$this->token));
     curl_setopt($ch, CURLOPT_HEADER, 1);
     $response = curl_exec($ch);
-    //var_dump($response);exit;
+   // var_dump($response);exit;
     $this->rawResponse = $response;
     $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
     $this->header = substr($response, 0, $header_size);

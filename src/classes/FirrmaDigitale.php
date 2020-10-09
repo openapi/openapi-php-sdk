@@ -1,6 +1,6 @@
 <?php
 namespace OpenApi\classes;
-class UfficioPostale extends OpenApiBase {
+class FirmaDigitale extends OpenApiBase {
 
   /**
    * @param string $token   Il token da utilizzare per il collegamento
@@ -9,22 +9,8 @@ class UfficioPostale extends OpenApiBase {
    */
   function __construct(string $token,  array $scopes, object $cache, string $prefix){
     parent::__construct($token,  $scopes, $cache, $prefix);
-    $this->basePath = "https://ws.ufficiopostale.com";
+    $this->basePath = "https://ws.firmadigitale.com";
   }
-
-   
-  /**
-   * Restiuisce un oggetto di tipo raccomandata
-   * @return object
-   */
-  function createRaccomandata(){
-    return new \OpenApi\classes\utility\UfficioPostale\Raccomandata($this->connect);
-  }
-
-  //function createRaccomandataByData()
-
-  
   
 
-  
 }

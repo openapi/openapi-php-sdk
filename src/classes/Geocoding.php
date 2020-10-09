@@ -12,6 +12,13 @@ class Geocoding extends OpenApiBase {
     $this->basePath = "https://geocoding.realgest.it";
   }
 
+  /**
+   * Restituisce le coordinate geografiche a partire dall'indirizzo
+   * @param string $address Indirizzo
+   * @param int $ttl Tempo  in cui la risposta resta in cahce
+   * 
+   * @return object
+   */
   function geocode(string $address, $ttl = 86400){
     $data = $this->connect("geocode", "POST", ["address" => $address], $ttl, TRUE);
 
