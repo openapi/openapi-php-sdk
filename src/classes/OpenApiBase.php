@@ -89,7 +89,7 @@ class OpenApiBase {
    * 
    * @return mixed
    */
-  protected function connect(string $endpoint, $type = "GET", $param = [], $ttr = 0, $force = false){
+  protected function connect(string $endpoint, $type = "GET", $param = [], $ttr = 0, $force = false, $addHeader = NULL){
     $url = $this->basePath;
     $url = str_replace("https://","https://".$this->prefix,$url);
     $url = str_replace("http://","http://".$this->prefix,$url);
@@ -119,7 +119,13 @@ class OpenApiBase {
     curl_setopt($ch, CURLOPT_URL, $url); 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); 
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $type);
-    curl_setopt($ch,CURLOPT_HTTPHEADER,array("Authorization: Bearer ".$this->token));
+    $header = array("Authorization: Bearer ".$this->token);
+    if($addHeader != NULL && is_array($addHeader) && count($addHeader)>0){
+      $header = array_merge($header, $addHeader);
+    }
+    
+    
+    curl_setopt($ch,CURLOPT_HTTPHEADER,$header);
     curl_setopt($ch, CURLOPT_HEADER, 1);
     $response = curl_exec($ch);
    // var_dump($response);exit;

@@ -21,7 +21,11 @@ class OpenApi {
     $domainsRealScopes = [];
     $prefix = $environment=="production"?"":$environment.".";
     $domains = [];
+    //var_dump($scopes);exit;
     foreach($scopes as $s){
+      if($s == NULL){
+        continue;
+      }
       if(is_array($s)){
         $domain = $s['domain'];
         $realScope = $s['mode'].":".$prefix.$s['domain']."/".$s['method'];
@@ -47,6 +51,7 @@ class OpenApi {
     $this->prefix = $prefix;
     $this->scopes = $realScopes;
     $token = $this->getToken();
+    
     list($moduli,$nomi) = $this->getListaModuli();
     $this->clients = [];
     foreach($domains as $d){
@@ -97,7 +102,10 @@ class OpenApi {
 
 
       $moduli['ws.firmadigitale.com'] = "\\OpenApi\\classes\\FirmaDigitale";
-      $nomi['ws.firmadigitale.com'] = "FirmaDigitale";
+      $nomi['ws.firmadigitale.com'] = "firmaDigitale";
+
+      $moduli['ws.pecmassiva.com'] = "\\OpenApi\\classes\\PecMassiva";
+      $nomi['ws.pecmassiva.com'] = "pecMassiva";
       return array($moduli,$nomi);
     }
   
