@@ -47,5 +47,5 @@ La funzione consente di recuperare i dati aziendali a partire dalla partita IVA
 
 `function getByPartitaIva(string $partitaIva, $ttl = 86400):object`
 
-* $partitaIva: La partita IVA da cvercare
+* $partitaIva: La partita IVA da cercare
 * $ttl: Time To Release, per quanti secondi la chiamata resta in cache prima di essere effettuata una seconda volta
