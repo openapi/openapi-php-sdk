@@ -22,11 +22,18 @@ class VisRequest {
     $this->ricerche = [];
     $this->document = NULL;
     $this->format_errror = [];
+    $this->fornitore = [];
     foreach($visura->data->json_struttura->campi as $k => $v){
       $this->variables[$k] = FALSE;
     }
   }
 
+  function setFornitore($fornitore){
+    $this->fornitore = $fornitore;
+  }
+  function getFornitore(){
+    return $this->fornitore;
+  }
   function setNew(bool $new){
     return $this->new = $new;
   }

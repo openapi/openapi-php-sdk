@@ -22,6 +22,17 @@ class VisEngine extends OpenApiBase {
     $this->hash = $hash;
   }
 
+  function getDatiFornitore($email){
+    $data = $this->connect("fornitori/$email", "GET", []);
+    return $data;
+  }
+
+  function getFornitori(){
+    $data = $this->connect("fornitori", "GET", []);
+    return $data;
+
+  }
+
   function getFormTool(){
     if($this->hash == NULL){
       throw new \OpenApi\classes\exception\OpenApiVisEngineException("Visengine hash is not setted",40005);
