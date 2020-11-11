@@ -106,6 +106,9 @@ class OpenApi {
 
       $moduli['ws.pecmassiva.com'] = "\\OpenApi\\classes\\PecMassiva";
       $nomi['ws.pecmassiva.com'] = "pecMassiva";
+
+      $moduli['uploader.altravia.com'] = "\\OpenApi\\classes\\Uploader";
+      $nomi['uploader.altravia.com'] = "uploader";
       return array($moduli,$nomi);
     }
   

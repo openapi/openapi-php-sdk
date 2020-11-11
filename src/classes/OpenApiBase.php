@@ -89,7 +89,7 @@ class OpenApiBase {
    * 
    * @return mixed
    */
-  protected function connect(string $endpoint, $type = "GET", $param = [], $ttr = 0, $force = false, $addHeader = NULL){
+  public function connect(string $endpoint, $type = "GET", $param = [], $ttr = 0, $force = false, $addHeader = NULL){
     $url = $this->basePath;
     $url = str_replace("https://","https://".$this->prefix,$url);
     $url = str_replace("http://","http://".$this->prefix,$url);
@@ -132,15 +132,27 @@ class OpenApiBase {
     $this->rawResponse = $response;
     $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
     $this->header = substr($response, 0, $header_size);
+    //var_dump($this->header);exit;
+    $this->parsedHEader = $this->parseHeader($this->header);
     $return = substr($response, $header_size);
     $httpCode = curl_getinfo ( $ch, CURLINFO_RESPONSE_CODE );;
     curl_close($ch);
-    $data =  json_decode($return);
+    
+    if(isset($this->parsedHEader['Content-Type']) && strtolower($this->parsedHEader['Content-Type']) == "application/json") {
+      
+      $data =  json_decode($return);
+    }else if(json_decode($return) != NULL){
+      $data =  json_decode($return);
+      
+    }else{
+      $data = $return;
+    }
+    
     if($data == NULL){
       throw new \OpenApi\classes\exception\OpenApiConnectionsException("Connection to $url: Connection Error",40001);
     }
-   // var_dump($data);exit;
-    if($data->success == false){
+    
+    if(is_object($data) && $data->success == false){
       $message = "Connection to $url: unknow error";
       if(isset($data->message)) {
         if(is_string(($data->message))){
@@ -164,6 +176,27 @@ class OpenApiBase {
       $this->setCacheObject($url, $data, $ttr);
     }
     return $data;
+  }
+
+  private function parseHeader($headers){
+    $headers = explode("\n",$headers);
+    $parsedHeaders = array();
+    foreach ($headers as $header) {
+      $header = trim($header);
+      
+      $header = explode(":",$header);
+
+      if(count($header) < 2){
+        
+        continue;
+      }
+      $key = $header[0];
+      unset($header[0]);
+      $parsedHeaders[trim($key)] = trim(implode(":",$header));
+    }
+  //  exit;
+    
+    return $parsedHeaders;
   }
 
 }
