@@ -18,7 +18,7 @@ class Sender {
     $this->data->city = NULL;
     $this->data->zip = NULL;
     $this->data->province = NULL;
-    $this->data->country = "Italia";
+    $this->data->country = "IT";
     $this->data->email = NULL;
 
 
@@ -32,17 +32,21 @@ class Sender {
     $this->itData->comune = NULL;
     $this->itData->cap = NULL;
     $this->itData->provincia = NULL;
-    $this->itData->nazione = "Italia";
+    $this->itData->nazione = "IT";
     $this->itData->email = NULL;
 
     $this->validate = false;
 
-    if($sender == NULL){
+    if($sender != NULL){
       $this->createFromObject($sender);
     }
   }
 
   public function createFromObject($object){
+    if(is_array($object)){
+      $object = (object)$object;
+    }
+  //  var_dump($object);
     $this->data->firstName = isset($object->firstName)?$object->firstName:(isset($object->nome)?$object->nome:NULL);
     $this->data->secondName = isset($object->secondName)?$object->secondName:(isset($object->cognome)?$object->cognome:NULL);
     $this->data->companyName = isset($object->companyName)?$object->companyName:(isset($object->ragione_sociale)?$object->ragione_sociale:NULL);
@@ -52,9 +56,9 @@ class Sender {
     $this->data->city = isset($object->city)?$object->city:(isset($object->comune)?$object->comune:NULL);
     $this->data->zip = isset($object->zip)?$object->zip:(isset($object->cap)?$object->cap:NULL);
     $this->data->province = isset($object->province)?$object->province:(isset($object->provincia)?$object->provincia:NULL);
-    $this->data->country = isset($object->country)?$object->country:(isset($object->nazione)?$object->nazione:"Italia");
+    $this->data->country = isset($object->country)?$object->country:(isset($object->nazione)?$object->nazione:"IT");
     $this->data->email = isset($object->email)?$object->email:NULL;
-
+  //  var_dump($this->data);exit;
     
     $this->itData->nome = $this->data->firstName;
     $this->itData->cognome = $this->data->secondName;
@@ -182,7 +186,7 @@ class Sender {
         "code"=> "required",
         "text"=>"zip field is required"
       ];
-    } else if($this->data->country == "Italia" || $this->data->country == "Italy"){
+    } else if($this->data->country == "Italia" || $this->data->country == "Italy" || $this->data->country == "IT"){
       $re = '/^\d{5}$/';
       preg_match($re, $this->data->zip, $matches, PREG_OFFSET_CAPTURE, 0);
       if(count($matches) == 0){

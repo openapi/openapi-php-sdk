@@ -23,6 +23,7 @@ class Uploader extends OpenApiBase {
     if($endpoint == NULL){
       throw new \OpenApi\classes\exception\OpenApiUploaderException("No endpoint GET",40018);
     }
+    //echo $endpoint;exit;
     
     $method = $_SERVER['REQUEST_METHOD'];
     $data = null;
@@ -30,7 +31,11 @@ class Uploader extends OpenApiBase {
       $data =  file_get_contents("php://input");
       $data = json_decode($data);
     }
+    
     $data = $this->connect($endpoint, $method,$data);
+    //var_dump($data);exit;
+
+    
     header("Content-Type: ",$this->parsedHEader['Content-Type']);
     if(isset($this->parsedHEader['Content-Type']) && strtolower($this->parsedHEader['Content-Type']) == "application/json") {
       echo json_encode($data);

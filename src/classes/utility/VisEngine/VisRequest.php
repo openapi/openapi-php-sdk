@@ -22,18 +22,20 @@ class VisRequest {
     $this->ricerche = [];
     $this->document = NULL;
     $this->format_errror = [];
-    $this->fornitore = [];
+    $this->opzioni = null;
     foreach($visura->data->json_struttura->campi as $k => $v){
       $this->variables[$k] = FALSE;
     }
   }
 
-  function setFornitore($fornitore){
-    $this->fornitore = $fornitore;
+  function setOpzioni($opzioni){
+    $this->opzioni = $opzioni;
   }
-  function getFornitore(){
-    return $this->fornitore;
+
+  function getOpzioni(){
+    return $this->opzioni;
   }
+
   function setNew(bool $new){
     return $this->new = $new;
   }
@@ -169,6 +171,12 @@ class VisRequest {
       return FALSE;
     }
     return $this->ricerche[count($this->ricerche) - 1]->id_ricerca;
+  }
+  function getSearch(){
+    if(count($this->ricerche) == NULL){
+      return FALSE;
+    }
+    return $this->ricerche[count($this->ricerche) - 1];
   }
   
   function getSearchCount(){

@@ -37,16 +37,25 @@ class FirmaDigitale extends OpenApiBase {
     $urgenza = isset($data['urgenza'])?$data['urgenza']:NULL;
     $assistenza = isset($data['assistenza'])?$data['assistenza']:NULL;
     $callback = isset($data['callback'])?$data['callback']:NULL;
+    $quantita = isset($data['quantita'])?$data['quantita']:NULL;
 
     $params = [];
     if($anagrafica != NULL){
-      if($type == "lettore"){
+      if($type == "lettore" || $type == "vergine"){
         $params['anagrafica_spedizione'] = $anagrafica;
+      }elseif($type == "spid"){
+        $params['email'] = $anagrafica->email;
+        $params['cellulare'] = $anagrafica->cellulare;
       }else{
         $params['anagrafica'] = $anagrafica;
       }
       
     }
+
+    if($quantita != NULL && ($type == "lettore" || $type == "vergine")){
+      $params['quantita'] = $quantita;
+    }
+
 
     if($spedizione != NULL && ($type == "lettore" || $type == "firma")){
       $params['spedizione'] = $spedizione;

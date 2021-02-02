@@ -17,7 +17,7 @@ class MarcheTemporali extends OpenApiBase {
     return $data->data;
   }
 
-  function checkLotto($username, $password){
+  function checkLotto($username, $password, $tipo){
 
     if(substr($username,0,4) == "FAKE" && substr($password,0,4) == "FAKE"){
       $ret = new \stdClass();
@@ -29,7 +29,7 @@ class MarcheTemporali extends OpenApiBase {
       $ret->error = NULL;
       return $ret->data;
     }
-    $data = $this->connect("check_lotto", "POST", ["username"=>$username, "password"=> $password]);
+    $data = $this->connect("check_lotto", "POST", ["username"=>$username, "password"=> $password,'type'=>$tipo]);
     
     return $data->data;
   }

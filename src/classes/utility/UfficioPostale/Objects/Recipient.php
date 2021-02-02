@@ -41,12 +41,16 @@ class Recipient {
 
     $this->validate = false;
 
-    if($recipient == NULL){
+    if($recipient != NULL){
       $this->createFromObject($recipient);
     }
   }
 
   public function createFromObject($object){
+    if(is_array($object)){
+      $object = (object)$object;
+    }
+    //var_dump($object);Exit;
     $this->data->title = isset($object->title)?$object->title:(isset($object->titolo)?$object->titolo:NULL);
     $this->data->at = isset($object->at)?$object->at:(isset($object->co)?$object->co:NULL);
     $this->data->firstName = isset($object->firstName)?$object->firstName:(isset($object->nome)?$object->nome:NULL);
@@ -58,8 +62,12 @@ class Recipient {
     $this->data->city = isset($object->city)?$object->city:(isset($object->comune)?$object->comune:NULL);
     $this->data->zip = isset($object->zip)?$object->zip:(isset($object->cap)?$object->cap:NULL);
     $this->data->province = isset($object->province)?$object->province:(isset($object->provincia)?$object->provincia:NULL);
-    $this->data->country = isset($object->country)?$object->country:(isset($object->nazione)?$object->nazione:"Italia");
+    $this->data->country = isset($object->country)?$object->country:(isset($object->nazione)?$object->nazione:"IT");
     $this->data->email = isset($object->email)?$object->email:NULL;
+
+    $this->data->id = isset($object->id)?$object->id:NULL;
+    $this->data->state = isset($object->state)?$object->state:NULL;
+
 
     
     $this->itData->co = $this->data->at;
@@ -75,6 +83,8 @@ class Recipient {
     $this->itData->provincia = $this->data->province;
     $this->itData->nazione = $this->data->country;
     $this->itData->email = $this->data->email;
+    $this->itData->id= $this->data->id;
+    $this->itData->state= $this->data->state;
 
   }
 

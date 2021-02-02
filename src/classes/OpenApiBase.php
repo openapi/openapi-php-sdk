@@ -137,7 +137,7 @@ class OpenApiBase {
     $return = substr($response, $header_size);
     $httpCode = curl_getinfo ( $ch, CURLINFO_RESPONSE_CODE );;
     curl_close($ch);
-    
+    //echo $return;exit;
     if(isset($this->parsedHEader['Content-Type']) && strtolower($this->parsedHEader['Content-Type']) == "application/json") {
       
       $data =  json_decode($return);
@@ -178,7 +178,7 @@ class OpenApiBase {
     return $data;
   }
 
-  private function parseHeader($headers){
+  protected function parseHeader($headers){
     $headers = explode("\n",$headers);
     $parsedHeaders = array();
     foreach ($headers as $header) {
@@ -198,5 +198,8 @@ class OpenApiBase {
     
     return $parsedHeaders;
   }
+
+  
+
 
 }

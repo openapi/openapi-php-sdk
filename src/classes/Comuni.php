@@ -28,6 +28,20 @@ class Comuni extends OpenApiBase {
   }
 
   /**
+   * 
+   * A partire dal CAP restistuisce un'array di oggietti di tipo comune 
+   * 
+   * @param string $cap Il cap da ricercare
+   * @param int $ttl Il tempo di chache degli oggetti ritornati, 0 per no chche
+   * 
+   * @return array
+   */
+  function getComuneByCatasto(string $codice_catastale, $ttl = 86400){
+    $data = $this->connect("catastale/$codice_catastale", "GET", [], $ttl);
+    return $data->data;
+  }
+
+  /**
    * Restituisce la lista delle regioni italiani
    * 
    * @return array
