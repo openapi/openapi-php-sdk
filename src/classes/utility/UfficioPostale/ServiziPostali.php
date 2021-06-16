@@ -17,6 +17,7 @@ class ServiziPostali {
   protected $confirmed;
   protected $state;
   protected $callback;
+  protected $numero_pagine;
 
   function __construct($connect){
     $this->connect = $connect;
@@ -34,6 +35,10 @@ class ServiziPostali {
     $this->confirmed = FALSE;
     $this->state = FALSE;
     $this->callback = NULL;
+  }
+
+  function getNumeroPagine(){
+    return $this->numero_pagine;
   }
 
   function getPricing(){
@@ -105,6 +110,10 @@ class ServiziPostali {
       return NULL;
     }
     return $this->sender->getErrors();
+  }
+
+  public function getRecipients(){
+    return $this->recipients;
   }
 
   public function getRecpients(){

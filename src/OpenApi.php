@@ -51,7 +51,12 @@ class OpenApi {
     $this->prefix = $prefix;
     $this->scopes = $realScopes;
     $token = $this->getToken();
-    
+    /*
+    if($_SERVER['REMOTE_ADDR'] == "37.163.55.217"){
+      var_dump($token);exit;
+    }
+    */
+    //var_dump($token);
     list($moduli,$nomi) = $this->getListaModuli();
     $this->clients = [];
     foreach($domains as $d){
@@ -65,7 +70,7 @@ class OpenApi {
 
     $this->validations = new \OpenApi\classes\utility\Plugins\Validations();
     $this->fiscalCode = new \OpenApi\classes\utility\Plugins\FiscalCode();
-    //$this->geocoding = new \OpenApi\classes\Geocoding($token->token, [], $this->cache, "");
+  //  $this->ufficiopostale = new \OpenApi\classes\UfficioPostale($token->token, $domainsRealScopes[$d], $this->cache, $prefix);
   }
 
     /**
@@ -79,6 +84,7 @@ class OpenApi {
       $nomi = [];
       $moduli['ws.ufficiopostale.com'] = "\\OpenApi\\classes\\UfficioPostale";
       $nomi['ws.ufficiopostale.com'] = "ufficiopostale";
+
       $moduli['imprese.altravia.com'] = "\\OpenApi\\classes\\Imprese";
       $nomi['imprese.altravia.com'] = "imprese";
 
@@ -97,18 +103,16 @@ class OpenApi {
       $moduli['geocoding.realgest.it'] = "\\OpenApi\\classes\\Geocoding";
       $nomi['geocoding.realgest.it'] = "geocoding";
 
+      $moduli['uploader.altravia.com'] = "\\OpenApi\\classes\\Uploader";
+      $nomi['uploader.altravia.com'] = "uploader";
+
       $moduli['ws.messaggisms.com'] = "\\OpenApi\\classes\\Sms";
       $nomi['ws.messaggisms.com'] = "SMS";
 
-
+      $moduli['pec.openapi.it'] = "\\OpenApi\\classes\\Pec";
+      $nomi['pec.openapi.it'] = "PEC";
       $moduli['ws.firmadigitale.com'] = "\\OpenApi\\classes\\FirmaDigitale";
       $nomi['ws.firmadigitale.com'] = "firmaDigitale";
-
-      $moduli['ws.pecmassiva.com'] = "\\OpenApi\\classes\\PecMassiva";
-      $nomi['ws.pecmassiva.com'] = "pecMassiva";
-
-      $moduli['uploader.altravia.com'] = "\\OpenApi\\classes\\Uploader";
-      $nomi['uploader.altravia.com'] = "uploader";
       return array($moduli,$nomi);
     }
   

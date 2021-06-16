@@ -23,6 +23,22 @@ class Raccomandata extends ServiziPostali {
 
   }
   
+  function creaRaccomandataByData($data){
+    
+    
+    $this->pricing = $data->pricing;
+    $this->id = $data->id;
+    $this->confirmed = $data->confirmed;
+    $this->state = $data->state;
+    $this->numero_pagine = $data->documento_validato->pagine;
+    $this->clearRecipients();
+    $this->setRecipients($data->destinatari);
+    $this->setSender($data->mittente);
+    $this->colori = $data->opzioni->colori;
+    $this->fronteretro = $data->opzioni->fronteretro;
+    $this->ar = $data->opzioni->ar;
+    $this->setCallback($data->opzioni->callback_url, $data->opzioni->custom);
+  }
 
   function send(){
     $object = new \stdClass();;
@@ -44,13 +60,23 @@ class Raccomandata extends ServiziPostali {
       }
     }
    // var_dump($object);exit;
+   if($this->getId() == NULL){
     $ret = call_user_func_array($this->connect,["raccomandate/","POST",$object]);
+   }else{
+    $ret = call_user_func_array($this->connect,["raccomandate/".$this->getId(),"PATCH",$object]);
+   }
+    
+    if(!isset($ret->data[0])){
+      return false;
+    }
     $this->pricing = $ret->data[0]->pricing;
     $this->id = $ret->data[0]->id;
     $this->confirmed = $ret->data[0]->confirmed;
     $this->state = $ret->data[0]->state;
+    $this->numero_pagine = $ret->data[0]->documento_validato->pagine;
     $this->clearRecipients();
     $this->setRecipients($ret->data[0]->destinatari);
+    return true;
     //$ret= $this->connect->call($this,"raccomandate",$object,"POST");
 
   }

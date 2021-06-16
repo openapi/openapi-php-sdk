@@ -22,6 +22,9 @@ class Recipient {
     $this->data->province = NULL;
     $this->data->country = "Italia";
     $this->data->email = NULL;
+    $this->data->id = NULL;
+    $this->data->IdRicevuta = NULL;
+    $this->data->tracking_code = NULL;
 
 
     $this->itData = new \stdClass();
@@ -38,6 +41,9 @@ class Recipient {
     $this->itData->provincia = NULL;
     $this->itData->nazione = "Italia";
     $this->itData->email = NULL;
+    $this->itData->id = NULL;
+    $this->itData->IdRicevuta = NULL;
+    $this->itData->tracking_code = NULL;
 
     $this->validate = false;
 
@@ -67,6 +73,8 @@ class Recipient {
 
     $this->data->id = isset($object->id)?$object->id:NULL;
     $this->data->state = isset($object->state)?$object->state:NULL;
+    $this->data->IdRicevuta = isset($object->IdRicevuta)?$object->IdRicevuta:NULL;
+    $this->data->tracking_code = isset($object->NumeroRaccomandata)?$object->NumeroRaccomandata:NULL;
 
 
     
@@ -86,6 +94,9 @@ class Recipient {
     $this->itData->id= $this->data->id;
     $this->itData->state= $this->data->state;
 
+    $this->itData->IdRicevuta = isset($object->IdRicevuta)?$object->IdRicevuta:NULL;
+    $this->itData->tracking_code = isset($object->NumeroRaccomandata)?$object->NumeroRaccomandata:NULL;
+
   }
 
   public function getObject($itNames = FALSE){
@@ -103,6 +114,11 @@ class Recipient {
     return $this->data->at;
   }
 
+  public function getState(){
+    return $this->data->state;
+  }
+
+ 
   public function getFirstName(){
     return $this->data->firstName;
   }
@@ -136,6 +152,19 @@ class Recipient {
   }
   public function getEmail(){
     return $this->data->email;
+  }
+
+  public function getId(){
+    return $this->data->id;
+  }
+  public function getIdRicevuta(){
+    return $this->data->IdRicevuta;
+  }
+
+  
+
+  public function getTrackingCode(){
+    return $this->data->tracking_code;
   }
 
   public function setTitle(string $title){

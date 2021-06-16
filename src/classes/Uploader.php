@@ -31,10 +31,47 @@ class Uploader extends OpenApiBase {
       $data =  file_get_contents("php://input");
       $data = json_decode($data);
     }
-    
-    $data = $this->connect($endpoint, $method,$data);
-    //var_dump($data);exit;
+    try{
+      $data = $this->connect($endpoint, $method,$data);
+    }catch(\OpenApi\classes\exception\OpenApiConnectionsException $e){
 
+      $message = $e->getMessage();
+      var_dump($message);
+      //var_dump($e->getServerRawResponse());
+      $message = explode("name (must be one of",$message);
+      $valid_ext = "";
+      if(isset($message[1])){
+        $message = substr($message[1],0,-1);
+        
+        $message = explode(",",$message);
+        foreach($message as $m){
+          $m = trim($m);
+          $m = explode("/",$m);
+          if(isset($m[1])){
+            $m = $m[1];
+            if($m == "jpeg"){
+              $vext[] = "jpg";
+            }
+            $vext[] = $m;
+          }
+          
+          
+        }
+
+        $valid_ext = ", è possibile caricare esclusivamente file con formato: ".implode(", ",$vext);
+        
+      }
+      $ret['success'] = FALSE;
+      $ret['message'] = "C'è stato un errore in fase di caricamento{$valid_ext}";
+      $ret['error'] = $e->getCode();
+      echo json_encode($ret);
+      exit;
+    }catch(\Exception $e){
+      $ret['success'] = FALSE;
+      $ret['message'] = "C'è stato un errore in fase di caricamento inaspettato, riprovare, se il problema persiste contattare la nostra assistenza";
+      echo json_encode($ret);
+      exit;  
+    }
     
     header("Content-Type: ",$this->parsedHEader['Content-Type']);
     if(isset($this->parsedHEader['Content-Type']) && strtolower($this->parsedHEader['Content-Type']) == "application/json") {

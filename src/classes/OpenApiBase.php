@@ -91,6 +91,7 @@ class OpenApiBase {
    */
   public function connect(string $endpoint, $type = "GET", $param = [], $ttr = 0, $force = false, $addHeader = NULL){
     $url = $this->basePath;
+    //if($url != "https://imprese.altravia.com"){
     $url = str_replace("https://","https://".$this->prefix,$url);
     $url = str_replace("http://","http://".$this->prefix,$url);
     $url .= "/".$endpoint;
@@ -99,9 +100,9 @@ class OpenApiBase {
     }
    
     
-    if($type == "GET" && $ttr > 0 && $ret = $this->getCacheObject($url)) {
+ /*   if($type == "GET" && $ttr > 0 && $ret = $this->getCacheObject($url)) {
       return $ret;
-    }
+    }*/
     $ch = curl_init(); 
 		if($type == "POST" || $type == "PUT") 	{
 			curl_setopt($ch, CURLOPT_POST, TRUE); 
@@ -149,10 +150,13 @@ class OpenApiBase {
     }
     
     if($data == NULL){
+      
       throw new \OpenApi\classes\exception\OpenApiConnectionsException("Connection to $url: Connection Error",40001);
     }
     
     if(is_object($data) && $data->success == false){
+
+    
       $message = "Connection to $url: unknow error";
       if(isset($data->message)) {
         if(is_string(($data->message))){

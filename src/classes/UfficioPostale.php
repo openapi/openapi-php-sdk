@@ -22,9 +22,29 @@ class UfficioPostale extends OpenApiBase {
 
       return $this->connect( $endpoint, $type, $param , $ttr , $force, $forceRaw);
     });
+
+    
   }
 
-  //function createRaccomandataByData()
+  function getRaccomandataById($id){
+    $data = $this->connect("raccomandate/$id", "GET");
+    
+    return $this->getRaccomandataByData($data->data);
+  }
+
+  function getRaccomandataByData($data){
+    $busta = $this->createRaccomandata();
+    $busta->creaRaccomandataByData($data);
+    return $busta;
+  }
+
+  function getPricing($type = NULL){
+    return $this->connect("pricing/$type", "GET");
+  }
+
+  function track($tracking_code){
+    return $this->connect("tracking/$tracking_code", "GET");
+  }
 
   
   

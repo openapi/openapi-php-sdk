@@ -38,6 +38,11 @@ class Collection {
     if($this->getOutputSize() != NULL){
       $data['output_size'] = $this->getOutputSize();
     }
+    if($this->outputGroup != NULL){
+      $data['output_group'] = $this->outputGroup;
+    }
+
+    
     if($this->getInputTypes() != NULL){
       $data['input_types'] = $this->getInputTypes();
     }
@@ -320,6 +325,18 @@ class Collection {
 
 
     $ret = call_user_func_array ($this->connect,["collections/$this->id/$id_documento","GET"]);
+
+    $this->updateCollection();
+    return $ret;
+  }
+
+  function getDocumenti(){
+    if($this->id == NULL){
+      throw new \OpenApi\classes\exception\OpenApiUploaderException("Impossible to add File",40019);
+    }
+
+
+    $ret = call_user_func_array ($this->connect,["collections/$this->id","GET"]);
 
     $this->updateCollection();
     return $ret;

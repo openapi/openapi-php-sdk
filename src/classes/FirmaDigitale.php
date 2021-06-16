@@ -71,7 +71,20 @@ class FirmaDigitale extends OpenApiBase {
     if($callback != NULL){
       $params['callback'] = $callback;
     }
+    if(isset($data['options'])){
+      foreach($data['options'] as $key =>$value){
+        $params[$key] = $value;
+      }
+    }
+//var_dump(json_encode($params));exit;
+   
     $ret = $this->connect("richiesta/$codice_prodotto","POST",$params);
+    return $ret;
+  }
+
+  function addVideoRiconoscimento($id_fd){
+    $param['id'] = $id_fd;
+    $ret = $this->connect("richiesta/VIDEORIC","POST",$param);
     return $ret;
   }
 

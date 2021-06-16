@@ -8,6 +8,8 @@ class Imprese extends OpenApiBase {
    */
   function __construct(string $token,  array $scopes, object $cache, string $prefix){
     parent::__construct($token,  $scopes, $cache, $prefix);
+    
+    //$prefix = "";
     $this->basePath = "https://imprese.altravia.com";
   }
 
@@ -20,10 +22,10 @@ class Imprese extends OpenApiBase {
    * 
    * @return object
    */
-  function getByPartitaIva(string $partitaIva, $ttr = 86400){
+  function getByPartitaIva(string $partitaIva, $ttr = 86400, $force = false){
     $partitaIva = trim($partitaIva);
     try{
-      $data = $this->connect("advance/$partitaIva", "GET", [], $ttr);
+      $data = $this->connect("advance/$partitaIva", "GET", [], $ttr, true);
       return $data->data;
     }catch (\OpenApi\classes\exception\OpenApiConnectionsException $e){
       if($e->getHTTPCode() == 404){

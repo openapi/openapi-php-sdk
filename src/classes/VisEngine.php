@@ -58,74 +58,56 @@ class VisEngine extends OpenApiBase {
    * 
    * @return object
    */
-  function sendRequest(\OpenApi\classes\utility\VisEngine\VisRequest $req, $new_search = FALSE) {
+  function sendRequest(\OpenApi\classes\utility\VisEngine\VisRequest $req) {
     
     
-   
+
     if($req->getNew()){
       $params = new \stdClass();
-    $params->state = $req->getState();
-    $params->test = $req->getTest();
-    $params->hash_visura = $this->hash;
-    if($req->getJson() != NULL){
-      $params->json_visura = $req->getJson();
-    }
-    if($req->getCallbackData() != NULL){
-      $params->callback_data = $req->getCallbackData();
-    }
-    if($req->getFornitore() != NULL){
-      $params->callback = $req->getFornitore();
-    }
-    if($req->getTargetEmail() != NULL){
-      $params->email_target = $req->getTargetEmail();
-    }
+      $params->state = $req->getState();
+      $params->test = $req->getTest();
+      $params->hash_visura = $this->hash;
+      if($req->getJson() != NULL){
+        $params->json_visura = $req->getJson();
+      }
+      if($req->getCallbackData() != NULL){
+        $params->callback_data = $req->getCallbackData();
+      }
+      if($req->getTargetEmail() != NULL){
+        $params->email_target = $req->getTargetEmail();
+      }
+      $opzioni = $req->getOpzioni();
+      if($opzioni != NULL){
+        $params->opzioni = $opzioni;
+      }
       $data = $this->connect("richiesta", "POST", $params);
- //var_dump($data);exit;
+      //var_dump($data);
       $req->setNew(FALSE);
       $req->setId($data->data->_id);
       $req->setStatoRichiesta($data->data->stato_richiesta);
-      
-      if(isset($data->data->callback)){
-        $req->setFornitore($data->data->callback);
-      }else{
-        $req->setFornitore(NULL);
-      }
       if(isset($data->data->ricerche)){
         $req->setRicerche($data->data->ricerche);
       }
       return $req;
     }else{
-      
+
       $params = new \stdClass();
       $params->state = $req->getState();
      // $params->test = $req->getTest();
-     $id_visura = $req->getId();
+    
       if($req->getJson() != NULL){
         $params->json_visura = $req->getJson();
       }
     
-     
+      $id_visura = $req->getId();
       //echo json_encode($params);exit;
      //var_dump($params);exit;
-     $visura = $this->connect("richiesta/$id_visura", "GET");
- 
-     if(!$new_search)
-    {
       $data = $this->connect("richiesta/$id_visura", "PUT", $params);
-    }else{
-      $data = $this->connect("richiesta/$id_visura", "POST", $params);
-    }
-
- //   var_dump($data);exit;
-      
-    
+     
      
       $req->setNew(FALSE);
       $req->setId($data->data->_id);
       $req->setStatoRichiesta($data->data->stato_richiesta);
-      if(isset($data->data->callback)){
-        $req->setFornitore($data->data->callback);
-      }
       if(isset($data->data->ricerche)){
         $req->setRicerche($data->data->ricerche);
       }
@@ -133,64 +115,38 @@ class VisEngine extends OpenApiBase {
     }
   }
 
-  function getDatiFornitore($email){
-    $data = $this->connect("fornitori/$email", "GET", []);
-    return $data;
-  }
-
-  function getFornitori(){
-    $data = $this->connect("fornitori", "GET", []);
-    return $data;
-
-  }
-
   function getRequestByIdVisura($id_visura){
     $visura = $this->connect("richiesta/$id_visura", "GET");
-    
-    /*if($visura->data->callback){
-      var_dump($visura->data->callback);exit;
-    }*/
-    
     return $this->getRequestByData($visura);
   }
 
-  function cancelRequest($id_visura, $motivazione){
-    $visura = $this->connect("richiesta/$id_visura", "DELETE",["motivo"=>$motivazione]);
-    return $this->getRequestByIdVisura($id_visura);
-  }
-  
-
   function getRequestByData($visura){
-    
+   
+  
     $this->visura = $this->connect("visure/{$visura->data->hash_visura}", "GET", [], 0);
+  
     $this->hash = $visura->data->hash_visura;
     defined("OPENAPI_CREATING_REQUEST") OR define("OPENAPI_CREATING_REQUEST", TRUE);
     $request = new \OpenApi\classes\utility\VisEngine\VisRequest($this->visura);
     $request->setNew(FALSE);
     $request->setId($visura->data->_id);
     $request->setStatoRichiesta($visura->data->stato_richiesta);
+    
     if(isset($visura->data->ricerche)){
+    
       $request->setRicerche($visura->data->ricerche);
     }else{
       $request->setRicerche([]);
     }
-    if($request->getStatoRichiesta() == "Dati disponibili" || $request->getStatoRichiesta() == "Visura evasa"){
-      $documento = $this->connect("documento/{$visura->data->_id}", "GET", [], 0);
-      $request->setDocument($documento->data);
-    }
-    if($visura->data->stato_richiesta == "Annullata"){
-      $request->setReasonCancellation($visura->data->motivo_annullamento);
-      
-    }
-    if(isset($visura->data->callback) && $visura->data->callback){
-      $request->setFornitore($visura->data->callback);
-    }
+  //  var_dump($request);exit;
     return $request;
   }
 
   function getDocument($id_visura){
+    ini_set("memory_limit","1024M");
     $request = $this->getRequestByIdVisura($id_visura);
     $documento = $this->connect("documento/{$id_visura}", "GET", [], 0);
+    //var_dump($documento);exit;
     if($request->getStatoRichiesta() == "Dati disponibili" || $request->getStatoRichiesta() == "Visura evasa"){
 
       $request->setDocument($documento->data);
@@ -209,10 +165,6 @@ class VisEngine extends OpenApiBase {
     $request->setStatoRichiesta($visura->data->stato_richiesta);
     return $request;
 
-  }
-
-  function getCatalog($ttr = 86400){
-    return $this->connect("visure", "GET", NULL, $ttr);
   }
 
 }
