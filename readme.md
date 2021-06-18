@@ -1,5 +1,11 @@
 # OpenAPI Library
 
+## Installation
+
+```sh
+composer require altravia/openapi
+```
+
 ## Usage
 
 ### Instanza della classe
