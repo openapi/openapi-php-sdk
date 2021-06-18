@@ -15,5 +15,8 @@
         "psr-4": {
             "OpenApi\\": "src"
         }
+    },
+    "require-dev": {
+        "symfony/dotenv": "^5.3"
     }
 }
