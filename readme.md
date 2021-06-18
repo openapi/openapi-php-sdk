@@ -24,7 +24,7 @@ $scopes=[
 ```
 
 ...e `$environment` è l'ambiente sceltro tra `'test'` (default) e `'production'`
-```
+
 
 A questo punto, in base agli scopes indicati vengono creati i seguenti oggetto:
 
