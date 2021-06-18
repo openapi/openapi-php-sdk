@@ -2,6 +2,15 @@
 
 class OpenApi {
 
+  public \OpenApi\classes\Imprese $imprese;
+  public \OpenApi\classes\ufficiopostale $ufficiopostale;
+  public \OpenApi\classes\comuni $comuni;
+  public \OpenApi\classes\visengine $visengine;
+  public \OpenApi\classes\marcheTemporali $marcheTemporali;
+  public \OpenApi\classes\geocoding $geocoding;
+  public \OpenApi\classes\SMS $SMS;
+  public \OpenApi\classes\firmaDigitale $firmaDigitale;
+  public \OpenApi\classes\pecMassiva $pecMassiva;
   
   /**
    * @param array $scopes              Array con gli scopes da utilizzare nel formato: ["domain"=>"ws.ufficiopostale.com", "method"=>"comuni","mode"=>"GET"] oppure "GET:ws.ufficiopostale.com/comuni NOTA: il dominio NON deve mai avere lo stage
