@@ -38,15 +38,15 @@ A questo punto, in base agli scopes indicati vengono creati i seguenti oggetti:
 
 ```php
 // Ogni oggetto verrá creato solo se disponibile nello scope.
-$openapi->ufficiopostale
-$openapi->comuni
-$openapi->imprese
-$openapi->visengine
-$openapi->marcheTemporali
-$openapi->geocoding
-$openapi->SMS
-$openapi->firmaDigitale
-$openapi->pecMassiva
+$openapi->ufficiopostale;
+$openapi->comuni;
+$openapi->imprese;
+$openapi->visengine;
+$openapi->marcheTemporali;
+$openapi->geocoding;
+$openapi->SMS;
+$openapi->firmaDigitale;
+$openapi->pecMassiva;
 ```
 che possono essere usati al seguente modo:
 
@@ -64,7 +64,7 @@ $scopes = [
     'GET:imprese.altravia.com/advance',
 ];
 
-$openapi = new OpenApi\OpenApi($scopes, 'my_username','my_api_key', 'production');
+$openapi = new OpenApi\OpenApi($scopes, 'my_username','my_api_key', 'test');
 
 // Comuni: prendi informazioni sul cap 00132
 $cap = $openapi->comuni->getCitiesByCap('00132');
@@ -76,14 +76,24 @@ $impresa = $openapi->imprese->getByPartitaIva('12485671007');
 $track = $this->openapi->ufficiopostale->track('123456789'); 
 ```
 
-# Modulo ufficio postale
-## Creare raccomandata
+## Modulo ufficio postale
+### Creare raccomandata
 
 
-# Modulo visure
+## Modulo visure
+### Utilizzo
+Il modulo espone i seguenti metodi: 
+* `sendRequest`
+* `getRequestByIdVisura`
+* `getRequestByData`
+* `getDocument`
+* `setRicerca`
 
-# Modulo imprese
-## Utilizzo
+### `sendRequest($VisRequest)`
+
+
+## Modulo imprese
+### Utilizzo
 Il modulo imprese espone i seguenti metodi:
 * `getByPartitaIva`
 * `getClosed`
@@ -93,3 +103,4 @@ Il modulo imprese espone i seguenti metodi:
 
 Per `getBySearch` e `getByPartitaIva` è richiesto accesso allo scope `/advance`
 
+## Modulo SMS

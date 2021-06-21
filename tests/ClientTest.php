@@ -2,6 +2,7 @@
 
 use OpenApi\classes\utility\UfficioPostale\Objects\Recipient;
 use OpenApi\classes\utility\UfficioPostale\Objects\Sender;
+use OpenApi\classes\utility\VisEngine\VisRequest;
 use OpenApi\OpenApi;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Dotenv\Dotenv;
@@ -26,20 +27,25 @@ final class ClientTest extends TestCase {
         
         // Dichiaro gli scopes necessari
         $this->scopes = [
-            "GET:ws.ufficiopostale.com/telegrammi",
+            "GET:ws.ufficiopostale.com/raccomandate",
             "GET:imprese.altravia.com/autocomplete",
-            "GET:imprese.openapi.it/base",
-            "GET:imprese.openapi.it/advance",
-            "GET:imprese.openapi.it/pec",
-            "GET:imprese.openapi.it/autocomplete",
-            "GET:imprese.openapi.it/closed",
-            "GET:imprese.openapi.it/gruppoiva",
+            "GET:imprese.altravia.com/base",
+            "GET:imprese.altravia.com/advance",
+            "GET:imprese.altravia.com/pec",
+            "GET:imprese.altravia.com/autocomplete",
+            "GET:imprese.altravia.com/closed",
+            "GET:imprese.altravia.com/gruppoiva",
             "GET:comuni.openapi.it/cap",
             "GET:comuni.openapi.it/istat",
             "GET:comuni.openapi.it/regioni",
             "GET:comuni.openapi.it/province",
             "GET:ws.ufficiopostale.com/tracking",
-            "POST:geocoding.realgest.it/geocode"
+            "POST:geocoding.realgest.it/geocode",
+            "POST:ws.messaggisms.com/messages",
+            "GET:ws.messaggisms.com/messages",
+            "PUT:ws.messaggisms.com/messages",
+            "GET:ws.firmadigitale.com/richiesta",
+            "POST:ws.firmadigitale.com/richiesta",
         ];
 
         $this->openapi = new OpenApi($this->scopes, $this->username, $this->api_key, 'test');
@@ -56,36 +62,63 @@ final class ClientTest extends TestCase {
         $this->assertIsArray($cap);
     }
 
+    // public function testImprese() {
+    //     $impresa = $this->openapi->imprese->getByPartitaIva('00966950230');
+    //     $autocomplete = $this->openapi->imprese->getBySearch('*multiservizi*', 'RM');
+    //     $this->assertEquals($impresa->provincia, 'RM');
+    //     $this->assertIsArray($autocomplete);
+    // }
+
     // public function testGeocoding() {
     //     // Prendi informazioni sul cap 00132
     //     $cap = $this->openapi->geocoding->geocode('Via Cristoforo Colombo, Roma RM');
     //     $this->assertIsArray($cap);
     // }
 
-    public function testUfficioPostale() {
-        $track = $this->openapi->ufficiopostale->track($_ENV['TRACK_TEST']);
-        $this->assertEquals(true, $track->success);
-        var_dump($track);
+    // public function testUfficioPostale() {
+    //     $track = $this->openapi->ufficiopostale->track($_ENV['TRACK_TEST']);
+    //     $this->assertEquals(true, $track->success);
+    //     var_dump($track);
 
-        $raccomandata = $this->openapi->ufficiopostale->createRaccomandata();
-        var_dump($raccomandata);
+    //     $raccomandata = $this->openapi->ufficiopostale->createRaccomandata();
+    //     var_dump($raccomandata);
 
-        $data = new stdClass();
-        $sender = new Sender([
-            'firstName' => 'John',
-            'secondName' => 'Doe',
-            'companyName' => 'example-spa',
-        ]);
+    //     $data = new stdClass();
+    //     $sender = new Sender([
+    //         'firstName' => 'John',
+    //         'secondName' => 'Doe',
+    //         'companyName' => 'example-spa',
+    //     ]);
 
-        $recipient = new Recipient([
-            'firstName' => 'John',
-            'secondName' => 'Doe',
-            'companyName' => 'example-spa',
-        ]);
+    //     $recipient = new Recipient([
+    //         'firstName' => 'John',
+    //         'secondName' => 'Doe',
+    //         'companyName' => 'example-spa',
+    //     ]);
 
-        $data->sender = $sender;
-        $data->recipient = $recipient;
+    //     $data->sender = $sender;
+    //     $data->recipient = $recipient;
     
-        $raccomandata->creaRaccomandataByData();
+    //     $raccomandata->creaRaccomandataByData($data);
+    // }
+
+    // public function testSms() {
+    //     $singleSms = $this->openapi->SMS->sendOne('prova', '3939989741', 'messaggio di prova', null, 1, null, true);
+    //     $this->assertIsArray($singleSms);
+    //     var_dump($singleSms);
+    // }
+
+    // public function testVisura() {
+    //     // $visura = new VisRequest('eccbc87e4b5ce2fe28308fd9f2a7baf3');
+    //     $response = $this->openapi->visengine->getRequestByIdVisura('eccbc87e4b5ce2fe28308fd9f2a7baf3');
+    //     $this->assertNotEmpty($response);
+    //     var_dump($response);
+    // }
+
+    public function testFirmaDigitale() { 
+        $data = json_decode(file_get_contents(__DIR__.'/esempio_firma.json'), true);
+        $data['codice_prodotto'] = 'FIR';
+        $response = $this->openapi->firmaDigitale->requestProduct($data);
+        $this->assertNotEmpty($response);
     }
 }
