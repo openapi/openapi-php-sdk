@@ -1,5 +1,7 @@
 <?php
 
+use OpenApi\classes\utility\UfficioPostale\Objects\Recipient;
+use OpenApi\classes\utility\UfficioPostale\Objects\Sender;
 use OpenApi\OpenApi;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Dotenv\Dotenv;
@@ -36,6 +38,7 @@ final class ClientTest extends TestCase {
             "GET:comuni.openapi.it/istat",
             "GET:comuni.openapi.it/regioni",
             "GET:comuni.openapi.it/province",
+            "GET:ws.ufficiopostale.com/tracking",
             "POST:geocoding.realgest.it/geocode"
         ];
 
@@ -53,9 +56,36 @@ final class ClientTest extends TestCase {
         $this->assertIsArray($cap);
     }
 
-    public function testGeocoding() {
-        // Prendi informazioni sul cap 00132
-        $cap = $this->openapi->geocoding->geocode('Via Cristoforo Colombo, Roma RM');
-        $this->assertIsArray($cap);
+    // public function testGeocoding() {
+    //     // Prendi informazioni sul cap 00132
+    //     $cap = $this->openapi->geocoding->geocode('Via Cristoforo Colombo, Roma RM');
+    //     $this->assertIsArray($cap);
+    // }
+
+    public function testUfficioPostale() {
+        $track = $this->openapi->ufficiopostale->track($_ENV['TRACK_TEST']);
+        $this->assertEquals(true, $track->success);
+        var_dump($track);
+
+        $raccomandata = $this->openapi->ufficiopostale->createRaccomandata();
+        var_dump($raccomandata);
+
+        $data = new stdClass();
+        $sender = new Sender([
+            'firstName' => 'John',
+            'secondName' => 'Doe',
+            'companyName' => 'example-spa',
+        ]);
+
+        $recipient = new Recipient([
+            'firstName' => 'John',
+            'secondName' => 'Doe',
+            'companyName' => 'example-spa',
+        ]);
+
+        $data->sender = $sender;
+        $data->recipient = $recipient;
+    
+        $raccomandata->creaRaccomandataByData();
     }
 }

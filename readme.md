@@ -71,9 +71,14 @@ $cap = $openapi->comuni->getCitiesByCap('00132');
 
 // Imprese: prendi informazioni su una specifica impresa
 $impresa = $openapi->imprese->getByPartitaIva('12485671007');
+
+// Ufficio Postale: ottieni informaizoni sul tracking
+$track = $this->openapi->ufficiopostale->track('123456789'); 
 ```
 
 # Modulo ufficio postale
+## Creare raccomandata
+
 
 # Modulo visure
 
