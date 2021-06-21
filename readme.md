@@ -66,10 +66,10 @@ $scopes = [
 
 $openapi = new OpenApi\OpenApi($scopes, 'my_username','my_api_key', 'production');
 
-// Prendi informazioni sul cap 00132
+// Comuni: prendi informazioni sul cap 00132
 $cap = $openapi->comuni->getCitiesByCap('00132');
 
-// Prendi informazioni su una specifica impresa
+// Imprese: prendi informazioni su una specifica impresa
 $impresa = $openapi->imprese->getByPartitaIva('12485671007');
 ```
 
