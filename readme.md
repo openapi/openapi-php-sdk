@@ -83,17 +83,13 @@ $track = $this->openapi->ufficiopostale->track('123456789');
 # Modulo visure
 
 # Modulo imprese
+## Utilizzo
+Il modulo imprese espone i seguenti metodi:
+* `getByPartitaIva`
+* `getClosed`
+* `getVatGroup`
+* `getPec`
+* `getBySearch`
 
-## `getByPartitaIva`
-
-### Introduction
-
-La funzione consente di recuperare i dati aziendali a partire dalla partita IVA
-
-### Description
-
-`function getByPartitaIva(string $partitaIva, $ttl = 86400):object`
-
-* $partitaIva: La partita IVA da cercare
-* $ttl: Time To Release, per quanti secondi la chiamata resta in cache prima di essere effettuata una seconda volta
+Per `getBySearch` e `getByPartitaIva` è richiesto accesso allo scope `/advance`
 
