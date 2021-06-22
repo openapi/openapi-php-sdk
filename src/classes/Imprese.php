@@ -40,7 +40,7 @@ class Imprese extends OpenApiBase {
     
   }
 
-  function getClosed(string $partitaIva, $ttr = 86400){
+  function getClosed(string $partitaIva, $ttr = 86400): object{
     $partitaIva = trim($partitaIva);
     try{
       $data = $this->connect("closed/$partitaIva", "GET", [], $ttr);
@@ -57,7 +57,7 @@ class Imprese extends OpenApiBase {
     }
   }
 
-  function getVatGroup(string $partitaIva, $ttr = 86400){
+  function getVatGroup(string $partitaIva, $ttr = 86400): object {
     $partitaIva = trim($partitaIva);
     try{
       $data = $this->connect("gruppoiva/$partitaIva", "GET", [], $ttr);
@@ -74,7 +74,7 @@ class Imprese extends OpenApiBase {
     }
   }
 
-  function getPec(string $partitaIva, $ttr = 86400){
+  function getPec(string $partitaIva, $ttr = 86400): object {
     $partitaIva = trim($partitaIva);
     try{
       $data = $this->connect("pec/$partitaIva", "GET", [], $ttr);
