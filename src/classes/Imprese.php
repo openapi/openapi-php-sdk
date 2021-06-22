@@ -60,7 +60,7 @@ class Imprese extends OpenApiBase {
   function getVatGroup(string $partitaIva, $ttr = 86400){
     $partitaIva = trim($partitaIva);
     try{
-      $data = $this->connect("gruppoIva/$partitaIva", "GET", [], $ttr);
+      $data = $this->connect("gruppoiva/$partitaIva", "GET", [], $ttr);
       return $data->data;
     }catch (\OpenApi\classes\exception\OpenApiConnectionsException $e){
       
