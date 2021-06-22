@@ -15,7 +15,7 @@ class UfficioPostale extends OpenApiBase {
    
   /**
    * Restiuisce un oggetto di tipo raccomandata
-   * @return object
+   * @return \OpenApi\classes\utility\UfficioPostale\Raccomandata
    */
   function createRaccomandata() {
     return new \OpenApi\classes\utility\UfficioPostale\Raccomandata(function(string $endpoint, $type = "GET", $param = [], $ttr = 0, $force = false, $forceRaw = false){
