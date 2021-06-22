@@ -39,6 +39,7 @@ final class ClientTest extends TestCase {
             "GET:comuni.openapi.it/istat",
             "GET:comuni.openapi.it/regioni",
             "GET:comuni.openapi.it/province",
+            "GET:comuni.openapi.it/catastale",
             "GET:ws.ufficiopostale.com/tracking",
             "POST:geocoding.realgest.it/geocode",
             "POST:ws.messaggisms.com/messages",
@@ -56,18 +57,36 @@ final class ClientTest extends TestCase {
         $this->assertInstanceOf('OpenApi\OpenApi', $this->openapi);
     }
 
-    public function testComuni() {
-        // Prendi informazioni sul cap 00132
-        $cap = $this->openapi->comuni->getCitiesByCap('00132');
-        $this->assertIsArray($cap);
-    }
+    // public function testComuni() {
+    //     // Prendi informazioni sul cap 00132
+    //     $cap = $this->openapi->comuni->getCitiesByCap('00132');
+    //     $comune = $this->openapi->comuni->getComuneByCatasto('117');
+    //     $comuni = $this->openapi->comuni->getComuni('RM');
+    //     $regioni = $this->openapi->comuni->getRegioni();
+    //     $provincie = $this->openapi->comuni->getProvince();
+        
+    //     $this->assertIsArray($cap);
+    //     $this->assertIsArray($comune);
+    //     $this->assertIsArray($comuni);
+    //     $this->assertIsArray($regioni);
+    //     $this->assertIsArray($provincie);
 
-    // public function testImprese() {
-    //     $impresa = $this->openapi->imprese->getByPartitaIva('00966950230');
-    //     $autocomplete = $this->openapi->imprese->getBySearch('*multiservizi*', 'RM');
-    //     $this->assertEquals($impresa->provincia, 'RM');
-    //     $this->assertIsArray($autocomplete);
+    //     var_dump($comuni[0]->nome);
     // }
+
+    public function testImprese() {
+        $impresa = $this->openapi->imprese->getByPartitaIva('00966950230');
+        $autocomplete = $this->openapi->imprese->getBySearch('*multiservizi*', 'RM');
+        $closed = $this->openapi->imprese->getClosed('00966950230');
+        $vat = $this->openapi->imprese->getVatGroup('00966950230');
+        $Pec = $this->openapi->imprese->getPec('00966950230');
+
+        $this->assertEquals($impresa->provincia, 'RM');
+        $this->assertIsArray($autocomplete);
+        $this->assertIsBool($closed->cessata);
+        $this->assertIsObject($vat);
+        $this->assertIsObject($Pec);
+    }
 
     // public function testGeocoding() {
     //     // Prendi informazioni sul cap 00132
@@ -115,10 +134,10 @@ final class ClientTest extends TestCase {
     //     var_dump($response);
     // }
 
-    public function testFirmaDigitale() { 
-        $data = json_decode(file_get_contents(__DIR__.'/esempio_firma.json'), true);
-        $data['codice_prodotto'] = 'FIR';
-        $response = $this->openapi->firmaDigitale->requestProduct($data);
-        $this->assertNotEmpty($response);
-    }
+    // public function testFirmaDigitale() { 
+    //     $data = json_decode(file_get_contents(__DIR__.'/esempio_firma.json'), true);
+    //     $data['codice_prodotto'] = 'FIR';
+    //     $response = $this->openapi->firmaDigitale->requestProduct($data);
+    //     $this->assertNotEmpty($response);
+    // }
 }
