@@ -76,11 +76,44 @@ $impresa = $openapi->imprese->getByPartitaIva('12485671007');
 $track = $this->openapi->ufficiopostale->track('123456789'); 
 ```
 
-## Modulo ufficio postale
-### Creare raccomandata
+<!-- ## Modulo ufficio postale
+### Creare raccomandata -->
+
+## Modulo comuni
+Consente di prendere informazioni su comuni e provincie.
+
+* `getCitiesByCap`
+* `getComuneByCatasto`
+* `getRegioni`
+* `getProvince`
+* `getComuni`
+
+### Esempi
+
+```php
+$provincia = 'RM';
+$comuni = $this->openapi->comuni->getComuni($provincia);
+
+var_dump($comuni['comuni']); 
+/*
+
+["nome_provincia"]=>
+  string(4) "Roma"
+  ["sigla_provincia"]=>
+  string(2) "RM"
+  ["regione"]=>
+  string(5) "Lazio"
+  ["comuni"]=>
+  array(121) {
+    [0]=>
+    string(6) "Affile"
+    ...
+*/
 
 
-## Modulo visure
+```
+
+<!-- ## Modulo visure
 ### Utilizzo
 Il modulo espone i seguenti metodi: 
 * `sendRequest`
@@ -89,7 +122,7 @@ Il modulo espone i seguenti metodi:
 * `getDocument`
 * `setRicerca`
 
-### `sendRequest($VisRequest)`
+### `sendRequest($VisRequest)` -->
 
 
 ## Modulo imprese
@@ -103,4 +136,48 @@ Il modulo imprese espone i seguenti metodi:
 
 Per `getBySearch` e `getByPartitaIva` è richiesto accesso allo scope `/advance`
 
-## Modulo SMS
+### Esempi
+Utilizziamo `getBySearch` per cercare un'azienda il cui nome inizia con  `Altrav` a Roma
+
+```php
+$autocomplete = $this->openapi->imprese->getBySearch('Altrav*', 'RM');
+
+/*
+ [0]=>
+  object(stdClass)#41 (10) {
+    ["piva"]=>
+    string(11) "12485671007"
+    ["cf"]=>
+    string(11) "12485671007"
+    ["denominazione"]=>
+    string(20) "ALTRAVIA SERVIZI SRL"
+ [1]=>
+  object(stdClass)#42 (10) {
+    ["id"]=>
+    string(24) "4242424242"
+    ["denominazione"]=>
+    string(18) "xxx Altravia Esempio 2"
+    ...
+ */
+```
+
+## Modulo Marche Temporali
+* `availability`
+* `checkLotto`
+* `purcahse`
+
+### Esempi
+
+```php
+// Controlliamo la disponibilitá di una marca di inforcert o aruba
+$disponibilita = $this->openapi->marcheTemporali->availability('infocert', 1);
+
+// Se le marche sono disponibili, acquistiamone una
+if ($disponibilita->availability > 0) {
+    try {
+        $marca = $this->openapi->marcheTemporali->purcahse('infocert', 1);
+    } catch (\OpenApi\classes\exception\OpenApiMarcheTemporaliException $e) {
+        error_log(var_dump($e));
+    }
+}
+```

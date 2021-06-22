@@ -47,6 +47,12 @@ final class ClientTest extends TestCase {
             "PUT:ws.messaggisms.com/messages",
             "GET:ws.firmadigitale.com/richiesta",
             "POST:ws.firmadigitale.com/richiesta",
+            "GET:ws.marchetemporali.com/availability",
+            "GET:ws.marchetemporali.com/marche",
+            "POST:ws.marchetemporali.com/check_lotto",
+            "POST:ws.marchetemporali.com/marca",
+            "POST:ws.marchetemporali.com/verifica",
+            "POST:ws.marchetemporali.com/analisi",
         ];
 
         $this->openapi = new OpenApi($this->scopes, $this->username, $this->api_key, 'test');
@@ -74,18 +80,26 @@ final class ClientTest extends TestCase {
     //     var_dump($comuni[0]->nome);
     // }
 
-    public function testImprese() {
-        $impresa = $this->openapi->imprese->getByPartitaIva('00966950230');
-        $autocomplete = $this->openapi->imprese->getBySearch('*multiservizi*', 'RM');
-        $closed = $this->openapi->imprese->getClosed('00966950230');
-        $vat = $this->openapi->imprese->getVatGroup('00966950230');
-        $Pec = $this->openapi->imprese->getPec('00966950230');
+    // public function testImprese() {
+    //     $impresa = $this->openapi->imprese->getByPartitaIva('00966950230');
+    //     $autocomplete = $this->openapi->imprese->getBySearch('Altrav*', 'RM');
+    //     $closed = $this->openapi->imprese->getClosed('00966950230');
+    //     $vat = $this->openapi->imprese->getVatGroup('00966950230');
+    //     $Pec = $this->openapi->imprese->getPec('00966950230');
 
-        $this->assertEquals($impresa->provincia, 'RM');
-        $this->assertIsArray($autocomplete);
-        $this->assertIsBool($closed->cessata);
-        $this->assertIsObject($vat);
-        $this->assertIsObject($Pec);
+    //     $this->assertEquals($impresa->provincia, 'RM');
+    //     $this->assertIsArray($autocomplete);
+    //     var_dump($autocomplete);
+    //     $this->assertIsBool($closed->cessata);
+    //     $this->assertIsObject($vat);
+    //     $this->assertIsObject($Pec);
+    // }
+
+    public function testMarche() {
+        $marca = $this->openapi->marcheTemporali->availability('infocert', 1);
+        $comprata = $this->openapi->marcheTemporali->purcahse('infocert', 1);
+
+        $this->assertIsInt($marca->availability);
     }
 
     // public function testGeocoding() {
