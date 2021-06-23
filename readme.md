@@ -206,7 +206,9 @@ Possiamo ora procedere ad inviare un SMS:
 ```php
 
 try {
-    $singleSms = $this->openapi->SMS->sendOne('Nome del mittente', $recipient, 'lorem ipsum', null, 1, null);
+    $priority = 1;
+    $options = null;
+    $singleSms = $this->openapi->SMS->sendOne('Nome del mittente', $recipient, 'lorem ipsum', null, $priority, $options);
 } catch (\OpenApi\classes\exception\OpenApiConnectionsException $e) {
     throw 'Non è stato possibile recapitare il messaggio';
 }
