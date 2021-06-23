@@ -37,8 +37,8 @@ final class ClientTest extends TestCase {
             "GET:imprese.altravia.com/gruppoiva",
             "GET:comuni.openapi.it/cap",
             "GET:comuni.openapi.it/istat",
-            "GET:comuni.openapi.it/regioni",
             "GET:comuni.openapi.it/province",
+            "GET:comuni.openapi.it/regioni",
             "GET:comuni.openapi.it/catastale",
             "GET:ws.ufficiopostale.com/tracking",
             "POST:geocoding.realgest.it/geocode",
@@ -95,12 +95,12 @@ final class ClientTest extends TestCase {
     //     $this->assertIsObject($Pec);
     // }
 
-    public function testMarche() {
-        $marca = $this->openapi->marcheTemporali->availability('infocert', 1);
-        $comprata = $this->openapi->marcheTemporali->purcahse('infocert', 1);
+    // public function testMarche() {
+    //     $marca = $this->openapi->marcheTemporali->availability('infocert', 1);
+    //     $comprata = $this->openapi->marcheTemporali->purcahse('infocert', 1);
 
-        $this->assertIsInt($marca->availability);
-    }
+    //     $this->assertIsInt($marca->availability);
+    // }
 
     // public function testGeocoding() {
     //     // Prendi informazioni sul cap 00132
@@ -135,11 +135,20 @@ final class ClientTest extends TestCase {
     //     $raccomandata->creaRaccomandataByData($data);
     // }
 
-    // public function testSms() {
-    //     $singleSms = $this->openapi->SMS->sendOne('prova', '3939989741', 'messaggio di prova', null, 1, null, true);
-    //     $this->assertIsArray($singleSms);
-    //     var_dump($singleSms);
-    // }
+    public function testSms() {
+        $recipients = [
+            [
+                'number' => '+39-3939989741', 
+                'fields' => ['nome' => 'NomeDestinatario']
+            ]
+        ];
+        $singleSms = $this->openapi->SMS->sendOne('test', '+39-3939989741', 'prova', null, 1, null, true);
+
+        $message = $this->openapi->SMS->getMessage($singleSms->data->id);
+        
+        $this->assertEquals(true, $singleSms->success);
+        $this->assertEquals(true, $message['success']);
+    }
 
     // public function testVisura() {
     //     // $visura = new VisRequest('eccbc87e4b5ce2fe28308fd9f2a7baf3');

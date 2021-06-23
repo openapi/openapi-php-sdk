@@ -181,3 +181,44 @@ if ($disponibilita->availability > 0) {
     }
 }
 ```
+
+## Modulo SMS
+* `getRecipients`
+* `getMessage`
+* `sendMore`
+* `sendOne`
+
+### Inviare un SMS
+Per inviare un SMS, per prima cosa definiamo i destinatari:
+
+```php
+$recipient = '+39-3939989741';
+// OR
+$recipients = [
+    [
+        'number' => '+39-3939989741', 
+        'fields' => ['nome' => 'NomeDestinatario']
+    ]
+];
+```
+
+Possiamo ora procedere ad inviare un SMS:
+```php
+
+try {
+    $singleSms = $this->openapi->SMS->sendOne('Nome del mittente', $recipient, 'lorem ipsum', null, 1, null);
+} catch (\OpenApi\classes\exception\OpenApiConnectionsException $e) {
+    throw 'Non è stato possibile recapitare il messaggio';
+}
+```
+
+Possiamo anche speficiare i prefissi in modo indipendente:
+```php
+$this->openapi->SMS->sendOne('Nome del mittente', '3939989741', 'lorem ipsum', '+42', 1, null);
+```
+
+O passare delle opzioni
+```php
+$options = ['timestamp_send' => '2021-04-20']
+$this->openapi->SMS->sendOne('Nome del mittente', '3939989741', 'lorem ipsum', '+42', 1, $options);
+```
