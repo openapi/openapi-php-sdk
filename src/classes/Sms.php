@@ -75,9 +75,11 @@ class Sms extends OpenApiBase {
     $param['recipients'] = $recipients;
     $param['body'] = $text;
     $param['transaction'] = $transaction;
-    if($options != NULL){
-      $param['priority'] = $priority;
+    $param['priority'] = $priority;
+    if(sizeof($options)){
+      $param['options'] = $options;
     }
+
     try{
       $data = $this->connect("messages/", "POST", $param);
       if(isset($data->data[0]) && $transaction){
@@ -94,8 +96,10 @@ class Sms extends OpenApiBase {
     }
   }
 
-
-  function sendOne($sender, $recipient, $text, $prefix = NULL, $priority = 1,$options = NULL, $test = false){
+  /**
+   * @param number $priority un moltiplicatore per la priorita di invio 
+   */
+  function sendOne($sender, $recipient, $text, $prefix = NULL, $priority = 1,$options = [], $test = false){
     if($prefix != NULL){
       $recipient = $prefix."-".$recipient;
     }
@@ -105,8 +109,9 @@ class Sms extends OpenApiBase {
     $param['recipients'] = $recipient;
     $param['body'] = $text;
     $param['transaction'] = FALSE;
-    if($options != NULL){
-      $param['priority'] = $priority;
+    $param['priority'] = $priority;
+    if(sizeof($options)){
+      $param['options'] = $options;
     }
     
     try{
