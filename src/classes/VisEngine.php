@@ -154,6 +154,9 @@ class VisEngine extends OpenApiBase {
     return $request;
   }
 
+  /**
+   * Nel caso arrivino dei risultati di ricerca, seleziona il risultato richiesto
+   */
   function setRicerca($id_visura, $id_ricerca, $index){
     $index = str_replace("indice_","",$index);
     $request = $this->getRequestByIdVisura($id_visura);
