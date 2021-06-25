@@ -224,3 +224,26 @@ O passare delle opzioni
 $options = ['timestamp_send' => '2021-04-20']
 $this->openapi->SMS->sendOne('Nome del mittente', '3939989741', 'lorem ipsum', '+42', 1, $options);
 ```
+
+## Modulo Visengine
+Come prima cosa, settiamo l'hash della visura che vogliamo richiedere
+
+```php
+// https://developers.openapi.it/services/visengine
+$this->openapi->visengine->setHash($visura->hash);
+```
+
+A questo punto, possiamo lanciare `createRequest`, che ritornerà una istanza vuota della visura che andremo a creare della struttura richiesta
+
+```php
+$request = $this->openapi->visengine->createRequest();
+```
+
+Prodediamo a completare l'oggetto, che potremmo passare a sendRequest quando pronto
+
+```php
+$request->setJson(['$0' => 'abcd', '$1' => '12485671007']);
+                    // url di callback,  oggetto con dati aggiuntivi, metodo
+$request->setCallbackData('https://example.com', new stdClass(), 'POST');
+$visura = $this->openapi->visengine->sendRequest($request);
+```
