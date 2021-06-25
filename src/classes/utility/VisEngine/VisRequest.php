@@ -51,7 +51,7 @@ class VisRequest {
    * 
    * @return boolean Ritorna TRUE nel caso in cui tutti i campi richiesti per la visura sono stati compilati (attenzione, viene effettuata la sola validazione sui required, per la validazione del formato occcorre inviare la visura)
    */
-  function setJson(object $data){
+  function setJson(array $data){
     foreach($data as $k => $v){
       if(!isset($this->variables[$k])){
         throw new \OpenApi\classes\exception\OpenApiVisEngineException("Visengine you are setting $k json key, but $k key is not presente for {$this->visura->data->nome_visura}",40006);
