@@ -1,14 +1,39 @@
 # OpenAPI Library
 
-## Installation
+<!-- vscode-markdown-toc -->
+* 1. [Installation](#Installation)
+* 2. [Usage](#Usage)
+	* 2.1. [Instanza della classe](#Instanzadellaclasse)
+	* 2.2. [Esempi](#Esempi)
+	* 2.3. [Creare raccomandata -->](#Creareraccomandata--)
+* 3. [Modulo comuni](#Modulocomuni)
+	* 3.1. [Esempi](#Esempi-1)
+	* 3.2. [Utilizzo](#Utilizzo)
+	* 3.3. [`sendRequest($VisRequest)` -->](#sendRequestVisRequest--)
+* 4. [Modulo imprese](#Moduloimprese)
+	* 4.1. [Utilizzo](#Utilizzo-1)
+	* 4.2. [Esempi](#Esempi-1)
+* 5. [Modulo Marche Temporali](#ModuloMarcheTemporali)
+	* 5.1. [Esempi](#Esempi-1)
+* 6. [Modulo SMS](#ModuloSMS)
+	* 6.1. [Inviare un SMS](#InviareunSMS)
+* 7. [Modulo Visengine](#ModuloVisengine)
+
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
+
+##  1. <a name='Installation'></a>Installation
 
 ```sh
 composer require altravia/openapi
 ```
 
-## Usage
+##  2. <a name='Usage'></a>Usage
 
-### Instanza della classe
+###  2.1. <a name='Instanzadellaclasse'></a>Instanza della classe
 
 ```php
 require_once 'vendor/autoload.php';
@@ -53,7 +78,7 @@ che possono essere usati al seguente modo:
 ```php
 $this->openapi->ufficioposale->getCitiesByCap('00132');
 ```
-### Esempi 
+###  2.2. <a name='Esempi'></a>Esempi 
 
 ```php
 require_once 'vendor/autoload.php';
@@ -77,9 +102,9 @@ $track = $this->openapi->ufficiopostale->track('123456789');
 ```
 
 <!-- ## Modulo ufficio postale
-### Creare raccomandata -->
+###  2.3. <a name='Creareraccomandata--'></a>Creare raccomandata -->
 
-## Modulo comuni
+##  3. <a name='Modulocomuni'></a>Modulo comuni
 Consente di prendere informazioni su comuni e provincie.
 
 * `getCitiesByCap`
@@ -88,7 +113,7 @@ Consente di prendere informazioni su comuni e provincie.
 * `getProvince`
 * `getComuni`
 
-### Esempi
+###  3.1. <a name='Esempi-1'></a>Esempi
 
 ```php
 $provincia = 'RM';
@@ -114,7 +139,7 @@ var_dump($comuni['comuni']);
 ```
 
 <!-- ## Modulo visure
-### Utilizzo
+###  3.2. <a name='Utilizzo'></a>Utilizzo
 Il modulo espone i seguenti metodi: 
 * `sendRequest`
 * `getRequestByIdVisura`
@@ -122,11 +147,11 @@ Il modulo espone i seguenti metodi:
 * `getDocument`
 * `setRicerca`
 
-### `sendRequest($VisRequest)` -->
+###  3.3. <a name='sendRequestVisRequest--'></a>`sendRequest($VisRequest)` -->
 
 
-## Modulo imprese
-### Utilizzo
+##  4. <a name='Moduloimprese'></a>Modulo imprese
+###  4.1. <a name='Utilizzo-1'></a>Utilizzo
 Il modulo imprese espone i seguenti metodi:
 * `getByPartitaIva`
 * `getClosed`
@@ -136,7 +161,7 @@ Il modulo imprese espone i seguenti metodi:
 
 Per `getBySearch` e `getByPartitaIva` è richiesto accesso allo scope `/advance`
 
-### Esempi
+###  4.2. <a name='Esempi-1'></a>Esempi
 Utilizziamo `getBySearch` per cercare un'azienda il cui nome inizia con  `Altrav` a Roma
 
 ```php
@@ -161,12 +186,12 @@ $autocomplete = $this->openapi->imprese->getBySearch('Altrav*', 'RM');
  */
 ```
 
-## Modulo Marche Temporali
+##  5. <a name='ModuloMarcheTemporali'></a>Modulo Marche Temporali
 * `availability`
 * `checkLotto`
 * `purcahse`
 
-### Esempi
+###  5.1. <a name='Esempi-1'></a>Esempi
 
 ```php
 // Controlliamo la disponibilitá di una marca di inforcert o aruba
@@ -182,13 +207,13 @@ if ($disponibilita->availability > 0) {
 }
 ```
 
-## Modulo SMS
+##  6. <a name='ModuloSMS'></a>Modulo SMS
 * `getRecipients`
 * `getMessage`
 * `sendMore`
 * `sendOne`
 
-### Inviare un SMS
+###  6.1. <a name='InviareunSMS'></a>Inviare un SMS
 Per inviare un SMS, per prima cosa definiamo i destinatari:
 
 ```php
@@ -225,7 +250,7 @@ $options = ['timestamp_send' => '2021-04-20']
 $this->openapi->SMS->sendOne('Nome del mittente', '3939989741', 'lorem ipsum', '+42', 1, $options);
 ```
 
-## Modulo Visengine
+##  7. <a name='ModuloVisengine'></a>Modulo Visengine
 Come prima cosa, settiamo l'hash della visura che vogliamo richiedere
 
 ```php
