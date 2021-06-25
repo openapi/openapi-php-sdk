@@ -50,6 +50,16 @@ final class ClientTest extends TestCase {
             "GET:ws.marchetemporali.com/availability",
             "GET:ws.marchetemporali.com/marche",
             "POST:ws.marchetemporali.com/check_lotto",
+            "GET:visengine2.altravia.com/fornitori",
+            "GET:ws.leicode.info/lei-records",
+            "POST:ws.leicode.info/create-lei",
+            "POST:ws.leicode.info/renew-lei",
+            "DELETE:visengine2.altravia.com/richiesta",
+            "GET:visengine2.altravia.com/visure",
+            "POST:visengine2.altravia.com/richiesta",
+            "PUT:visengine2.altravia.com/richiesta",
+            "GET:visengine2.altravia.com/richiesta",
+            "GET:visengine2.altravia.com/documento",
             "POST:ws.marchetemporali.com/marca",
             "POST:ws.marchetemporali.com/verifica",
             "POST:ws.marchetemporali.com/analisi",
@@ -135,27 +145,30 @@ final class ClientTest extends TestCase {
     //     $raccomandata->creaRaccomandataByData($data);
     // }
 
-    public function testSms() {
-        $recipients = [
-            [
-                'number' => '+39-3939989741', 
-                'fields' => ['nome' => 'NomeDestinatario']
-            ]
-        ];
-        $singleSms = $this->openapi->SMS->sendOne('test', '+39-3939989741', 'prova', null, 1, null, true);
+    // public function testSms() {
+    //     $recipients = [
+    //         [
+    //             'number' => '+39-3939989741', 
+    //             'fields' => ['nome' => 'NomeDestinatario']
+    //         ]
+    //     ];
+    //     $singleSms = $this->openapi->SMS->sendOne('test', '+39-3939989741', 'prova', null, 1, null, true);
 
-        $message = $this->openapi->SMS->getMessage($singleSms->data->id);
+    //     $message = $this->openapi->SMS->getMessage($singleSms->data->id);
         
-        $this->assertEquals(true, $singleSms->success);
-        $this->assertEquals(true, $message['success']);
-    }
-
-    // public function testVisura() {
-    //     // $visura = new VisRequest('eccbc87e4b5ce2fe28308fd9f2a7baf3');
-    //     $response = $this->openapi->visengine->getRequestByIdVisura('eccbc87e4b5ce2fe28308fd9f2a7baf3');
-    //     $this->assertNotEmpty($response);
-    //     var_dump($response);
+    //     $this->assertEquals(true, $singleSms->success);
+    //     $this->assertEquals(true, $message['success']);
     // }
+
+    public function testVisura() {
+        $this->openapi->visengine->setHash('eccbc87e4b5ce2fe28308fd9f2a7baf3');
+        $visura = $this->openapi->visengine->createRequest();
+        var_dump($visura);
+        
+        $response = $this->openapi->visengine->getRequestByIdVisura('eccbc87e4b5ce2fe28308fd9f2a7baf3');
+        $this->assertNotEmpty($response);
+        // var_dump($response);
+    }
 
     // public function testFirmaDigitale() { 
     //     $data = json_decode(file_get_contents(__DIR__.'/esempio_firma.json'), true);
@@ -163,4 +176,49 @@ final class ClientTest extends TestCase {
     //     $response = $this->openapi->firmaDigitale->requestProduct($data);
     //     $this->assertNotEmpty($response);
     // }
+    // public function testcreaVisura() {
+
+    //     $this->openapi->visengine->setHash($visura->hash);
+    //     $request = $this->openapi->visengine->createRequest();
+    //     $res = $request->setJson((object)$json);
+    //     if($request->isValidJson() && !$visura->show_form){
+    //         $request->setState(1);
+    //         $request->setCallbackData(site_url("callbacks/ordini/visure"),(object)["order_id"=>"".$order_id, "detail_key"=>$detail_key]);
+    //         $request = $this->openapi->visengine->sendRequest($request);
+    //     }
+    // }
+
+    // public function callbackVisura(Request $data) {
+    //     $data =json_decode(file_get_contents('php://input'));
+    //     $request = $this->openapi->visengine->getRequestByData($data);
+    //     $ret['id'] = $request->getId();
+    //     $ret['stato'] = $request->getStatoRichiesta();
+    //     $ret['stato_ricerca'] = $request->getStatoRicerca();
+    //     if($request->hasSearchResult()){
+    //         $ret['ricerche'] = $request->getSearchResult();
+    //         $ret['search_count'] = $request->getSearchCount();
+    //         $ret['has_search_result'] =  TRUE;
+    //         $ret['search_id'] = $request->getSearchId();
+    //     }else{
+    //         if($request->getStatoRichiesta() == "Dati disponibili" || $request->getStatoRichiesta() == "Visura evasa"){
+    //             $document =  $this->openapi->visengine->getDocument($id_visura)->getDocument();
+    //             if($document != NULL && $document->file != ""){
+    //                  $has_document = TRUE;
+    //                  //salviamo il file
+    //                 file_put_contents("writable/documenti/{$id_visura}.bin", $document->file);
+    //             }
+    //         }
+    //     }
+    // }
+
+    public function testcreaVisura() {
+
+        $this->openapi->visengine->setHash('8f14e45fceea167a5a36dedd4bea2543');
+        $request = $this->openapi->visengine->createRequest();
+        $request->setState(1);
+        $request->setCallbackData('https://example.com', new stdClass(), 'POST');
+        $request->setJson(['$0' => 'abcd', '$1' => '12485671007']);
+        $visura = $this->openapi->visengine->sendRequest($request);
+
+    }
 }
