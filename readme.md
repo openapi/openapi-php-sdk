@@ -5,13 +5,10 @@
 * 2. [Usage](#Usage)
 	* 2.1. [Instanza della classe](#Instanzadellaclasse)
 	* 2.2. [Esempi](#Esempi)
-	* 2.3. [Creare raccomandata -->](#Creareraccomandata--)
 * 3. [Modulo comuni](#Modulocomuni)
 	* 3.1. [Esempi](#Esempi-1)
-	* 3.2. [Utilizzo](#Utilizzo)
-	* 3.3. [`sendRequest($VisRequest)` -->](#sendRequestVisRequest--)
 * 4. [Modulo imprese](#Moduloimprese)
-	* 4.1. [Utilizzo](#Utilizzo-1)
+	* 4.1. [Utilizzo](#Utilizzo)
 	* 4.2. [Esempi](#Esempi-1)
 * 5. [Modulo Marche Temporali](#ModuloMarcheTemporali)
 	* 5.1. [Esempi](#Esempi-1)
@@ -24,6 +21,7 @@
 	autoSave=true
 	/vscode-markdown-toc-config -->
 <!-- /vscode-markdown-toc -->
+
 
 ##  1. <a name='Installation'></a>Installation
 
@@ -101,8 +99,6 @@ $impresa = $openapi->imprese->getByPartitaIva('12485671007');
 $track = $this->openapi->ufficiopostale->track('123456789'); 
 ```
 
-<!-- ## Modulo ufficio postale
-###  2.3. <a name='Creareraccomandata--'></a>Creare raccomandata -->
 
 ##  3. <a name='Modulocomuni'></a>Modulo comuni
 Consente di prendere informazioni su comuni e provincie.
@@ -138,20 +134,8 @@ var_dump($comuni['comuni']);
 
 ```
 
-<!-- ## Modulo visure
-###  3.2. <a name='Utilizzo'></a>Utilizzo
-Il modulo espone i seguenti metodi: 
-* `sendRequest`
-* `getRequestByIdVisura`
-* `getRequestByData`
-* `getDocument`
-* `setRicerca`
-
-###  3.3. <a name='sendRequestVisRequest--'></a>`sendRequest($VisRequest)` -->
-
-
 ##  4. <a name='Moduloimprese'></a>Modulo imprese
-###  4.1. <a name='Utilizzo-1'></a>Utilizzo
+###  4.1. <a name='Utilizzo'></a>Utilizzo
 Il modulo imprese espone i seguenti metodi:
 * `getByPartitaIva`
 * `getClosed`
