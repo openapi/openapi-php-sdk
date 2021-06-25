@@ -39,7 +39,7 @@ class VisEngine extends OpenApiBase {
    * Prepara un nuovo oggetto di tipo VisRequest da utilizzare per inviare una nuova richiesta e lo restituisce
    * @param int $ttr Time to Release sulla richiesta dei dati della visura
    * 
-   * @return object
+   * @return \OpenApi\classes\utility\VisEngine\VisRequest
    */
   function createRequest($ttr = 500){
     if($this->hash == NULL){
