@@ -1,21 +1,30 @@
 # OpenAPI Library
 
+## Installation
+
+```sh
+composer require altravia/openapi
+```
+
 ## Usage
 
 ### Instanza della classe
 
-```
+```php
  $this->openapi = new \OpenApi\OpenApi($scopes,$user,$apikey,"test");
 ```
 
-Dove ```$scopes``` è un array di stringhe o di oggetti in uno dei seguenti formati:
+Dove `$scopes` è un array di stringhe o di oggetti in uno dei seguenti formati:
 
 ```php
 $scopes=[
-"GET:ws.ufficiopostale.com/comuni",
-["domain"=>"ws.ufficiopostale.com", "method"=>"comuni","mode"=>"GET"]
+    "GET:ws.ufficiopostale.com/comuni",
+    ["domain"=>"ws.ufficiopostale.com", "method"=>"comuni","mode"=>"GET"]
 ];
 ```
+
+...e `$environment` è l'ambiente sceltro tra `'test'` (default) e `'production'`
+
 
 A questo punto, in base agli scopes indicati vengono creati i seguenti oggetto:
 
@@ -49,3 +58,4 @@ La funzione consente di recuperare i dati aziendali a partire dalla partita IVA
 
 * $partitaIva: La partita IVA da cercare
 * $ttl: Time To Release, per quanti secondi la chiamata resta in cache prima di essere effettuata una seconda volta
+
