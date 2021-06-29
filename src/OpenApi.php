@@ -88,6 +88,9 @@ class OpenApi {
       $moduli['imprese.altravia.com'] = "\\OpenApi\\classes\\Imprese";
       $nomi['imprese.altravia.com'] = "imprese";
 
+      $moduli['imprese.openapi.it'] = "\\OpenApi\\classes\\ImpreseOpenapi";
+      $nomi['imprese.openapi.it'] = "imprese";
+
       $moduli['visengine2.altravia.com'] = "\\OpenApi\\classes\\VisEngine";
       $nomi['visengine2.altravia.com'] = "visengine";
 
