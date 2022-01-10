@@ -143,10 +143,14 @@ class VisEngine extends OpenApiBase {
   }
 
   function getDocument($id_visura){
+   
     ini_set("memory_limit","1024M");
+
     $request = $this->getRequestByIdVisura($id_visura);
+    
     $documento = $this->connect("documento/{$id_visura}", "GET", [], 0);
-    //var_dump($documento);exit;
+    
+    
     if($request->getStatoRichiesta() == "Dati disponibili" || $request->getStatoRichiesta() == "Visura evasa"){
 
       $request->setDocument($documento->data);

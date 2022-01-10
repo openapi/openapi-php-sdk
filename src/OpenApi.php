@@ -114,6 +114,10 @@ class OpenApi {
 
       $moduli['pec.openapi.it'] = "\\OpenApi\\classes\\Pec";
       $nomi['pec.openapi.it'] = "PEC";
+
+      $moduli['catasto.openapi.it'] = "\\OpenApi\\classes\\Catasto";
+      $nomi['catasto.openapi.it'] = "catasto";
+      
       $moduli['ws.firmadigitale.com'] = "\\OpenApi\\classes\\FirmaDigitale";
       $nomi['ws.firmadigitale.com'] = "firmaDigitale";
       return array($moduli,$nomi);

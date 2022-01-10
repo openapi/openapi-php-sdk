@@ -13,6 +13,23 @@ class ImpreseOpenapi extends OpenApiBase {
     $this->basePath = "https://imprese.openapi.it";
   }
 
+  function getFormaGiuridica($codice, $ttr=86400){
+    $codice = trim($codice);
+    try{
+      $data = $this->connect("forma_giuridica/$codice", "GET", [], $ttr);
+      return $data->data;
+    }catch (\OpenApi\classes\exception\OpenApiConnectionsException $e){
+      
+      if($e->getHTTPCode() == 404){
+        return null;
+      }
+      throw $e;
+      
+      
+      exit;
+    }
+  }
+
   /**
    * 
    * Consente di recuperare i dati di una azienda a partire dalla partita IVA
