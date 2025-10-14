@@ -1,5 +1,5 @@
 <?php
-namespace OpenApi\classes\utility\Uploader;
+namespace Openapi\classes\utility\Uploader;
 class Collection {
   private $output = null;
   private $id = null;
@@ -31,7 +31,7 @@ class Collection {
   function save($state = false){
     $state = (bool)$state;
     if($this->getOutput() == NULL){
-      throw new \OpenApi\classes\exception\OpenApiUploaderException("Output format not setted",40017);
+      throw new \Openapi\classes\exception\OpenapiUploaderException("Output format not setted",40017);
     }
     $this->state = $state;
     $data['output_format'] = $this->getOutput();
@@ -125,7 +125,7 @@ class Collection {
   }
   function setOutput($output){
     if($output != "image/png" && $output != "image/jpeg" && $output != "application/pdf"){
-      throw new \OpenApi\classes\exception\OpenApiUploaderException("Output format not valid",40013);
+      throw new \Openapi\classes\exception\OpenapiUploaderException("Output format not valid",40013);
     }
     if($output == "image/png" || $output == "image/jpeg") {
       $this->outputGroup = false;
@@ -181,7 +181,7 @@ class Collection {
   }
   function setOutputGroup($outputGroup){
     if($outputGroup && ($this->output == "image/png" || $this->output == "image/jpeg")){
-      throw new \OpenApi\classes\exception\OpenApiUploaderException("Output group not valid",40015);
+      throw new \Openapi\classes\exception\OpenapiUploaderException("Output group not valid",40015);
     }
     $this->outputGroup = $outputGroup;
   }
@@ -212,7 +212,7 @@ class Collection {
     }
     foreach($types as $t){
       if($t != "image/png" && $t != "image/jpeg" && $t != "application/pdf"){
-        throw new \OpenApi\classes\exception\OpenApiUploaderException("Input type not valid",40016);
+        throw new \Openapi\classes\exception\OpenapiUploaderException("Input type not valid",40016);
       }
     }
     $this->inputTypes = $types;
@@ -233,11 +233,11 @@ class Collection {
     }
     if($this->output == "application/pdf"){
       if(!in_array($this->outputSize,$this->validPdfFormats)){
-        throw new \OpenApi\classes\exception\OpenApiUploaderException("Output size not valid",40014);
+        throw new \Openapi\classes\exception\OpenapiUploaderException("Output size not valid",40014);
       }
     }else{
       if(!is_array($this->outputSize) || !isset($this->outputSize[0])  || !isset($this->outputSize[1]) || !is_int($this->outputSize[0]) || !is_int($this->outputSize[1])){
-        throw new \OpenApi\classes\exception\OpenApiUploaderException("Output size not valid",40014);
+        throw new \Openapi\classes\exception\OpenapiUploaderException("Output size not valid",40014);
       }
     }
   }
@@ -260,7 +260,7 @@ class Collection {
 
   function addDocument($name, $type,$file,$crop_size = null){
     if($this->id == NULL){
-      throw new \OpenApi\classes\exception\OpenApiUploaderException("Impossible to add File",40019);
+      throw new \Openapi\classes\exception\OpenapiUploaderException("Impossible to add File",40019);
     }
 
     $data['name'] = $name;
@@ -276,7 +276,7 @@ class Collection {
 
   function updateDocument($id_documento, $name = NULL,$type = NULL, $file = NULL, $crop_size = NULL){
     if($this->id == NULL){
-      throw new \OpenApi\classes\exception\OpenApiUploaderException("Impossible to add File",40019);
+      throw new \Openapi\classes\exception\OpenapiUploaderException("Impossible to add File",40019);
     }
     if($name != NULL){
       $data['name'] = $name;
@@ -299,7 +299,7 @@ class Collection {
 
   function deleteDocument($id_documento){
     if($this->id == NULL){
-      throw new \OpenApi\classes\exception\OpenApiUploaderException("Impossible to add File",40019);
+      throw new \Openapi\classes\exception\OpenapiUploaderException("Impossible to add File",40019);
     }
 
 
@@ -320,7 +320,7 @@ class Collection {
 
   function getDocumento($id_documento){
     if($this->id == NULL){
-      throw new \OpenApi\classes\exception\OpenApiUploaderException("Impossible to add File",40019);
+      throw new \Openapi\classes\exception\OpenapiUploaderException("Impossible to add File",40019);
     }
 
 
@@ -332,7 +332,7 @@ class Collection {
 
   function getDocumenti(){
     if($this->id == NULL){
-      throw new \OpenApi\classes\exception\OpenApiUploaderException("Impossible to add File",40019);
+      throw new \Openapi\classes\exception\OpenapiUploaderException("Impossible to add File",40019);
     }
 
 

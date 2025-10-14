@@ -1,11 +1,11 @@
 <?php
-namespace OpenApi\classes;
-class UfficioPostale extends OpenApiBase {
+namespace Openapi\classes;
+class UfficioPostale extends OpenapiBase {
 
   /**
    * @param string $token   Il token da utilizzare per il collegamento
    * @param array $scopes   Array con la lista degli scope per cui il token è abilitato
-   * @param object $cache   Classe che gestisce la cahce, deve essere una classe che estende {@see OpenApi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
+   * @param object $cache   Classe che gestisce la cahce, deve essere una classe che estende {@see Openapi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
    */
   function __construct(string $token,  array $scopes, object $cache, string $prefix){
     parent::__construct($token,  $scopes, $cache, $prefix);
@@ -19,7 +19,7 @@ class UfficioPostale extends OpenApiBase {
      * Prende in ingresso la path di un json contenente le traduzioni degli errori
      */
     function setErrorLang($errorLang){
-      $this->errorClass = new \OpenApi\classes\utility\UfficioPostale\Objects\ErrorTranslation\errorLang($errorLang);
+      $this->errorClass = new \Openapi\classes\utility\UfficioPostale\Objects\ErrorTranslation\errorLang($errorLang);
     }
    
     function getComuniByCAP($cap){
@@ -41,7 +41,7 @@ class UfficioPostale extends OpenApiBase {
       if($prodotto == "posta-ordinaria"){
         return $this->createPostaOrdinaria();
       }
-      $ex = new \OpenApi\classes\exception\OpenApiUPException("Il prodotto $prodotto non esiste",40014);
+      $ex = new \Openapi\classes\exception\OpenapiUPException("Il prodotto $prodotto non esiste",40014);
       throw $ex;
       
     }
@@ -50,7 +50,7 @@ class UfficioPostale extends OpenApiBase {
    * @return object
    */
   function createRaccomandata(){
-    return new \OpenApi\classes\utility\UfficioPostale\Raccomandata(function(string $endpoint, $type = "GET", $param = [], $ttr = 0, $force = false, $forceRaw = false){
+    return new \Openapi\classes\utility\UfficioPostale\Raccomandata(function(string $endpoint, $type = "GET", $param = [], $ttr = 0, $force = false, $forceRaw = false){
 
       return $this->connect( $endpoint, $type, $param , $ttr , $force, $forceRaw);
     },
@@ -62,7 +62,7 @@ class UfficioPostale extends OpenApiBase {
   }
 
   function createPostaPrioritaria(){
-    return new \OpenApi\classes\utility\UfficioPostale\PostaPrioritaria(function(string $endpoint, $type = "GET", $param = [], $ttr = 0, $force = false, $forceRaw = false){
+    return new \Openapi\classes\utility\UfficioPostale\PostaPrioritaria(function(string $endpoint, $type = "GET", $param = [], $ttr = 0, $force = false, $forceRaw = false){
 
       return $this->connect( $endpoint, $type, $param , $ttr , $force, $forceRaw);
     },
@@ -74,7 +74,7 @@ class UfficioPostale extends OpenApiBase {
   }
 
   function createPostaOrdinaria(){
-    return new \OpenApi\classes\utility\UfficioPostale\PostaOrdinaria(function(string $endpoint, $type = "GET", $param = [], $ttr = 0, $force = false, $forceRaw = false){
+    return new \Openapi\classes\utility\UfficioPostale\PostaOrdinaria(function(string $endpoint, $type = "GET", $param = [], $ttr = 0, $force = false, $forceRaw = false){
 
       return $this->connect( $endpoint, $type, $param , $ttr , $force, $forceRaw);
     },
@@ -86,7 +86,7 @@ class UfficioPostale extends OpenApiBase {
   }
 
   function createTelegramma(){
-    return new \OpenApi\classes\utility\UfficioPostale\Telegramma(function(string $endpoint, $type = "GET", $param = [], $ttr = 0, $force = false, $forceRaw = false){
+    return new \Openapi\classes\utility\UfficioPostale\Telegramma(function(string $endpoint, $type = "GET", $param = [], $ttr = 0, $force = false, $forceRaw = false){
 
       return $this->connect( $endpoint, $type, $param , $ttr , $force, $forceRaw);
     },
@@ -115,7 +115,7 @@ class UfficioPostale extends OpenApiBase {
     if($prodotto == "posta-ordinaria"){
       return $this->getPostaOrdinariaById($id);
     }
-    $ex = new \OpenApi\classes\exception\OpenApiUPException("Il prodotto $prodotto non esiste",40014);
+    $ex = new \Openapi\classes\exception\OpenapiUPException("Il prodotto $prodotto non esiste",40014);
     throw $ex;
     
   }
@@ -133,7 +133,7 @@ class UfficioPostale extends OpenApiBase {
     if($prodotto == "posta-ordinaria"){
       return $this->getPostaOrdinariaByData($data);
     }
-    $ex = new \OpenApi\classes\exception\OpenApiUPException("Il prodotto $prodotto non esiste",40014);
+    $ex = new \Openapi\classes\exception\OpenapiUPException("Il prodotto $prodotto non esiste",40014);
     throw $ex;
   }
 

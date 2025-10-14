@@ -1,12 +1,12 @@
 <?php 
-namespace OpenApi\classes;
-class OpenApiBase {
+namespace Openapi\classes;
+class OpenapiBase {
 
 
   /**
    * @param string $token   Il token da utilizzare per il collegamento
    * @param array $scopes   Array con la lista degli scope per cui il token è abilitato
-   * @param object $cache   Classe che gestisce la cahce, deve essere una classe che estende {@see OpenApi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
+   * @param object $cache   Classe che gestisce la cahce, deve essere una classe che estende {@see Openapi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
    * @param string $prefix   Prefisso da utilizzare per le chiamate (dev, test o null)
    */
   function __construct(string $token,  array $scopes, object $cache, string $prefix){
@@ -19,7 +19,7 @@ class OpenApiBase {
 
   /**
    * Imposta la calsse da utilizzare sistema di cache, deve essere una classe che estende
-   * {@see \OpenApi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
+   * {@see \Openapi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
    * 
    * @param object $cacheSys Istanza della classe da usare come sistema di cache
    * @return void
@@ -76,7 +76,7 @@ class OpenApiBase {
       $permission .= "/".$path[1];
     }
     if(!in_array($permission, $this->scopes)){
-      throw new \OpenApi\classes\exception\OpenApiConnectionsException("Scope missed: $permission",40004);
+      throw new \Openapi\classes\exception\OpenapiConnectionsException("Scope missed: $permission",40004);
     }
     
   }
@@ -151,7 +151,7 @@ class OpenApiBase {
     
     if($data == NULL){
       
-      throw new \OpenApi\classes\exception\OpenApiConnectionsException("Connection to $url: Connection Error",40001);
+      throw new \Openapi\classes\exception\OpenapiConnectionsException("Connection to $url: Connection Error",40001);
     }
     
     if(is_object($data) && $data->success == false){
@@ -171,7 +171,7 @@ class OpenApiBase {
         
       }
       //var_dump($this->rawResponse);
-      $except = new \OpenApi\classes\exception\OpenApiConnectionsException($message,40002);
+      $except = new \Openapi\classes\exception\OpenapiConnectionsException($message,40002);
       $except->setServerResponse($data, $this->header, $this->rawResponse, $httpCode);
       
       throw $except;

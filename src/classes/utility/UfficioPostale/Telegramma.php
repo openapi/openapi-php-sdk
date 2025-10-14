@@ -1,5 +1,5 @@
 <?php
-namespace OpenApi\classes\utility\UfficioPostale;
+namespace Openapi\classes\utility\UfficioPostale;
 class Telegramma extends ServiziPostali {
 
   protected $letter;
@@ -21,16 +21,16 @@ class Telegramma extends ServiziPostali {
     return $this->parole;
   }
   function getNumeroPagine(){
-    throw new \OpenApi\classes\exception\OpenApiUPException("Pages not exist for telagrammi",40015);
+    throw new \Openapi\classes\exception\OpenapiUPException("Pages not exist for telagrammi",40015);
   }
 
 
   function confirm(){
     if($this->getId() == NULL){
-      throw new \OpenApi\classes\exception\OpenApiUPException("Id not present",40011);
+      throw new \Openapi\classes\exception\OpenapiUPException("Id not present",40011);
     }
     if($this->getState() != "NEW"){
-      throw new \OpenApi\classes\exception\OpenApiUPException("State is not NEW",40012);
+      throw new \Openapi\classes\exception\OpenapiUPException("State is not NEW",40012);
     }
     $param['confirmed'] = TRUE;
     $ret = call_user_func_array($this->connect,["telegrammi/".$this->getId(),"PATCH",$param]);
@@ -73,12 +73,12 @@ class Telegramma extends ServiziPostali {
       $this->clearRecipients();
       $this->setRecipients($ret->data[0]->destinatari);
       return true;
-    }catch(\OpenApi\classes\exception\OpenApiConnectionsException $e){
+    }catch(\Openapi\classes\exception\OpenapiConnectionsException $e){
       $response = $e->getServerResponse();
       if(isset($response->data->wrong_fields) && isset($response->error)){
         $error_message = $this->getError($response->error, $response);
       
-        $e2 = new \OpenApi\classes\exception\OpenApiUPFieldsException("Fields Error",40013);
+        $e2 = new \Openapi\classes\exception\OpenapiUPFieldsException("Fields Error",40013);
         $e2->setServerResponse($e->getServerResponse(), $e->getServerHeaderResponse(), $e->getServerRawResponse(), $e->getHttpCode());
         $e2->setErrorMessage($error_message);
         $e2->setFields($response->data->wrong_fields);
@@ -128,10 +128,10 @@ class Telegramma extends ServiziPostali {
       $this->ar_c = $ar_c;
       return TRUE;
     }else{
-      if($ar_c instanceof \OpenApi\classes\utility\UfficioPostale\Objects\Sender){
+      if($ar_c instanceof \Openapi\classes\utility\UfficioPostale\Objects\Sender){
         $this->ar_c = $ar_c;
       }else{
-        $this->ar_c = new \OpenApi\classes\utility\UfficioPostale\Objects\Sender($ar_c);
+        $this->ar_c = new \Openapi\classes\utility\UfficioPostale\Objects\Sender($ar_c);
       }
       if(!$this->ar_c->validate()){
         return FALSE;

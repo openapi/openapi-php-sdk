@@ -1,6 +1,6 @@
-<?php namespace OpenApi;
+<?php namespace Openapi;
 
-class OpenApi {
+class Openapi {
 
   
   /**
@@ -11,9 +11,9 @@ class OpenApi {
    */
   function __construct(array $scopes, string $username, string $apikey, $environment='test', $store = NULL){
     if($store == NULL)  {
-      $store = new \OpenApi\classes\utility\sessionStoreToken;
+      $store = new \Openapi\classes\utility\sessionStoreToken;
     }
-    $this->cache = new \OpenApi\classes\utility\DummyCache;
+    $this->cache = new \Openapi\classes\utility\DummyCache;
     $this->store = $store;
     $this->header = null;
     $this->rawResponse = null;
@@ -68,9 +68,9 @@ class OpenApi {
       }
     }
 
-    $this->validations = new \OpenApi\classes\utility\Plugins\Validations();
-    $this->fiscalCode = new \OpenApi\classes\utility\Plugins\FiscalCode();
-  //  $this->ufficiopostale = new \OpenApi\classes\UfficioPostale($token->token, $domainsRealScopes[$d], $this->cache, $prefix);
+    $this->validations = new \Openapi\classes\utility\Plugins\Validations();
+    $this->fiscalCode = new \Openapi\classes\utility\Plugins\FiscalCode();
+  //  $this->ufficiopostale = new \Openapi\classes\UfficioPostale($token->token, $domainsRealScopes[$d], $this->cache, $prefix);
   }
 
     /**
@@ -82,50 +82,50 @@ class OpenApi {
     private function getListaModuli(){
       $moduli = [];
       $nomi = [];
-      $moduli['ws.ufficiopostale.com'] = "\\OpenApi\\classes\\UfficioPostale";
+      $moduli['ws.ufficiopostale.com'] = "\\Openapi\\classes\\UfficioPostale";
       $nomi['ws.ufficiopostale.com'] = "ufficiopostale";
 
-      $moduli['imprese.altravia.com'] = "\\OpenApi\\classes\\Imprese";
+      $moduli['imprese.altravia.com'] = "\\Openapi\\classes\\Imprese";
       $nomi['imprese.altravia.com'] = "imprese";
 
-      $moduli['imprese.openapi.it'] = "\\OpenApi\\classes\\ImpreseOpenapi";
+      $moduli['imprese.openapi.it'] = "\\Openapi\\classes\\ImpreseOpenapi";
       $nomi['imprese.openapi.it'] = "imprese";
 
-      $moduli['visengine2.altravia.com'] = "\\OpenApi\\classes\\VisEngine";
+      $moduli['visengine2.altravia.com'] = "\\Openapi\\classes\\VisEngine";
       $nomi['visengine2.altravia.com'] = "visengine";
 
 
-      $moduli['comuni.openapi.it'] = "\\OpenApi\\classes\\Comuni";
+      $moduli['comuni.openapi.it'] = "\\Openapi\\classes\\Comuni";
       $nomi['comuni.openapi.it'] = "comuni";
 
 
-      $moduli['ws.marchetemporali.com'] = "\\OpenApi\\classes\\MarcheTemporali";
+      $moduli['ws.marchetemporali.com'] = "\\Openapi\\classes\\MarcheTemporali";
       $nomi['ws.marchetemporali.com'] = "marcheTemporali";
 
 
-      $moduli['geocoding.realgest.it'] = "\\OpenApi\\classes\\Geocoding";
+      $moduli['geocoding.realgest.it'] = "\\Openapi\\classes\\Geocoding";
       $nomi['geocoding.realgest.it'] = "geocoding";
 
-      $moduli['uploader.altravia.com'] = "\\OpenApi\\classes\\Uploader";
+      $moduli['uploader.altravia.com'] = "\\Openapi\\classes\\Uploader";
       $nomi['uploader.altravia.com'] = "uploader";
 
-      $moduli['ws.messaggisms.com'] = "\\OpenApi\\classes\\Sms";
+      $moduli['ws.messaggisms.com'] = "\\Openapi\\classes\\Sms";
       $nomi['ws.messaggisms.com'] = "SMS";
 
-      $moduli['pec.openapi.it'] = "\\OpenApi\\classes\\Pec";
+      $moduli['pec.openapi.it'] = "\\Openapi\\classes\\Pec";
       $nomi['pec.openapi.it'] = "PEC";
 
-      $moduli['catasto.openapi.it'] = "\\OpenApi\\classes\\Catasto";
+      $moduli['catasto.openapi.it'] = "\\Openapi\\classes\\Catasto";
       $nomi['catasto.openapi.it'] = "catasto";
       
-      $moduli['ws.firmadigitale.com'] = "\\OpenApi\\classes\\FirmaDigitale";
+      $moduli['ws.firmadigitale.com'] = "\\Openapi\\classes\\FirmaDigitale";
       $nomi['ws.firmadigitale.com'] = "firmaDigitale";
       return array($moduli,$nomi);
     }
   
   /**
    * Imposta la calsse da utilizzare sistema di cache, deve essere una classe che estende
-   * {@see OpenApi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
+   * {@see Openapi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
    * 
    * @param mixed $cacheSys Istanza della classe da usare come sistema di cache
    * @return void
@@ -178,14 +178,14 @@ class OpenApi {
     $token = $this->connect("token/".$this->store->get()['token']->token,$param,"PUT");
 
     if($token == NULL){
-      throw new \OpenApi\classes\exception\OpenApiTokenException("Renew Token: Connection Error",40001);
+      throw new \Openapi\classes\exception\OpenapiTokenException("Renew Token: Connection Error",40001);
     }
     if($token->success == false){
       $message = "REnew Token: unknow error";
       if(isset($token->message)) {
         $message = "REnew Token: $token->message";
       }
-      $except = new \OpenApi\classes\exception\OpenApiTokenException($message,40002);
+      $except = new \Openapi\classes\exception\OpenapiTokenException($message,40002);
       $except->setServerResponse($token, $this->header, $this->rawResponse);
       
       throw $except;
@@ -266,14 +266,14 @@ class OpenApi {
     $param = ["scopes" => $this->scopes];
     $token = $this->connect("token",$param,"POST");
     if($token == NULL){
-      throw new \OpenApi\classes\exception\OpenApiTokenException("Getting Token: Connection Error",40001);
+      throw new \Openapi\classes\exception\OpenapiTokenException("Getting Token: Connection Error",40001);
     }
     if($token->success == false){
       $message = "Getting Token: unknow error";
       if(isset($token->message)) {
         $message = "Getting Token: $token->message";
       }
-      $except = new \OpenApi\classes\exception\OpenApiTokenException($message,40002);
+      $except = new \Openapi\classes\exception\OpenapiTokenException($message,40002);
       $except->setServerResponse($token, $this->header, $this->rawResponse);
       
       throw $except;
@@ -291,7 +291,7 @@ class OpenApi {
         
       }
       $message = "Getting Token: invalid scopes (".implode($invalid_scopes).")";
-      $except = new \OpenApi\classes\exception\OpenApiTokenException($message,40003);
+      $except = new \Openapi\classes\exception\OpenapiTokenException($message,40003);
       $except->setServerResponse($token, $this->header, $this->rawResponse);
       throw $except;
     }

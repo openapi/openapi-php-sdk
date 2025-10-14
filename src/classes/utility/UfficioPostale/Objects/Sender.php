@@ -1,5 +1,5 @@
 <?php
-namespace OpenApi\classes\utility\UfficioPostale\Objects;
+namespace Openapi\classes\utility\UfficioPostale\Objects;
 class Sender {
   private $data;
   private $itData;

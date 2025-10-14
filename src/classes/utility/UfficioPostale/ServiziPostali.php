@@ -1,5 +1,5 @@
 <?php
-namespace OpenApi\classes\utility\UfficioPostale;
+namespace Openapi\classes\utility\UfficioPostale;
 class ServiziPostali {
 
   protected $connect;
@@ -63,7 +63,7 @@ class ServiziPostali {
   }
 
   function getNumeroLettere(){
-    throw new \OpenApi\classes\exception\OpenApiUPException("Letter exist only for telagrammi",40016);
+    throw new \Openapi\classes\exception\OpenapiUPException("Letter exist only for telagrammi",40016);
   }
 
   function getNumeroPagine(){
@@ -121,10 +121,10 @@ class ServiziPostali {
 
 
   public function setSender($sender){
-    if($sender instanceof \OpenApi\classes\utility\UfficioPostale\Objects\Sender){
+    if($sender instanceof \Openapi\classes\utility\UfficioPostale\Objects\Sender){
       $this->sender = $sender;
     }else{
-      $this->sender = new \OpenApi\classes\utility\UfficioPostale\Objects\Sender($sender);
+      $this->sender = new \Openapi\classes\utility\UfficioPostale\Objects\Sender($sender);
     }
     if(!$this->sender->validate()){
     //  var_dump($this->sender->getErrors());
@@ -174,9 +174,9 @@ class ServiziPostali {
     $this->clearRecipients();
     $valid = TRUE;
     foreach($recipients as $key => $recipient){
-      if(!($recipient instanceof \OpenApi\classes\utility\UfficioPostale\Objects\Recipient)){
+      if(!($recipient instanceof \Openapi\classes\utility\UfficioPostale\Objects\Recipient)){
       
-        $recipient = new \OpenApi\classes\utility\UfficioPostale\Objects\Recipient($recipient);
+        $recipient = new \Openapi\classes\utility\UfficioPostale\Objects\Recipient($recipient);
       }
       if(!$recipient->validate()){
         $valid = FALSE;
@@ -193,8 +193,8 @@ class ServiziPostali {
 
   public function addRecipient($recipient){
    
-    if(!($recipient instanceof \OpenApi\classes\utility\UfficioPostale\Objects\Recipient)){
-      $recipient = new \OpenApi\classes\utility\UfficioPostale\Objects\Recipient($recipient);
+    if(!($recipient instanceof \Openapi\classes\utility\UfficioPostale\Objects\Recipient)){
+      $recipient = new \Openapi\classes\utility\UfficioPostale\Objects\Recipient($recipient);
     }
   
     $valid = TRUE;

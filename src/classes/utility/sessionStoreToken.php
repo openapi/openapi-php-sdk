@@ -1,5 +1,5 @@
 <?php
-namespace OpenApi\classes\utility;
+namespace Openapi\classes\utility;
 if (session_status() == PHP_SESSION_NONE) {session_start();}
 class sessionStoreToken implements storeTokenInterface{
   function get(){

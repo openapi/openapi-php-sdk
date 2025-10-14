@@ -1,11 +1,11 @@
 <?php
-namespace OpenApi\classes;
-class VisEngine extends OpenApiBase {
+namespace Openapi\classes;
+class VisEngine extends OpenapiBase {
   
   /**
    * @param string $token   Il token da utilizzare per il collegamento
    * @param array $scopes   Array con la lista degli scope per cui il token è abilitato
-   * @param object $cache   Classe che gestisce la cahce, deve essere una classe che estende {@see OpenApi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
+   * @param object $cache   Classe che gestisce la cahce, deve essere una classe che estende {@see Openapi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
    */
   function __construct(string $token,  array $scopes, object $cache, string $prefix){
     $this->hash = NULL;
@@ -24,7 +24,7 @@ class VisEngine extends OpenApiBase {
 
   function getFormTool(){
     if($this->hash == NULL){
-      throw new \OpenApi\classes\exception\OpenApiVisEngineException("Visengine hash is not setted",40005);
+      throw new \Openapi\classes\exception\OpenapiVisEngineException("Visengine hash is not setted",40005);
     }
     $url = $this->basePath;
     $url = str_replace("https://","https://".$this->prefix,$url);
@@ -43,22 +43,22 @@ class VisEngine extends OpenApiBase {
    */
   function createRequest($ttr = 500){
     if($this->hash == NULL){
-      throw new \OpenApi\classes\exception\OpenApiVisEngineException("Visengine hash is not setted",40005);
+      throw new \Openapi\classes\exception\OpenapiVisEngineException("Visengine hash is not setted",40005);
     }
     $this->visura = $this->connect("visure/$this->hash", "GET", [], $ttr);
     defined("OPENAPI_CREATING_REQUEST") OR define("OPENAPI_CREATING_REQUEST", TRUE);
-    return new \OpenApi\classes\utility\VisEngine\VisRequest($this->visura);
+    return new \Openapi\classes\utility\VisEngine\VisRequest($this->visura);
   }
 
   
   /**
    * Invia una request, in base al contenuto della stessa distingue automaticamente se fare la chiamata in POST o PUT
    * Restituisce la richiesa comprensiva di risposta del server
-   * @param \OpenApi\classes\utility\VisEngine\VisRequest $request
+   * @param \Openapi\classes\utility\VisEngine\VisRequest $request
    * 
    * @return object
    */
-  function sendRequest(\OpenApi\classes\utility\VisEngine\VisRequest $req) {
+  function sendRequest(\Openapi\classes\utility\VisEngine\VisRequest $req) {
     
     
 
@@ -127,7 +127,7 @@ class VisEngine extends OpenApiBase {
   
     $this->hash = $visura->data->hash_visura;
     defined("OPENAPI_CREATING_REQUEST") OR define("OPENAPI_CREATING_REQUEST", TRUE);
-    $request = new \OpenApi\classes\utility\VisEngine\VisRequest($this->visura);
+    $request = new \Openapi\classes\utility\VisEngine\VisRequest($this->visura);
     $request->setNew(FALSE);
     $request->setId($visura->data->_id);
     $request->setStatoRichiesta($visura->data->stato_richiesta);

@@ -1,5 +1,5 @@
 <?php 
-namespace OpenApi\classes\exception;
+namespace Openapi\classes\exception;
 
 /**
  *  Gestisce le eccezioni relative alle funzionalità Uploader
@@ -11,7 +11,7 @@ namespace OpenApi\classes\exception;
  * 40018: Si è invocato il gateway senza endpoint in GET
  * 40019: Si è tentato di aggiungere un file ad una collection ancora non salvata
  */
-class OpenApiUploaderException extends OpenApiExceptionBase
+class OpenapiUploaderException extends OpenapiExceptionBase
 {
   public function __construct($message, $code = 0, \Exception $previous = null) {
     parent::__construct($message, $code, $previous);

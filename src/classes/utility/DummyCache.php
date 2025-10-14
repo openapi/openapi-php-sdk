@@ -1,5 +1,5 @@
 <?php
-namespace OpenApi\classes\utility;
+namespace Openapi\classes\utility;
 
 use CodeIgniter\Cache\CacheInterface;
 

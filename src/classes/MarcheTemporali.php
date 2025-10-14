@@ -1,11 +1,11 @@
 <?php
-namespace OpenApi\classes;
-class MarcheTemporali extends OpenApiBase {
+namespace Openapi\classes;
+class MarcheTemporali extends OpenapiBase {
 
   /**
    * @param string $token   Il token da utilizzare per il collegamento
    * @param array $scopes   Array con la lista degli scope per cui il token è abilitato
-   * @param object $cache   Classe che gestisce la cahce, deve essere una classe che estende {@see OpenApi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
+   * @param object $cache   Classe che gestisce la cahce, deve essere una classe che estende {@see Openapi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
    */
   function __construct(string $token,  array $scopes, object $cache, string $prefix){
     parent::__construct($token,  $scopes, $cache, $prefix);
@@ -38,7 +38,7 @@ class MarcheTemporali extends OpenApiBase {
     $data = $this->availability($type, $qty);
     //var_dump($data);exit;
     if($data->availability == 0){
-      throw new \OpenApi\classes\exception\OpenApiMarcheTemporaliException("$qty $type time stamps is not availabile for purchase",40009);
+      throw new \Openapi\classes\exception\OpenapiMarcheTemporaliException("$qty $type time stamps is not availabile for purchase",40009);
     }
     //echo "marche/$type/$qty";exit;
     $data = $this->connect("marche/$type/$qty", "GET", []);

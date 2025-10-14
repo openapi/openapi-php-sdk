@@ -1,5 +1,5 @@
 <?php
-namespace OpenApi\classes\utility\UfficioPostale;
+namespace Openapi\classes\utility\UfficioPostale;
 class PostaPrioritaria extends ServiziPostali {
 
   function __construct($connect, $errorClass){
@@ -8,10 +8,10 @@ class PostaPrioritaria extends ServiziPostali {
 
   function confirm(){
     if($this->getId() == NULL){
-      throw new \OpenApi\classes\exception\OpenApiUPException("Id not present",40011);
+      throw new \Openapi\classes\exception\OpenapiUPException("Id not present",40011);
     }
     if($this->getState() != "NEW"){
-      throw new \OpenApi\classes\exception\OpenApiUPException("State is not NEW",40012);
+      throw new \Openapi\classes\exception\OpenapiUPException("State is not NEW",40012);
     }
     $param['confirmed'] = TRUE;
     $ret = call_user_func_array($this->connect,["prioritarie/".$this->getId(),"PATCH",$param]);
@@ -50,13 +50,13 @@ class PostaPrioritaria extends ServiziPostali {
       $this->clearRecipients();
       $this->setRecipients($ret->data[0]->destinatari);
       return true;
-    }catch(\OpenApi\classes\exception\OpenApiConnectionsException $e){
+    }catch(\Openapi\classes\exception\OpenapiConnectionsException $e){
       $response = $e->getServerResponse();
       //var_dump($response->data->wrong_fields);exit;
       if(isset($response->data->wrong_fields) && isset($response->error)){
         $error_message = $this->getError($response->error, $response);
       
-        $e2 = new \OpenApi\classes\exception\OpenApiUPFieldsException("Fields Error",40013);
+        $e2 = new \Openapi\classes\exception\OpenapiUPFieldsException("Fields Error",40013);
         $e2->setServerResponse($e->getServerResponse(), $e->getServerHeaderResponse(), $e->getServerRawResponse(), $e->getHttpCode());
         $e2->setErrorMessage($error_message);
         $e2->setFields($response->data->wrong_fields);

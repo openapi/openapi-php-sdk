@@ -1,5 +1,5 @@
 <?php 
-namespace OpenApi\classes\exception;
+namespace Openapi\classes\exception;
 
 /**
  *  Gestisce le eccezioni relative alla richiesta del token, di seguito i codici errore ritornati:
@@ -8,7 +8,7 @@ namespace OpenApi\classes\exception;
  * 40004: Si sta tentando di effettuare una chiamata per la quale non si hanno i permessi
  
  */
-class OpenApiConnectionsException extends OpenApiExceptionBase
+class OpenapiConnectionsException extends OpenapiExceptionBase
 {
   public function __construct($message, $code = 0, \Exception $previous = null) {
     parent::__construct($message, $code, $previous);

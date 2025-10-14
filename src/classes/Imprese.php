@@ -1,10 +1,10 @@
 <?php
-namespace OpenApi\classes;
-class Imprese extends OpenApiBase {
+namespace Openapi\classes;
+class Imprese extends OpenapiBase {
   /**
    * @param string $token   Il token da utilizzare per il collegamento
    * @param array $scopes   Array con la lista degli scope per cui il token è abilitato
-   * @param object $cache   Classe che gestisce la cahce, deve essere una classe che estende {@see OpenApi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
+   * @param object $cache   Classe che gestisce la cahce, deve essere una classe che estende {@see Openapi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
    */
   function __construct(string $token,  array $scopes, object $cache, string $prefix){
     parent::__construct($token,  $scopes, $cache, $prefix);
@@ -27,7 +27,7 @@ class Imprese extends OpenApiBase {
     try{
       $data = $this->connect("advance/$partitaIva", "GET", [], $ttr, true);
       return $data->data;
-    }catch (\OpenApi\classes\exception\OpenApiConnectionsException $e){
+    }catch (\Openapi\classes\exception\OpenapiConnectionsException $e){
       if($e->getHTTPCode() == 404){
         return null;
       }
@@ -45,7 +45,7 @@ class Imprese extends OpenApiBase {
     try{
       $data = $this->connect("closed/$partitaIva", "GET", [], $ttr);
       return $data->data;
-    }catch (\OpenApi\classes\exception\OpenApiConnectionsException $e){
+    }catch (\Openapi\classes\exception\OpenapiConnectionsException $e){
       
       if($e->getHTTPCode() == 404){
         return null;
@@ -62,7 +62,7 @@ class Imprese extends OpenApiBase {
     try{
       $data = $this->connect("gruppoIva/$partitaIva", "GET", [], $ttr);
       return $data->data;
-    }catch (\OpenApi\classes\exception\OpenApiConnectionsException $e){
+    }catch (\Openapi\classes\exception\OpenapiConnectionsException $e){
       
       if($e->getHTTPCode() == 404){
         return null;
@@ -79,7 +79,7 @@ class Imprese extends OpenApiBase {
     try{
       $data = $this->connect("pec/$partitaIva", "GET", [], $ttr);
       return $data->data;
-    }catch (\OpenApi\classes\exception\OpenApiConnectionsException $e){
+    }catch (\Openapi\classes\exception\OpenapiConnectionsException $e){
       
       if($e->getHTTPCode() == 404){
         return null;

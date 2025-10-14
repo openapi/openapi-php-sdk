@@ -1,10 +1,10 @@
 <?php
-namespace OpenApi\classes;
-class Sms extends OpenApiBase {
+namespace Openapi\classes;
+class Sms extends OpenapiBase {
   /**
    * @param string $token   Il token da utilizzare per il collegamento
    * @param array $scopes   Array con la lista degli scope per cui il token è abilitato
-   * @param object $cache   Classe che gestisce la cahce, deve essere una classe che estende {@see OpenApi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
+   * @param object $cache   Classe che gestisce la cahce, deve essere una classe che estende {@see Openapi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
    */
   function __construct(string $token,  array $scopes, object $cache, string $prefix){
     parent::__construct($token,  $scopes, $cache, $prefix);
@@ -14,7 +14,7 @@ class Sms extends OpenApiBase {
 
   function addRecipeints($recipients, $finish = false){
     if($this->messageId == NULL){
-      throw new \OpenApi\classes\exception\OpenApiSMSException("No message id presente",40010);
+      throw new \Openapi\classes\exception\OpenapiSMSException("No message id presente",40010);
       exit;
     }
     $data = $this->addRecipeintsByMessageId($this->messageId, $recipients, $finish );
@@ -31,7 +31,7 @@ class Sms extends OpenApiBase {
       $data = $this->connect("messages/$messageId", "PUT", $param);
       
       return $data;
-    }catch (\OpenApi\classes\exception\OpenApiConnectionsException $e){
+    }catch (\Openapi\classes\exception\OpenapiConnectionsException $e){
       if($e->getHTTPCode() == 404){
         return null;
       }
@@ -44,7 +44,7 @@ class Sms extends OpenApiBase {
     try{
       $data = $this->connect("messages/$messageId/recipients/".$number, "GET", []);
       return $data;
-    }catch (\OpenApi\classes\exception\OpenApiConnectionsException $e){
+    }catch (\Openapi\classes\exception\OpenapiConnectionsException $e){
       
       if($e->getHTTPCode() == 404){
         return null;
@@ -58,7 +58,7 @@ class Sms extends OpenApiBase {
     try{
       $data = $this->connect("messages/$messageId", "GET", []);
       return $data;
-    }catch (\OpenApi\classes\exception\OpenApiConnectionsException $e){
+    }catch (\Openapi\classes\exception\OpenapiConnectionsException $e){
       
       if($e->getHTTPCode() == 404){
         return null;
@@ -84,7 +84,7 @@ class Sms extends OpenApiBase {
         $this->messageId =$data->data[0]->id;
       }
       return $data;
-    }catch (\OpenApi\classes\exception\OpenApiConnectionsException $e){
+    }catch (\Openapi\classes\exception\OpenapiConnectionsException $e){
       
       if($e->getHTTPCode() == 404){
         return null;
@@ -113,7 +113,7 @@ class Sms extends OpenApiBase {
       $data = $this->connect("messages/", "POST", $param);
     
       return $data;
-    }catch (\OpenApi\classes\exception\OpenApiConnectionsException $e){
+    }catch (\Openapi\classes\exception\OpenapiConnectionsException $e){
       if($e->getHTTPCode() == 404){
         return null;
       }

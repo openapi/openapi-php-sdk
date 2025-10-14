@@ -1,11 +1,11 @@
 <?php
-namespace OpenApi\classes;
-class Uploader extends OpenApiBase {
+namespace Openapi\classes;
+class Uploader extends OpenapiBase {
 
   /**
    * @param string $token   Il token da utilizzare per il collegamento
    * @param array $scopes   Array con la lista degli scope per cui il token è abilitato
-   * @param object $cache   Classe che gestisce la cahce, deve essere una classe che estende {@see OpenApi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
+   * @param object $cache   Classe che gestisce la cahce, deve essere una classe che estende {@see Openapi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
    */
   function __construct(string $token,  array $scopes, object $cache, string $prefix){
     parent::__construct($token,  $scopes, $cache, $prefix);
@@ -14,14 +14,14 @@ class Uploader extends OpenApiBase {
 
   function newCollection(){
     
-    return new \OpenApi\classes\utility\Uploader\Collection([$this, 'connect']);
+    return new \Openapi\classes\utility\Uploader\Collection([$this, 'connect']);
   }
 
   function gateway(){
     
     $endpoint  = isset($_GET['endpoint'])?$_GET['endpoint']:null;
     if($endpoint == NULL){
-      throw new \OpenApi\classes\exception\OpenApiUploaderException("No endpoint GET",40018);
+      throw new \Openapi\classes\exception\OpenapiUploaderException("No endpoint GET",40018);
     }
     //echo $endpoint;exit;
     
@@ -33,7 +33,7 @@ class Uploader extends OpenApiBase {
     }
     try{
       $data = $this->connect($endpoint, $method,$data);
-    }catch(\OpenApi\classes\exception\OpenApiConnectionsException $e){
+    }catch(\Openapi\classes\exception\OpenapiConnectionsException $e){
 
       $message = $e->getMessage();
       var_dump($message);
@@ -82,7 +82,7 @@ class Uploader extends OpenApiBase {
   }
 
   function createCollection($outputFormat, $outputSize = null, $inputTypes = null, $inputCount = null, $public = null, $watermark = null, $watermarkPosition = NULL, $expireTimestamp = null) {
-    $collection = new \OpenApi\classes\utility\Uploader\Collection([$this, 'connect']);
+    $collection = new \Openapi\classes\utility\Uploader\Collection([$this, 'connect']);
     $collection->setOutput($outputFormat);
     $collection->setOutputSize($outputSize);
     $collection->setInputTypes($inputTypes);
@@ -96,7 +96,7 @@ class Uploader extends OpenApiBase {
 
   function getCollectionById($id){
     $coll = $this->connect("collections/$id","GET");
-    $collection = new \OpenApi\classes\utility\Uploader\Collection([$this, 'connect']);
+    $collection = new \Openapi\classes\utility\Uploader\Collection([$this, 'connect']);
     if(isset($coll->data)){
       $collection->parseData($coll->data);
       return $collection;

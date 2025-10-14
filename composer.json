@@ -1,6 +1,6 @@
 {
-    "name": "altravia/openapi",
-    "description": "OpenApi PHP Libraries (https://openapi.it)",
+    "name": "openapi/openapi-sdk",
+    "description": "Openapi PHP Libraries (https://openapi.com)",
     "authors": [
         {
             "name": "Altravia",
@@ -13,7 +13,7 @@
     },
     "autoload": {
         "psr-4": {
-            "OpenApi\\": "src"
+            "Openapi\\": "src"
         }
     }
 }
