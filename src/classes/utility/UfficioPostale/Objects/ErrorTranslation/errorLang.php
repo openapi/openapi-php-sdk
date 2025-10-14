@@ -1,5 +1,5 @@
 <?php
-namespace OpenApi\classes\utility\UfficioPostale\Objects\ErrorTranslation;
+namespace Openapi\classes\utility\UfficioPostale\Objects\ErrorTranslation;
 class errorLang {
   function __construct($json){
     if(strpos($json,".json") === FALSE){

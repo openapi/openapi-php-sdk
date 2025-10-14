@@ -1,5 +1,5 @@
 <?php 
-namespace OpenApi\classes\exception;
+namespace Openapi\classes\exception;
 
 /**
  *  Gestisce le eccezioni relative alle funzionalità visengine
@@ -8,7 +8,7 @@ namespace OpenApi\classes\exception;
  * 40007: Si è provato ad impostare lo stato della visura ad 1 con il JSON non valido
  * 40008: Si è cercato di instanziare una classe interna esternamente, tali operazioni sono permesso solo utilizzando gli appositi metodi delle singole classi
  */
-class OpenApiVisEngineException extends OpenApiExceptionBase
+class OpenapiVisEngineException extends OpenapiExceptionBase
 {
   public function __construct($message, $code = 0, \Exception $previous = null) {
     parent::__construct($message, $code, $previous);

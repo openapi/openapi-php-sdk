@@ -1,12 +1,12 @@
 <?php
-namespace OpenApi\classes\utility\VisEngine;
+namespace Openapi\classes\utility\VisEngine;
 class VisRequest {
 
 
   function __construct($visura)
   {
     if(!defined("OPENAPI_CREATING_REQUEST") || !OPENAPI_CREATING_REQUEST){
-      throw new \OpenApi\classes\exception\OpenApiVisEngineException("this class is not externally installable, but must be recovered using the appropriate methods of the class openapi-> visengin",40008);
+      throw new \Openapi\classes\exception\OpenapiVisEngineException("this class is not externally installable, but must be recovered using the appropriate methods of the class openapi-> visengin",40008);
     }
     $this->visura = $visura;
     $this->variables = [];
@@ -54,7 +54,7 @@ class VisRequest {
   function setJson(object $data){
     foreach($data as $k => $v){
       if(!isset($this->variables[$k])){
-        throw new \OpenApi\classes\exception\OpenApiVisEngineException("Visengine you are setting $k json key, but $k key is not presente for {$this->visura->data->nome_visura}",40006);
+        throw new \Openapi\classes\exception\OpenapiVisEngineException("Visengine you are setting $k json key, but $k key is not presente for {$this->visura->data->nome_visura}",40006);
       }
       $this->variables[$k] = $v!=NULL;
     }
@@ -124,7 +124,7 @@ class VisRequest {
    */
   function setState($stato = 0){
     if($stato != 0 && !$this->jsonValido ){
-      throw new \OpenApi\classes\exception\OpenApiVisEngineException("JSON is not valid, so is not possible set state = 1",40007);
+      throw new \Openapi\classes\exception\OpenapiVisEngineException("JSON is not valid, so is not possible set state = 1",40007);
     }
     $this->state = $stato == 0 ? $stato : 1; 
   }
@@ -249,7 +249,7 @@ class VisRequest {
         continue;
       }
       if(isset($campo->tipo) && $campo->tipo == 'codice_fiscale_persona_fisica'){
-        $val = new \OpenApi\classes\utility\Plugins\Validations();
+        $val = new \Openapi\classes\utility\Plugins\Validations();
         if(!$val->italianFiscalCode($this->json->$key)){
           $this->format_errror[$key] = 'codice_fiscale_persona_fisica';
           $error = TRUE;
@@ -257,7 +257,7 @@ class VisRequest {
       }
 
       if(isset($campo->tipo) && $campo->tipo == 'partita_iva'){
-        $val = new \OpenApi\classes\utility\Plugins\Validations();
+        $val = new \Openapi\classes\utility\Plugins\Validations();
         if(!$val->italianFiscalCode($this->json->$key) && !$val->italianVat($this->json->$key)){
           $this->format_errror[$key] = 'partita_iva';
           $error = TRUE;
@@ -265,7 +265,7 @@ class VisRequest {
       }
 
       if(isset($campo->tipo) && $campo->tipo == 'codice_fiscale'){
-        $val = new \OpenApi\classes\utility\Plugins\Validations();
+        $val = new \Openapi\classes\utility\Plugins\Validations();
         if(!$val->italianFiscalCode($this->json->$key) && !$val->italianVat($this->json->$key)){
           $this->format_errror[$key] = 'codice_fiscale';
           $error = TRUE;

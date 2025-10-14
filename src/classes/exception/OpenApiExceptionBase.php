@@ -1,6 +1,6 @@
 <?php 
-namespace OpenApi\classes\exception;
-class OpenApiExceptionBase extends \Exception
+namespace Openapi\classes\exception;
+class OpenapiExceptionBase extends \Exception
 {
   public function __construct($message, $code = 0, \Exception $previous = null) {
     parent::__construct($message, $code, $previous);

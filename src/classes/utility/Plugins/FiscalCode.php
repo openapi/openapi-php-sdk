@@ -1,5 +1,5 @@
 <?php
-namespace OpenApi\classes\utility\Plugins;
+namespace Openapi\classes\utility\Plugins;
 class FiscalCode {
     
 

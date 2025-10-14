@@ -1,5 +1,5 @@
 <?php
-namespace OpenApi\classes\utility;
+namespace Openapi\classes\utility;
 interface  storeTokenInterface {
   function get();
   function save($data);

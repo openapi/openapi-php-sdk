@@ -1,5 +1,5 @@
 <?php
-namespace OpenApi\classes\utility;
+namespace Openapi\classes\utility;
 class ci4SessionStoreToken implements storeTokenInterface{
   function get(){
     return session("openapi");

@@ -1,6 +1,6 @@
 <?php
-namespace OpenApi\classes;
-class PecMassiva extends OpenApiBase {
+namespace Openapi\classes;
+class PecMassiva extends OpenapiBase {
 
   private string $username;
   private string $password;
@@ -11,7 +11,7 @@ class PecMassiva extends OpenApiBase {
   /**
    * @param string $token   Il token da utilizzare per il collegamento
    * @param array $scopes   Array con la lista degli scope per cui il token è abilitato
-   * @param object $cache   Classe che gestisce la cahce, deve essere una classe che estende {@see OpenApi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
+   * @param object $cache   Classe che gestisce la cahce, deve essere una classe che estende {@see Openapi\clasess\utility\DummyCache} o comunque compatibile con essa (stessi metodi)
    */
   function __construct(string $token,  array $scopes, object $cache, string $prefix){
     parent::__construct($token,  $scopes, $cache, $prefix);
@@ -28,7 +28,7 @@ class PecMassiva extends OpenApiBase {
 
   function getStatus($messageId){
     if(!$this->inizialized){
-      throw new \OpenApi\classes\exception\OpenApiPecMassivaException("class must initialized calling initialize function", 40011);
+      throw new \Openapi\classes\exception\OpenapiPecMassivaException("class must initialized calling initialize function", 40011);
     }
 
 
@@ -37,9 +37,9 @@ class PecMassiva extends OpenApiBase {
       $header[] = 'x-password: '.$this->password;
       return $this->connect("send/$messageId","GET",[],0,false,$header);
       
-     }catch(\OpenApi\classes\exception\OpenApiConnectionsException $e){
+     }catch(\Openapi\classes\exception\OpenapiConnectionsException $e){
        if(isset($e->getServerResponse()->message_id)){
-         throw new \OpenApi\classes\exception\OpenApiPecMassivaException("error occurred connecting to SMTP: ".$e->getServerResponse()->message_id, 40012);
+         throw new \Openapi\classes\exception\OpenapiPecMassivaException("error occurred connecting to SMTP: ".$e->getServerResponse()->message_id, 40012);
        }
        throw $e;
          
@@ -48,7 +48,7 @@ class PecMassiva extends OpenApiBase {
 
   function send($recipient, $subject, $body, $attachments = [], $sender = NULL){
     if(!$this->inizialized){
-      throw new \OpenApi\classes\exception\OpenApiPecMassivaException("class must initialized calling initialize function", 40011);
+      throw new \Openapi\classes\exception\OpenapiPecMassivaException("class must initialized calling initialize function", 40011);
     }
     $sender = $sender ? $sender : $this->username;
     
@@ -63,9 +63,9 @@ class PecMassiva extends OpenApiBase {
     $params['sender'] = $sender;
     try{
      return $this->connect("send","POST",$params);
-    }catch(\OpenApi\classes\exception\OpenApiConnectionsException $e){
+    }catch(\Openapi\classes\exception\OpenapiConnectionsException $e){
       if(isset($e->getServerResponse()->message_id)){
-        throw new \OpenApi\classes\exception\OpenApiPecMassivaException("error occurred connecting to SMTP: ".$e->getServerResponse()->message_id, 40012);
+        throw new \Openapi\classes\exception\OpenapiPecMassivaException("error occurred connecting to SMTP: ".$e->getServerResponse()->message_id, 40012);
       }
       throw $e;
         

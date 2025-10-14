@@ -13,7 +13,7 @@
 [![Rust Version](https://img.shields.io/badge/rust-1.80+-orange.svg)](https://www.rust-lang.org/)
 </div>
 
-# OpenAPI Library
+# Openapi Library
 
 <!-- vscode-markdown-toc -->
 * 1. [Installation](#Installation)
@@ -51,7 +51,7 @@ composer require altravia/openapi
 ```php
 require_once 'vendor/autoload.php';
 
-$openapi = new \OpenApi\OpenApi($scopes, $user, $apikey, $environment);
+$openapi = new \Openapi\Openapi($scopes, $user, $apikey, $environment);
 ```
 
 Dove `$scopes` è un array di stringhe o di oggetti in uno dei seguenti formati:
@@ -69,7 +69,7 @@ $scopes = [
 
 ...e `$environment` è l'ambiente sceltro tra `'test'` (default) e `'production'`
 
-OpenApi si occuperá di reperire automaticamente, o generare, un nuovo token quando necessario.
+Openapi si occuperá di reperire automaticamente, o generare, un nuovo token quando necessario.
 
 A questo punto, in base agli scopes indicati vengono creati i seguenti oggetti:
 
@@ -102,7 +102,7 @@ $scopes = [
     'GET:imprese.altravia.com/advance',
 ];
 
-$openapi = new OpenApi\OpenApi($scopes, 'my_username','my_api_key', 'test');
+$openapi = new Openapi\Openapi($scopes, 'my_username','my_api_key', 'test');
 
 // Comuni: prendi informazioni sul cap 00132
 $cap = $openapi->comuni->getCitiesByCap('00132');
@@ -200,7 +200,7 @@ $disponibilita = $this->openapi->marcheTemporali->availability('infocert', 1);
 if ($disponibilita->availability > 0) {
     try {
         $marca = $this->openapi->marcheTemporali->purcahse('infocert', 1);
-    } catch (\OpenApi\classes\exception\OpenApiMarcheTemporaliException $e) {
+    } catch (\Openapi\classes\exception\OpenapiMarcheTemporaliException $e) {
         error_log(var_dump($e));
     }
 }
@@ -233,7 +233,7 @@ try {
     $priority = 1;
     $options = null;
     $singleSms = $this->openapi->SMS->sendOne('Nome del mittente', $recipient, 'lorem ipsum', null, $priority, $options);
-} catch (\OpenApi\classes\exception\OpenApiConnectionsException $e) {
+} catch (\Openapi\classes\exception\OpenapiConnectionsException $e) {
     throw 'Non è stato possibile recapitare il messaggio';
 }
 ```
