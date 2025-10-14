@@ -1,6 +1,10 @@
 {
     "name": "openapi/openapi-sdk",
+<<<<<<< HEAD
     "description": "Openapi PHP Libraries (https://openapi.com)",
+=======
+    "description": "OpenApi PHP Libraries (https://openapi.com)",
+>>>>>>> f44c43c47a8d98159ea0017846374da1be2b1f8c
     "authors": [
         {
             "name": "Altravia",
