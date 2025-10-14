@@ -1,12 +1,10 @@
 <?php
 namespace OpenApi\classes\utility\UfficioPostale;
-class Raccomandata extends ServiziPostali {
+class PostaPrioritaria extends ServiziPostali {
 
   function __construct($connect, $errorClass){
     parent::__construct($connect, $errorClass);
   }
-
-
 
   function confirm(){
     if($this->getId() == NULL){
@@ -16,52 +14,13 @@ class Raccomandata extends ServiziPostali {
       throw new \OpenApi\classes\exception\OpenApiUPException("State is not NEW",40012);
     }
     $param['confirmed'] = TRUE;
-    $ret = call_user_func_array($this->connect,["raccomandate/".$this->getId(),"PATCH",$param]);
+    $ret = call_user_func_array($this->connect,["prioritarie/".$this->getId(),"PATCH",$param]);
     
     $this->confirmed = $ret->data[0]->confirmed;
     $this->state = $ret->data[0]->state;
     $this->clearRecipients();
     $this->setRecipients($ret->data[0]->destinatari);
-
   }
-
-  /*
-  public function setRecipients($recipients){
-    $this->clearRecipients();
-    $valid = TRUE;
-    foreach($recipients as $key => $recipient){
-      if(!($recipient instanceof \OpenApi\classes\utility\UfficioPostale\Objects\RecipientRaccomandate)){
-      
-        $recipient = new \OpenApi\classes\utility\UfficioPostale\Objects\RecipientRaccomandate($recipient);
-      }
-      if(!$recipient->validate()){
-        $valid = FALSE;
-      }
-      $this->recipients[] = $recipient;
-    }
-    $this->validRecipients = $valid;
-    return $valid;
-  }
-
-  protected function getError($code, $serverResponse){
-    return call_user_func_array($this->errorFunc,[$code, $serverResponse]);
-  }
-
-  public function addRecipient($recipient){
-   
-    if(!($recipient instanceof \OpenApi\classes\utility\UfficioPostale\Objects\RecipientRaccomandate)){
-      $recipient = new \OpenApi\classes\utility\UfficioPostale\Objects\RecipientRaccomandate($recipient);
-    }
-  
-    $valid = TRUE;
-    if(!$recipient->validate()){
-      $valid = FALSE;
-    }
-    $this->recipients[] = $recipient;
-    $this->validRecipients = $valid;
-    return $valid;
-  }*/
-  
 
   function send(){
     try{
@@ -75,7 +34,6 @@ class Raccomandata extends ServiziPostali {
       $object->opzioni = new \stdClass();
       $object->opzioni->fronteretro = $this->getFronteRetro();
       $object->opzioni->colori = $this->getColori();
-      $object->opzioni->ar = $this->getAR();
       $object->opzioni->autoconfirm = $this->getAutoconfirm();
       if($this->getCallback() != NULL){
         $callback = $this->getCallback();
@@ -83,7 +41,7 @@ class Raccomandata extends ServiziPostali {
           $object->opzioni->$k = $v;
         }
       }
-      $ret = call_user_func_array($this->connect,["raccomandate/","POST",$object]);
+      $ret = call_user_func_array($this->connect,["prioritarie/","POST",$object]);
       $this->pricing = $ret->data[0]->pricing;
       $this->id = $ret->data[0]->id;
       $this->confirmed = $ret->data[0]->confirmed;
@@ -109,7 +67,7 @@ class Raccomandata extends ServiziPostali {
   }
 
 
-  function creaRaccomandataByData($data){
+  function creaPostaPrioritariaByData($data){
     if(isset($data->documento_validato) && is_object($data->documento_validato)){
       $this->valid_doc_pdf = $data->documento_validato->pdf;
       $this->valid_doc_jpg = $data->documento_validato->jpg;
@@ -124,11 +82,9 @@ class Raccomandata extends ServiziPostali {
     $this->setSender($data->mittente);
     $this->colori = $data->opzioni->colori;
     $this->fronteretro = $data->opzioni->fronteretro;
-    $this->ar = $data->opzioni->ar;
     $this->setCallback($data->opzioni->callback_url, $data->opzioni->custom);
     if(isset($data->IDRichiesta)){
       $this->request_id = $data->IDRichiesta;
     }
   }
-
 }

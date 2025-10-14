@@ -1,10 +1,10 @@
 <?php
 namespace OpenApi\classes\utility\UfficioPostale\Objects;
 class Recipient {
-  private $data;
-  private $itData;
-  private $errors;
-  private $validate;
+  protected $data;
+  protected $itData;
+  protected $errors;
+  protected $validate;
 
   function __construct($recipient = NULL){
     $this->errors = null;
@@ -25,6 +25,8 @@ class Recipient {
     $this->data->id = NULL;
     $this->data->IdRicevuta = NULL;
     $this->data->tracking_code = NULL;
+    $this->data->post_office = NULL;
+    $this->data->post_office_box = NULL;
 
 
     $this->itData = new \stdClass();
@@ -44,7 +46,15 @@ class Recipient {
     $this->itData->id = NULL;
     $this->itData->IdRicevuta = NULL;
     $this->itData->tracking_code = NULL;
+    $this->data->state = NULL;
+    $this->itData->state = NULL;
+    $this->itData->casella_postale = NULL;
+    $this->itData->ufficio_postale = NULL;
 
+    $this->itData->stateType = 'TRANSITORIO';
+    $this->data->stateType = 'TRANSITORIO';
+    $this->data->stateDescription = 'Inviato da Web';
+    $this->itData->stateDescription = 'Inviato da Web';
     $this->validate = false;
 
     if($recipient != NULL){
@@ -57,6 +67,30 @@ class Recipient {
       $object = (object)$object;
     }
     //var_dump($object);Exit;
+    $stateType = 'TRANSITORIO';
+    $stateDescription = '';
+  //  var_dump($object);exit;
+    if(isset($object->tracking))
+    {
+      $object->tracking = (array)$object->tracking;
+      if(is_array($object->tracking) && count($object->tracking)>1){
+        
+        $lastT = $object->tracking[count($object->tracking)-1];
+
+        $stateType = $lastT->definitivo?'DEFINITIVO':'TRANSITORIO';
+        $stateDescription = $lastT->descrizione;
+        
+      }
+    }else{
+      if(isset($object->stateType)){
+        $stateType = $object->stateType;
+        $stateDescription = $object->state;
+      }
+    }
+    $this->data->stateType = $stateType;
+    $this->data->stateDescription = $stateDescription;
+    $this->itData->stateType = $stateType;
+    $this->itData->stateDescription = $stateDescription;
     $this->data->title = isset($object->title)?$object->title:(isset($object->titolo)?$object->titolo:NULL);
     $this->data->at = isset($object->at)?$object->at:(isset($object->co)?$object->co:NULL);
     $this->data->firstName = isset($object->firstName)?$object->firstName:(isset($object->nome)?$object->nome:NULL);
@@ -75,9 +109,13 @@ class Recipient {
     $this->data->state = isset($object->state)?$object->state:NULL;
     $this->data->IdRicevuta = isset($object->IdRicevuta)?$object->IdRicevuta:NULL;
     $this->data->tracking_code = isset($object->NumeroRaccomandata)?$object->NumeroRaccomandata:NULL;
+    $this->data->post_office = isset($object->post_office)?$object->post_office:(isset($object->ufficio_postale)?$object->ufficio_postale:NULL);
+    $this->data->post_office_box = isset($object->post_office_box)?$object->post_office_box:(isset($object->casella_postale)?$object->casella_postale:NULL);
 
 
     
+    $this->itData->ufficio_postale = $this->data->post_office;
+    $this->itData->casella_postale = $this->data->post_office_box;
     $this->itData->co = $this->data->at;
     $this->itData->titolo = $this->data->title;
     $this->itData->nome = $this->data->firstName;
@@ -96,7 +134,10 @@ class Recipient {
 
     $this->itData->IdRicevuta = isset($object->IdRicevuta)?$object->IdRicevuta:NULL;
     $this->itData->tracking_code = isset($object->NumeroRaccomandata)?$object->NumeroRaccomandata:NULL;
-
+    if($this->itData->tracking_code == NULL && $this->itData->IdRicevuta  != NULL){
+      $this->itData->tracking_code = $this->itData->IdRicevuta;
+      $this->data->tracking_code = $this->itData->tracking_code;
+    }
   }
 
   public function getObject($itNames = FALSE){
@@ -118,12 +159,22 @@ class Recipient {
     return $this->data->state;
   }
 
+  public function getStateType(){
+    return $this->data->stateType;
+  }
  
+  public function getStateDescription(){
+    return $this->data->stateDescription;
+  }
   public function getFirstName(){
     return $this->data->firstName;
   }
   public function getSecondName(){
     return $this->data->secondName;
+  }
+
+  public function getLastName(){
+    return $this->getSecondName();
   }
 
   public function getCompanyName(){
@@ -182,6 +233,10 @@ class Recipient {
     $this->itData->nome = $firstName;
   }
 
+  public function setLastName(string $secondName){
+    $this->setSecondName($secondName);
+    
+  }
   public function setSecondName(string $secondName){
     $this->data->secondName = $secondName;
     $this->itData->cognome = $secondName;

@@ -1,11 +1,28 @@
 <?php
 namespace OpenApi\classes\utility\UfficioPostale;
-class Raccomandata extends ServiziPostali {
+class Telegramma extends ServiziPostali {
 
+  protected $letter;
+  protected $parole;
+  private $ar_e;
+  private $ar_c;
   function __construct($connect, $errorClass){
     parent::__construct($connect, $errorClass);
+    $this->letter = NULL;
+    $this->ar_e = false;
+    $this->ar_c = false;
   }
 
+  function getNumeroLettere(){
+    return $this->letter;
+  }
+
+  function getNumeroParole(){
+    return $this->parole;
+  }
+  function getNumeroPagine(){
+    throw new \OpenApi\classes\exception\OpenApiUPException("Pages not exist for telagrammi",40015);
+  }
 
 
   function confirm(){
@@ -16,52 +33,14 @@ class Raccomandata extends ServiziPostali {
       throw new \OpenApi\classes\exception\OpenApiUPException("State is not NEW",40012);
     }
     $param['confirmed'] = TRUE;
-    $ret = call_user_func_array($this->connect,["raccomandate/".$this->getId(),"PATCH",$param]);
+    $ret = call_user_func_array($this->connect,["telegrammi/".$this->getId(),"PATCH",$param]);
     
     $this->confirmed = $ret->data[0]->confirmed;
     $this->state = $ret->data[0]->state;
     $this->clearRecipients();
     $this->setRecipients($ret->data[0]->destinatari);
-
   }
 
-  /*
-  public function setRecipients($recipients){
-    $this->clearRecipients();
-    $valid = TRUE;
-    foreach($recipients as $key => $recipient){
-      if(!($recipient instanceof \OpenApi\classes\utility\UfficioPostale\Objects\RecipientRaccomandate)){
-      
-        $recipient = new \OpenApi\classes\utility\UfficioPostale\Objects\RecipientRaccomandate($recipient);
-      }
-      if(!$recipient->validate()){
-        $valid = FALSE;
-      }
-      $this->recipients[] = $recipient;
-    }
-    $this->validRecipients = $valid;
-    return $valid;
-  }
-
-  protected function getError($code, $serverResponse){
-    return call_user_func_array($this->errorFunc,[$code, $serverResponse]);
-  }
-
-  public function addRecipient($recipient){
-   
-    if(!($recipient instanceof \OpenApi\classes\utility\UfficioPostale\Objects\RecipientRaccomandate)){
-      $recipient = new \OpenApi\classes\utility\UfficioPostale\Objects\RecipientRaccomandate($recipient);
-    }
-  
-    $valid = TRUE;
-    if(!$recipient->validate()){
-      $valid = FALSE;
-    }
-    $this->recipients[] = $recipient;
-    $this->validRecipients = $valid;
-    return $valid;
-  }*/
-  
 
   function send(){
     try{
@@ -73,28 +52,29 @@ class Raccomandata extends ServiziPostali {
       }
       $object->documento =$this->documents;
       $object->opzioni = new \stdClass();
-      $object->opzioni->fronteretro = $this->getFronteRetro();
-      $object->opzioni->colori = $this->getColori();
-      $object->opzioni->ar = $this->getAR();
-      $object->opzioni->autoconfirm = $this->getAutoconfirm();
+     
+      $object->opzioni->ar_c = is_bool($this->ar_c)?$this->ar_c:$this->ar_c->getObject(TRUE);
+      
+      $object->opzioni->ar_e = $this->ar_e;
+
       if($this->getCallback() != NULL){
         $callback = $this->getCallback();
         foreach($callback as $k => $v){
           $object->opzioni->$k = $v;
         }
       }
-      $ret = call_user_func_array($this->connect,["raccomandate/","POST",$object]);
+      $ret = call_user_func_array($this->connect,["telegrammi/","POST",$object]);
       $this->pricing = $ret->data[0]->pricing;
       $this->id = $ret->data[0]->id;
       $this->confirmed = $ret->data[0]->confirmed;
       $this->state = $ret->data[0]->state;
-      $this->pages = $ret->data[0]->documento_validato->pagine;
+      $this->letter = $ret->data[0]->documento_validato->size;
+      $this->parole = $ret->data[0]->documento_validato->parole;
       $this->clearRecipients();
       $this->setRecipients($ret->data[0]->destinatari);
       return true;
     }catch(\OpenApi\classes\exception\OpenApiConnectionsException $e){
       $response = $e->getServerResponse();
-      //var_dump($response->data->wrong_fields);exit;
       if(isset($response->data->wrong_fields) && isset($response->error)){
         $error_message = $this->getError($response->error, $response);
       
@@ -108,8 +88,7 @@ class Raccomandata extends ServiziPostali {
     }
   }
 
-
-  function creaRaccomandataByData($data){
+  function creaTelegrammaByData($data){
     if(isset($data->documento_validato) && is_object($data->documento_validato)){
       $this->valid_doc_pdf = $data->documento_validato->pdf;
       $this->valid_doc_jpg = $data->documento_validato->jpg;
@@ -118,17 +97,52 @@ class Raccomandata extends ServiziPostali {
     $this->id = $data->id;
     $this->confirmed = $data->confirmed;
     $this->state = $data->state;
-    $this->numero_pagine = $data->documento_validato->pagine;
+    $this->letter = $data->documento_validato->size;
+    $this->parole = $data->documento_validato->parole;
     $this->clearRecipients();
     $this->setRecipients($data->destinatari);
     $this->setSender($data->mittente);
-    $this->colori = $data->opzioni->colori;
+    $this->ar_e = isset($data->opzioni->ar_e)?$data->opzioni->ar_e:FALSE;
+    $this->ar_c = isset($data->opzioni->ar_c)?$data->opzioni->ar_c:FALSE;
+   /* $this->colori = $data->opzioni->colori;
     $this->fronteretro = $data->opzioni->fronteretro;
-    $this->ar = $data->opzioni->ar;
+    $this->ar = $data->opzioni->ar;*/
     $this->setCallback($data->opzioni->callback_url, $data->opzioni->custom);
     if(isset($data->IDRichiesta)){
       $this->request_id = $data->IDRichiesta;
     }
+    
+  }
+
+
+  function setRicevutaElettronica($ar_e){
+    $this->ar_e = $ar_e;
+  }
+
+  function getRicevutaElettronica(){
+    return $this->ar_e;
+  }
+
+  function setRicevutaCartacea($ar_c){
+    if(is_bool(($ar_c))){
+      $this->ar_c = $ar_c;
+      return TRUE;
+    }else{
+      if($ar_c instanceof \OpenApi\classes\utility\UfficioPostale\Objects\Sender){
+        $this->ar_c = $ar_c;
+      }else{
+        $this->ar_c = new \OpenApi\classes\utility\UfficioPostale\Objects\Sender($ar_c);
+      }
+      if(!$this->ar_c->validate()){
+        return FALSE;
+      }
+      return TRUE;
+    }
+    
+  }
+
+  function getRicevutaCartacea(){
+    return $this->ar_c;
   }
 
 }
