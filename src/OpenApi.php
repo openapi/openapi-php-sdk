@@ -97,6 +97,9 @@ class OpenApi {
       $moduli['imprese.altravia.com'] = "\\OpenApi\\classes\\Imprese";
       $nomi['imprese.altravia.com'] = "imprese";
 
+      $moduli['imprese.openapi.it'] = "\\OpenApi\\classes\\ImpreseOpenapi";
+      $nomi['imprese.openapi.it'] = "imprese";
+
       $moduli['visengine2.altravia.com'] = "\\OpenApi\\classes\\VisEngine";
       $nomi['visengine2.altravia.com'] = "visengine";
 
@@ -120,6 +123,10 @@ class OpenApi {
 
       $moduli['pec.openapi.it'] = "\\OpenApi\\classes\\Pec";
       $nomi['pec.openapi.it'] = "PEC";
+
+      $moduli['catasto.openapi.it'] = "\\OpenApi\\classes\\Catasto";
+      $nomi['catasto.openapi.it'] = "catasto";
+      
       $moduli['ws.firmadigitale.com'] = "\\OpenApi\\classes\\FirmaDigitale";
       $nomi['ws.firmadigitale.com'] = "firmaDigitale";
       return array($moduli,$nomi);

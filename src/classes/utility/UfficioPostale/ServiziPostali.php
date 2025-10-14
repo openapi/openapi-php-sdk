@@ -17,12 +17,19 @@ class ServiziPostali {
   protected $confirmed;
   protected $state;
   protected $callback;
+  protected $pages;
+  protected $request_id;
   protected $numero_pagine;
+  protected  $valid_doc_pdf;
+  protected  $valid_doc_jpg;
 
-  function __construct($connect){
+  function __construct($connect, $errorFunc){
     $this->connect = $connect;
     $this->sender = NULL;
+    $this->errorFunc = $errorFunc;
     $this->recipients = [];
+    $this->valid_doc_pdf = NULL;
+    $this->valid_doc_jpg = NULL;
     $this->documents = [];
     $this->textMessage = NULL;
     $this->validRecipients = FALSE;
@@ -37,8 +44,33 @@ class ServiziPostali {
     $this->callback = NULL;
   }
 
+ 
+  function setRequestId($request_id){
+    $this->request_id = $request_id;
+  }
+
+  function getRequestId(){
+    return $this->request_id ;
+  }
+
+  function getValidatedDocument($type = "pdf"){
+    if($type == "pdf"){
+      return $this->valid_doc_pdf;
+    }
+    if($type == "jpg"){
+      return $this->valid_doc_jpg;
+    }
+  }
+
+  function getNumeroLettere(){
+    throw new \OpenApi\classes\exception\OpenApiUPException("Letter exist only for telagrammi",40016);
+  }
+
   function getNumeroPagine(){
     return $this->numero_pagine;
+  }
+  function getPages(){
+    return $this->pages;
   }
 
   function getPricing(){
@@ -113,9 +145,9 @@ class ServiziPostali {
   }
 
   public function getRecipients(){
-    return $this->recipients;
+    return $this->getRecpients();
   }
-
+  //MANTENUTO PER RETROCOMPATIBILITA'
   public function getRecpients(){
     return $this->recipients;
   }
@@ -153,6 +185,10 @@ class ServiziPostali {
     }
     $this->validRecipients = $valid;
     return $valid;
+  }
+
+  protected function getError($code, $serverResponse){
+    return call_user_func_array($this->errorFunc,[$code, $serverResponse]);
   }
 
   public function addRecipient($recipient){
