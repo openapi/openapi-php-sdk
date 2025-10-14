@@ -271,3 +271,41 @@ $request->setJson(['$0' => 'abcd', '$1' => '12485671007']);
 $request->setCallbackData('https://example.com', new stdClass(), 'POST');
 $visura = $this->openapi->visengine->sendRequest($request);
 ```
+
+## Contributing
+
+Contributions are always welcome! Whether you want to report bugs, suggest new features, improve documentation, or contribute code, your help is appreciated.
+
+See [docs/contributing.md](docs/contributing.md) for detailed instructions on how to get started. Please make sure to follow this project's [docs/code-of-conduct.md](docs/code-of-conduct.md) to help maintain a welcoming and collaborative environment.
+
+## Authors
+
+Meet the project authors:
+
+- Michael Cuffaro ([@maiku1008](https://www.github.com/maiku1008))
+- Openapi Team ([@openapi-it](https://github.com/openapi-it))
+
+## Partners
+
+Meet our partners using Openapi or contributing to this SDK:
+
+- [Blank](https://www.blank.app/)
+- [Credit Safe](https://www.creditsafe.com/)
+- [Deliveroo](https://deliveroo.it/)
+- [Gruppo MOL](https://molgroupitaly.it/it/)
+- [Jakala](https://www.jakala.com/)
+- [Octotelematics](https://www.octotelematics.com/)
+- [OTOQI](https://otoqi.com/)
+- [PWC](https://www.pwc.com/)
+- [QOMODO S.R.L.](https://www.qomodo.me/)
+- [SOUNDREEF S.P.A.](https://www.soundreef.com/)
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+The MIT License is a permissive open-source license that allows you to freely use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the software, provided that the original copyright notice and this permission notice are included in all copies or substantial portions of the software.
+
+In short, you are free to use this SDK in your personal, academic, or commercial projects, with minimal restrictions. The project is provided "as-is", without any warranty of any kind, either expressed or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement.
+
+For more details, see the full license text at the [MIT License page](https://choosealicense.com/licenses/mit/).
