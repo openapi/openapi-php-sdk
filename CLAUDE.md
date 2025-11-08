@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Language Policy
+
+**IMPORTANT:** The primary language for this codebase is English. All code, comments, documentation, commit messages, PR descriptions, and communications should be in English.
+
 ## Development Commands
 
 ### Testing
