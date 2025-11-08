@@ -1,273 +1,72 @@
-<div align="center">
-  <a href="https://openapi.com/">
-    <img alt="Openapi SDK for PHP" src=".github/assets/repo-header-a3.png" >
-  </a>
+# OpenAPI PHP SDK
 
-  <h1>Openapi® client for Rust</h1>
-  <h4>The perfect starting point to integrate <a href="https://openapi.com/">Openapi®</a> within your Rust project</h4>
+A minimal and agnostic PHP SDK for OpenAPI, inspired by the Rust implementation. This SDK provides only the core HTTP primitives needed to interact with any OpenAPI service.
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/<username>/<repo>/rust.yml?branch=main)](https://github.com/<username>/<repo>/actions)
-[![Crates.io](https://img.shields.io/crates/v/<crate_name>.svg)](https://crates.io/crates/<crate_name>)
-[![Docs.rs](https://img.shields.io/docsrs/<crate_name>)](https://docs.rs/<crate_name>)
-[![License](https://img.shields.io/github/license/<username>/<repo>)](LICENSE)
-[![Rust Version](https://img.shields.io/badge/rust-1.80+-orange.svg)](https://www.rust-lang.org/)
-</div>
+## Features
 
-# OpenAPI Library
+- **Agnostic Design**: No API-specific classes, works with any OpenAPI service
+- **Minimal Dependencies**: Only requires PHP 8.0+ and cURL
+- **OAuth Support**: Built-in OAuth client for token management  
+- **HTTP Primitives**: GET, POST, PUT, DELETE, PATCH methods
+- **Clean Interface**: Similar to the Rust SDK design
 
-<!-- vscode-markdown-toc -->
-* 1. [Installation](#Installation)
-* 2. [Usage](#Usage)
-	* 2.1. [Instanza della classe](#Instanzadellaclasse)
-	* 2.2. [Esempi](#Esempi)
-* 3. [Modulo comuni](#Modulocomuni)
-	* 3.1. [Esempi](#Esempi-1)
-* 4. [Modulo imprese](#Moduloimprese)
-	* 4.1. [Utilizzo](#Utilizzo)
-	* 4.2. [Esempi](#Esempi-1)
-* 5. [Modulo Marche Temporali](#ModuloMarcheTemporali)
-	* 5.1. [Esempi](#Esempi-1)
-* 6. [Modulo SMS](#ModuloSMS)
-	* 6.1. [Inviare un SMS](#InviareunSMS)
-* 7. [Modulo Visengine](#ModuloVisengine)
+## Installation
 
-<!-- vscode-markdown-toc-config
-	numbering=true
-	autoSave=true
-	/vscode-markdown-toc-config -->
-<!-- /vscode-markdown-toc -->
-
-
-##  1. <a name='Installation'></a>Installation
-
-```sh
-composer require altravia/openapi
+```bash
+composer require openapi/openapi-sdk
 ```
 
-##  2. <a name='Usage'></a>Usage
+## Quick Start
 
-###  2.1. <a name='Instanzadellaclasse'></a>Instanza della classe
-
-```php
-require_once 'vendor/autoload.php';
-
-$openapi = new \OpenApi\OpenApi($scopes, $user, $apikey, $environment);
-```
-
-Dove `$scopes` è un array di stringhe o di oggetti in uno dei seguenti formati:
+### Token Generation
 
 ```php
+use OpenApi\OauthClient;
+
+$oauthClient = new OauthClient('username', 'apikey', true); // true for test environment
+
 $scopes = [
-    "GET:ws.ufficiopostale.com/comuni",
-    [
-        "domain"=>"ws.ufficiopostale.com", 
-        "method"=>"comuni",
-        "mode"  =>"GET"
-    ]
-];
-```
-
-...e `$environment` è l'ambiente sceltro tra `'test'` (default) e `'production'`
-
-OpenApi si occuperá di reperire automaticamente, o generare, un nuovo token quando necessario.
-
-A questo punto, in base agli scopes indicati vengono creati i seguenti oggetti:
-
-
-```php
-// Ogni oggetto verrá creato solo se disponibile nello scope.
-$openapi->ufficiopostale;
-$openapi->comuni;
-$openapi->imprese;
-$openapi->visengine;
-$openapi->marcheTemporali;
-$openapi->geocoding;
-$openapi->SMS;
-$openapi->firmaDigitale;
-$openapi->pecMassiva;
-```
-che possono essere usati al seguente modo:
-
-```php
-$this->openapi->ufficioposale->getCitiesByCap('00132');
-```
-###  2.2. <a name='Esempi'></a>Esempi 
-
-```php
-require_once 'vendor/autoload.php';
-
-// Dichiaro gli scopes necessari
-$scopes = [
-    'GET:comuni.openapi.it/cap',
-    'GET:imprese.altravia.com/advance',
+    'GET:test.imprese.openapi.it/advance',
+    'POST:test.postontarget.com/fields/country'
 ];
 
-$openapi = new OpenApi\OpenApi($scopes, 'my_username','my_api_key', 'test');
-
-// Comuni: prendi informazioni sul cap 00132
-$cap = $openapi->comuni->getCitiesByCap('00132');
-
-// Imprese: prendi informazioni su una specifica impresa
-$impresa = $openapi->imprese->getByPartitaIva('12485671007');
-
-// Ufficio Postale: ottieni informaizoni sul tracking
-$track = $this->openapi->ufficiopostale->track('123456789'); 
+$result = $oauthClient->createToken($scopes, 3600);
+$tokenData = json_decode($result, true);
+$token = $tokenData['token'];
 ```
 
-
-##  3. <a name='Modulocomuni'></a>Modulo comuni
-Consente di prendere informazioni su comuni e provincie.
-
-* `getCitiesByCap`
-* `getComuneByCatasto`
-* `getRegioni`
-* `getProvince`
-* `getComuni`
-
-###  3.1. <a name='Esempi-1'></a>Esempi
+### Making API Calls
 
 ```php
-$provincia = 'RM';
-$comuni = $this->openapi->comuni->getComuni($provincia);
+use OpenApi\Client;
 
-var_dump($comuni['comuni']); 
-/*
+$client = new Client($token);
 
-["nome_provincia"]=>
-  string(4) "Roma"
-  ["sigla_provincia"]=>
-  string(2) "RM"
-  ["regione"]=>
-  string(5) "Lazio"
-  ["comuni"]=>
-  array(121) {
-    [0]=>
-    string(6) "Affile"
-    ...
-*/
+// GET request
+$params = ['denominazione' => 'altravia', 'provincia' => 'RM'];
+$response = $client->get('https://test.imprese.openapi.it/advance', $params);
 
+// POST request  
+$payload = ['limit' => 10, 'query' => ['country_code' => 'IT']];
+$response = $client->post('https://test.postontarget.com/fields/country', $payload);
 
+// Other HTTP methods
+$response = $client->put($url, $payload);
+$response = $client->delete($url);
+$response = $client->patch($url, $payload);
 ```
 
-##  4. <a name='Moduloimprese'></a>Modulo imprese
-###  4.1. <a name='Utilizzo'></a>Utilizzo
-Il modulo imprese espone i seguenti metodi:
-* `getByPartitaIva`
-* `getClosed`
-* `getVatGroup`
-* `getPec`
-* `getBySearch`
+## Architecture
 
-Per `getBySearch` e `getByPartitaIva` è richiesto accesso allo scope `/advance`
+This SDK follows a minimal approach with only essential components:
 
-###  4.2. <a name='Esempi-1'></a>Esempi
-Utilizziamo `getBySearch` per cercare un'azienda il cui nome inizia con  `Altrav` a Roma
+- `OauthClient`: Handles OAuth authentication and token management
+- `Client`: Agnostic HTTP client for API calls
+- `Exception`: Error handling
+- `Cache\CacheInterface`: Optional caching interface
 
-```php
-$autocomplete = $this->openapi->imprese->getBySearch('Altrav*', 'RM');
+## Requirements
 
-/*
- [0]=>
-  object(stdClass)#41 (10) {
-    ["piva"]=>
-    string(11) "12485671007"
-    ["cf"]=>
-    string(11) "12485671007"
-    ["denominazione"]=>
-    string(20) "ALTRAVIA SERVIZI SRL"
- [1]=>
-  object(stdClass)#42 (10) {
-    ["id"]=>
-    string(24) "4242424242"
-    ["denominazione"]=>
-    string(18) "xxx Altravia Esempio 2"
-    ...
- */
-```
-
-##  5. <a name='ModuloMarcheTemporali'></a>Modulo Marche Temporali
-* `availability`
-* `checkLotto`
-* `purcahse`
-
-###  5.1. <a name='Esempi-1'></a>Esempi
-
-```php
-// Controlliamo la disponibilitá di una marca di inforcert o aruba
-$disponibilita = $this->openapi->marcheTemporali->availability('infocert', 1);
-
-// Se le marche sono disponibili, acquistiamone una
-if ($disponibilita->availability > 0) {
-    try {
-        $marca = $this->openapi->marcheTemporali->purcahse('infocert', 1);
-    } catch (\OpenApi\classes\exception\OpenApiMarcheTemporaliException $e) {
-        error_log(var_dump($e));
-    }
-}
-```
-
-##  6. <a name='ModuloSMS'></a>Modulo SMS
-* `getRecipients`
-* `getMessage`
-* `sendMore`
-* `sendOne`
-
-###  6.1. <a name='InviareunSMS'></a>Inviare un SMS
-Per inviare un SMS, per prima cosa definiamo i destinatari:
-
-```php
-$recipient = '+39-3939989741';
-// OR
-$recipients = [
-    [
-        'number' => '+39-3939989741', 
-        'fields' => ['nome' => 'NomeDestinatario']
-    ]
-];
-```
-
-Possiamo ora procedere ad inviare un SMS:
-```php
-
-try {
-    $priority = 1;
-    $options = null;
-    $singleSms = $this->openapi->SMS->sendOne('Nome del mittente', $recipient, 'lorem ipsum', null, $priority, $options);
-} catch (\OpenApi\classes\exception\OpenApiConnectionsException $e) {
-    throw 'Non è stato possibile recapitare il messaggio';
-}
-```
-
-Possiamo anche speficiare i prefissi in modo indipendente:
-```php
-$this->openapi->SMS->sendOne('Nome del mittente', '3939989741', 'lorem ipsum', '+42', 1, null);
-```
-
-O passare delle opzioni
-```php
-$options = ['timestamp_send' => '2021-04-20']
-$this->openapi->SMS->sendOne('Nome del mittente', '3939989741', 'lorem ipsum', '+42', 1, $options);
-```
-
-##  7. <a name='ModuloVisengine'></a>Modulo Visengine
-Come prima cosa, settiamo l'hash della visura che vogliamo richiedere
-
-```php
-// https://developers.openapi.it/services/visengine
-$this->openapi->visengine->setHash($visura->hash);
-```
-
-A questo punto, possiamo lanciare `createRequest`, che ritornerà una istanza vuota della visura che andremo a creare della struttura richiesta
-
-```php
-$request = $this->openapi->visengine->createRequest();
-```
-
-Prodediamo a completare l'oggetto, che potremmo passare a sendRequest quando pronto
-
-```php
-$request->setJson(['$0' => 'abcd', '$1' => '12485671007']);
-                    // url di callback,  oggetto con dati aggiuntivi, metodo
-$request->setCallbackData('https://example.com', new stdClass(), 'POST');
-$visura = $this->openapi->visengine->sendRequest($request);
-```
+- PHP 8.0 or higher
+- cURL extension
+- JSON extension
