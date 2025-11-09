@@ -6,7 +6,7 @@
   <h1>Openapi® client for PHP</h1>
   <h4>The perfect starting point to integrate <a href="https://openapi.com/">Openapi®</a> within your PHP project</h4>
 
-  [![Build Status](https://img.shields.io/github/actions/workflow/status/openapi/openapi-php-sdk/ci.yml?branch=main)](https://github.com/openapi/openapi-php-sdk/actions)
+  [![Build Status](https://github.com/openapi/openapi-php-sdk/actions/workflows/php.yml/badge.svg)](https://github.com/openapi/openapi-php-sdk/actions/workflows/php.yml)  
   [![Packagist Version](https://img.shields.io/packagist/v/openapi/openapi-sdk)](https://packagist.org/packages/openapi/openapi-sdk)
   [![PHP Version](https://img.shields.io/packagist/php-v/openapi/openapi-sdk)](https://packagist.org/packages/openapi/openapi-sdk)
   [![License](https://img.shields.io/github/license/openapi/openapi-php-sdk)](LICENSE)
