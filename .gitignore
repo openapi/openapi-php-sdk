@@ -1,11 +1,13 @@
 .idea/
 .vscode/
+reference/
 /vendor/
 node_modules/
 npm-debug.log
 yarn-error.log
 storage/*.key
 .env
+composer.lock
 Homestead.yaml
 Homestead.json
 /.vagrant
