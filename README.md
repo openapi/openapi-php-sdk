@@ -43,6 +43,8 @@ For a complete list of all available services, check out the [Openapi Marketplac
 
 ## Installation
 
+You can add the Openapi PHP Client to your project with the following command:
+
 ```bash
 composer require openapi/openapi-sdk
 ```
