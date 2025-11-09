@@ -19,7 +19,7 @@ A minimal and agnostic PHP SDK for Openapi, inspired by a clean client implement
 
 ## Pre-requisites
 
-Before using the Openapi Rust Client, you will need an account at [Openapi](https://console.openapi.com/) and an API key to the sandbox and/or production environment
+Before using the Openapi PHP Client, you will need an account at [Openapi](https://console.openapi.com/) and an API key to the sandbox and/or production environment
 
 ## Features
 
