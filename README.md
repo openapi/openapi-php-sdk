@@ -9,7 +9,7 @@
   [![Build Status](https://github.com/openapi/openapi-php-sdk/actions/workflows/php.yml/badge.svg)](https://github.com/openapi/openapi-php-sdk/actions/workflows/php.yml)
   [![Packagist Version](https://img.shields.io/packagist/v/openapi/openapi-sdk)](https://packagist.org/packages/openapi/openapi-sdk)
   [![PHP Version](https://img.shields.io/packagist/php-v/openapi/openapi-sdk)](https://packagist.org/packages/openapi/openapi-sdk)
-  [![License](https://img.shields.io/github/license/openapi/openapi-php-sdk)](LICENSE)
+  [![License](https://img.shields.io/github/license/openapi/openapi-php-sdk?v=2)](LICENSE)
   [![Downloads](https://img.shields.io/packagist/dt/openapi/openapi-sdk)](https://packagist.org/packages/openapi/openapi-sdk)
 </div>
 
