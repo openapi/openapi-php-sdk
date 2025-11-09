@@ -21,5 +21,12 @@
     "require-dev": {
         "symfony/dotenv": "^5.3",
         "phpunit/phpunit": "^9.5"
+    },
+    "scripts": {
+        "test": "phpunit tests/",
+        "test:unit": "phpunit tests/ --testsuite=unit",
+        "example:token": "php examples/token_generation.php",
+        "example:api": "php examples/api_calls.php",
+        "example:complete": "php examples/complete_workflow.php"
     }
 }
