@@ -1,6 +1,6 @@
 {
     "name": "openapi/openapi-sdk",
-    "description": "Openapi PHP Libraries (https://openapi.com)",
+    "description": "Minimal and agnostic PHP SDK for OpenAPI (https://openapi.com)",
     "authors": [
         {
             "name": "Altravia",
@@ -9,11 +9,17 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": ">=7.2.0"
+        "php": ">=8.0.0",
+        "ext-curl": "*",
+        "ext-json": "*"
     },
     "autoload": {
         "psr-4": {
-            "Openapi\\": "src"
+            "OpenApi\\": "src"
         }
+    },
+    "require-dev": {
+        "symfony/dotenv": "^5.3",
+        "phpunit/phpunit": "^9.5"
     }
 }
