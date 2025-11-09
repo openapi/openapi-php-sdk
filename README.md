@@ -6,11 +6,11 @@
   <h1>Openapi® client for PHP</h1>
   <h4>The perfect starting point to integrate <a href="https://openapi.com/">Openapi®</a> within your PHP project</h4>
 
-  [![Build Status](https://img.shields.io/github/actions/workflow/status/<username>/<repo>/rust.yml?branch=main)](https://github.com/<username>/<repo>/actions)
-  [![Crates.io](https://img.shields.io/crates/v/<crate_name>.svg)](https://crates.io/crates/<crate_name>)
-  [![Docs.rs](https://img.shields.io/docsrs/<crate_name>)](https://docs.rs/<crate_name>)
-  [![License](https://img.shields.io/github/license/<username>/<repo>)](LICENSE)
-  [![Rust Version](https://img.shields.io/badge/rust-1.80+-orange.svg)](https://www.rust-lang.org/)
+  [![Build Status](https://img.shields.io/github/actions/workflow/status/openapi/openapi-php-sdk/ci.yml?branch=main)](https://github.com/openapi/openapi-php-sdk/actions)
+  [![Packagist Version](https://img.shields.io/packagist/v/openapi/openapi-sdk)](https://packagist.org/packages/openapi/openapi-sdk)
+  [![PHP Version](https://img.shields.io/packagist/php-v/openapi/openapi-sdk)](https://packagist.org/packages/openapi/openapi-sdk)
+  [![License](https://img.shields.io/github/license/openapi/openapi-php-sdk)](LICENSE)
+  [![Downloads](https://img.shields.io/packagist/dt/openapi/openapi-sdk)](https://packagist.org/packages/openapi/openapi-sdk)
 </div>
 
 ## Overview
@@ -106,14 +106,16 @@ This SDK follows a minimal approach with only essential components:
 
 You can find complete examples in the `examples/` directory:
 
-- `examples/token_generation.rs` - Token generation example
-- `examples/api_calls.rs` - API calls example
+- `examples/token_generation.php` - OAuth token generation example
+- `examples/api_calls.php` - HTTP API calls example
+- `examples/complete_workflow.php` - End-to-end workflow example
 
 Run examples with:
 
 ```bash
-cargo run --example token_generation
-cargo run --example api_calls
+composer run example:token
+composer run example:api
+composer run example:complete
 ```
 
 ## Testing
@@ -121,7 +123,11 @@ cargo run --example api_calls
 Run tests with:
 
 ```bash
-cargo test
+# Run all tests
+composer run test
+
+# Run unit tests specifically
+composer run test:unit
 ```
 
 
