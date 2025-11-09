@@ -1,6 +1,7 @@
 {
     "name": "openapi/openapi-sdk",
     "description": "Minimal and agnostic PHP SDK for OpenAPI (https://openapi.com)",
+    "license": "MIT",
     "authors": [
         {
             "name": "Altravia",
