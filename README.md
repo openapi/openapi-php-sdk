@@ -31,7 +31,7 @@ Before using the Openapi PHP Client, you will need an account at [Openapi](https
 
 ## What you can do
 
-With the Openapi Rust Client, you can easily interact with a variety of services in the Openapi Marketplace. For example, you can:
+With the Openapi PHP Client, you can easily interact with a variety of services in the Openapi Marketplace. For example, you can:
 
 - 📩 **Send SMS messages** with delivery reports and custom sender IDs
 - 💸 **Process bills and payments** in real time via API
