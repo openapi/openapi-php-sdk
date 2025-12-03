@@ -29,7 +29,7 @@ We welcome all kinds of contributions: bug reports, feature requests, documentat
 
 ## Guidelines
 
-* Follow the existing **Rust coding style**.
+* Follow the existing **Php coding style**.
 * Include **tests** for new features or bug fixes when applicable.
 * Keep **commit messages clear and concise**.
 * Update **documentation** as needed for your changes.
