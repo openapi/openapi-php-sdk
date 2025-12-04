@@ -76,8 +76,8 @@ use OpenApi\Client;
 $client = new Client($token);
 
 // GET request
-$params = ['denominazione' => 'altravia', 'provincia' => 'RM'];
-$response = $client->get('https://test.imprese.openapi.it/advance', $params);
+$params = ['denominazione' => 'Stellantis', 'provincia' => 'TO'];
+$response = $client->get('https://test.company.openapi.com/IT-advanced', $params);
 
 // POST request  
 $payload = ['limit' => 10, 'query' => ['country_code' => 'IT']];
