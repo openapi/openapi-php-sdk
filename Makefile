@@ -59,5 +59,5 @@ push:
 release: push
 	@git add .
 	@git commit -m "Update PHP SDK to version ${VERSION}" || echo "No changes to commit"
-	@git tag -fa "v${VERSION}" -m "${VERSION}"
+	@git tag -fa "${VERSION}" -m "${VERSION}"
 	@git push origin --tags -f
