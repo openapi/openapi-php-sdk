@@ -21,8 +21,8 @@
 #   License:        MIT                                                       #
 #   Maintainer:     Francesco Bianco                                          #
 #   Contact:        https://openapi.com/                                      #
-#   Repository:     [Repository URL]                                          #
-#   Documentation:  [Docs URL]                                                #
+#   Repository:     https://github.com/openapi/openapi-php-sdk/               #
+#   Documentation:  https://console.openapi.com/                              #
 #                                                                             #
 #   ═══════════════════════════════════════════════════════════════════════   #
 #                                                                             #
@@ -31,6 +31,11 @@
 #                                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+## =========
+## Variables
+## =========
+
+VERSION := 1.2.1
 
 ## ====================
 ## Development Commands
@@ -41,3 +46,18 @@ dev-push:
 	@git add .
 	@git commit -m "$$(read -p 'Commit message: ' msg; echo $$msg)" || true
 	@git push
+
+## ================
+## Release Commands
+## ================
+
+push:
+	@git add .
+	@git commit -am "Updated at $$(date)" || true
+	@git push
+
+release: push
+	@git add .
+	@git commit -m "Update PHP SDK to version ${VERSION}" || echo "No changes to commit"
+	@git tag -fa "v${VERSION}" -m "${VERSION}"
+	@git push origin --tags -f
