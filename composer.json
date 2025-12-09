@@ -1,6 +1,6 @@
 {
     "name": "openapi/openapi-sdk",
-    "description": "Minimal and agnostic PHP SDK for OpenAPI (https://openapi.com)",
+    "description": "Minimal and agnostic PHP SDK for Openapi® (https://openapi.com)",
     "license": "MIT",
     "authors": [
         {
@@ -14,14 +14,14 @@
         "ext-curl": "*",
         "ext-json": "*"
     },
+    "require-dev": {
+        "symfony/dotenv": "^5.3",
+        "phpunit/phpunit": "^9.5"
+    },
     "autoload": {
         "psr-4": {
             "OpenApi\\": "src"
         }
-    },
-    "require-dev": {
-        "symfony/dotenv": "^5.3",
-        "phpunit/phpunit": "^9.5"
     },
     "scripts": {
         "test": "phpunit tests/",
