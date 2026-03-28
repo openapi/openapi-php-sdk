@@ -2,6 +2,11 @@
 
 namespace OpenApi;
 
+use OpenApi\Interfaces\HttpTransportInterface;
+use OpenApi\Transports\CurlTransport;
+use Psr\Http\Client\ClientInterface as PsrClientInterface;;
+
+
 /**
  * Generic HTTP client for OpenAPI services
  * Handles REST operations with Bearer token authentication
@@ -10,70 +15,25 @@ class Client
 {
     private string $token;
 
+    private HttpTransportInterface|PsrClientInterface $transport;
+
     /**
      * Initialize client with Bearer token
      */
-    public function __construct(string $token)
+    public function __construct(string $token, HttpTransportInterface|PsrClientInterface|null $transport = null)
     {
         $this->token = $token;
+        $this->transport = $transport ?? new CurlTransport($token);
     }
 
-    /**
-     * Execute HTTP request
-     *
-     * @param string $method HTTP method (GET, POST, PUT, DELETE, PATCH)
-     * @param string $url Target URL
-     * @param mixed $payload Request body (for POST/PUT/PATCH)
-     * @param array|null $params Query parameters (for GET) or form data (for other methods)
-     * @return string Response body
-     */
-    public function request(string $method, string $url, mixed $payload = null, ?array $params = null): string
-    {
-        // Append query parameters for GET requests
-        if ($params && $method === 'GET') {
-            $url .= '?' . http_build_query($params);
-        }
 
-        $ch = curl_init();
-
-        curl_setopt_array($ch, [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CUSTOMREQUEST => $method,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTPHEADER => [
-                'Content-Type: application/json',
-                'Authorization: Bearer ' . $this->token
-            ]
-        ]);
-
-        // Add JSON payload for POST/PUT/PATCH requests
-        if ($payload && in_array($method, ['POST', 'PUT', 'PATCH'])) {
-            curl_setopt($ch, CURLOPT_POSTFIELDS, is_string($payload) ? $payload : json_encode($payload));
-        }
-
-        // Add form data for non-GET requests
-        if ($params && $method !== 'GET') {
-            curl_setopt($ch, CURLOPT_POSTFIELDS,
-                is_string($params) ? $params : http_build_query($params));
-        }
-
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $error = curl_error($ch);
-        curl_close($ch);
-
-        // TODO: Provide more graceful error message with connection context (timeout, DNS, SSL, etc.)
-        if ($response === false) {
-            throw new Exception("cURL Error: " . $error);
-        }
-
-        // TODO: Parse response body and provide structured error details (error code, message, request ID)
-        if ($httpCode >= 400) {
-            throw new Exception("HTTP Error {$httpCode}: " . $response);
-        }
-
-        return $response;
+      public function request(
+        string $method,
+        string $url,
+        mixed $payload = null,
+        ?array $params = null
+    ): string {
+        return $this->transport->request($method, $url, $payload, $params);
     }
 
     /**
