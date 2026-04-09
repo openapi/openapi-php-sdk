@@ -1,5 +1,5 @@
 {
-    "name": "openapi/openapi-sdk",
+    "name": "seraphim/openapi-sdk",
     "description": "Minimal and agnostic PHP SDK for Openapi® (https://openapi.com)",
     "license": "MIT",
     "authors": [
@@ -12,7 +12,8 @@
     "require": {
         "php": ">=8.0.0",
         "ext-curl": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "psr/http-client": "^1.0"
     },
     "require-dev": {
         "symfony/dotenv": "^5.3",
