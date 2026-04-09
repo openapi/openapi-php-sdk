@@ -21,7 +21,11 @@
     },
     "autoload": {
         "psr-4": {
-            "OpenApi\\": "src",
+            "OpenApi\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Tests\\": "tests"
         }
     },
