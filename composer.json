@@ -21,7 +21,8 @@
     },
     "autoload": {
         "psr-4": {
-            "OpenApi\\": "src"
+            "OpenApi\\": "src",
+            "Tests\\": "tests"
         }
     },
     "scripts": {
