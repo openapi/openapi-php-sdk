@@ -32,6 +32,11 @@
             "Tests\\": "tests"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests"
+        }
+    },
     "scripts": {
         "test": "phpunit tests/",
         "test:unit": "phpunit tests/ --testsuite=unit",
