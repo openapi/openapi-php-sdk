@@ -1,12 +1,12 @@
 <?php
 
-namespace OpenApi;
+namespace Openapi;
 
 /**
- * Custom exception for OpenAPI SDK
+ * Custom exception for Openapi SDK
  * Stores HTTP response details for better error handling
  */
-class Exception extends \Exception
+class OpenapiException extends \Exception
 {
     private mixed $serverResponse = null;
     private mixed $headers = null;

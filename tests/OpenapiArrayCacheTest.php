@@ -1,15 +1,15 @@
 <?php
 
-use OpenApi\Cache\ArrayCache;
+use Openapi\Cache\OpenapiArrayCache;
 use PHPUnit\Framework\TestCase;
 
 final class ArrayCacheTest extends TestCase
 {
-    private ArrayCache $cache;
+    private OpenapiArrayCache $cache;
 
     protected function setUp(): void
     {
-        $this->cache = new ArrayCache();
+        $this->cache = new OpenapiArrayCache();
     }
 
     public function testCacheImplementation(): void

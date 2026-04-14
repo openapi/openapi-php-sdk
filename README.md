@@ -31,6 +31,7 @@ Before using the Openapi PHP Client, you will need an account at [Openapi](https
 - **OAuth Support**: Built-in OAuth client for token management
 - **HTTP Primitives**: GET, POST, PUT, DELETE, PATCH methods
 - **Clean Interface**: Similar to the Rust SDK design
+- **Built-in DotEnv Support**: Lightweight environment loader with safe fallback behavior
 
 ## What you can do
 
@@ -164,6 +165,59 @@ This SDK follows a minimal approach with only essential components:
 - `Client`: Agnostic HTTP client for API calls
 - `Exception`: Error handling
 - `Cache\CacheInterface`: Optional caching interface
+
+## Environment Configuration (.env support)
+
+This SDK includes a lightweight and framework-agnostic .env loader to simplify configuration in non-framework environments.
+
+### Automatic loading
+
+When installed via Composer, the SDK will automatically attempt to load a .env file from the project root.
+
+This happens only when no existing environment configuration is detected (e.g. Laravel, Symfony, CI environments).
+
+- ✅ Does not override existing environment variables
+- ✅ Works out of the box in plain PHP projects
+- ✅ Compatible with Laravel, Symfony, and other frameworks
+- ✅ Safe fallback mechanism
+
+### Supported variables
+
+The following environment variables are commonly used:
+
+```env
+OPENAPI_BASE_URL=https://example.com
+OPENAPI_OAUTH_USERNAME=your_username
+OPENAPI_OAUTH_APIKEY=your_api_key
+OPENAPI_OAUTH_URL=https://api.com
+OPENAPI_OAUTH_TEST_URL=https://api.com
+```
+
+### Framework compatibility
+
+If you are using a framework like Laravel or Symfony:
+
+- The SDK will not override your existing environment
+- Your framework's configuration system remains the source of truth
+- The internal loader acts only as a fallback
+
+### Manual usage
+
+If you prefer full control, you can use the DotEnv loader manually:
+
+```php
+use OpenApi\Environment\DotEnv\DotEnv;
+
+$dotenv = new DotEnv(__DIR__ . '/.env');
+$dotenv->load();
+
+```
+
+### Notes
+
+- The loader is intentionally minimal and does not aim to fully replace libraries like vlucas/phpdotenv
+- Designed for performance, predictability, and zero external dependencies
+- Suitable for CLI tools, microservices, and lightweight integrations
 
 ## Requirements
 

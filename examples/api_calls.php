@@ -2,11 +2,11 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use OpenApi\Client;
+use OpenApi\OpenapiClient;
 
 try {
     $token = '<your_access_token>';
-    $client = new Client($token);
+    $client = new OpenapiClient($token);
 
     // GET request with parameters
     $params = [

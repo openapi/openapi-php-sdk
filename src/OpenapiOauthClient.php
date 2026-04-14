@@ -1,12 +1,12 @@
 <?php
 
-namespace OpenApi;
+namespace Openapi;
 
 /**
- * OAuth client for OpenAPI authentication
+ * OAuth client for Openapi authentication
  * Handles token management using Basic Auth (username:apikey)
  */
-class OauthClient
+class OpenapiOauthClient
 {
     private string $url;
     private string $username;
@@ -22,11 +22,12 @@ class OauthClient
      * @param string $apikey API key
      * @param bool $test Use test environment if true
      */
-    public function __construct(string $username, string $apikey, bool $test = false)
+    public function __construct(?string $username = null, ?string $apikey = null, bool $test = false)
     {
-        $this->username = $username;
-        $this->apikey = $apikey;
-        $this->url = $test ? self::TEST_OAUTH_BASE_URL : self::OAUTH_BASE_URL;
+        $this->username = $username ?? getenv('OPENAPI_OAUTH_USERNAME') ;
+        $this->apikey = $apikey ?? getenv('OPENAPI_OAUTH_APIKEY');
+        $this->url = $test ? getenv('OPENAPI_OAUTH_TEST_URL') ?? self::TEST_OAUTH_BASE_URL 
+                        : getenv('OPENAPI_OAUTH_URL') ?? self::OAUTH_BASE_URL;
     }
 
     /**
@@ -126,12 +127,12 @@ class OauthClient
 
         // TODO: Provide more graceful error message with connection context (timeout, DNS, SSL, etc.)
         if ($response === false) {
-            throw new Exception("cURL Error: " . $error);
+            throw new OpenapiException("cURL Error: " . $error);
         }
 
         // TODO: Parse response body and provide structured error details with auth-specific hints (invalid credentials, expired key, etc.)
         if ($httpCode >= 400) {
-            throw new Exception("HTTP Error {$httpCode}: " . $response);
+            throw new OpenapiException("HTTP Error {$httpCode}: " . $response);
         }
 
         return $response;

@@ -1,10 +1,10 @@
 <?php
 
-namespace OpenApi\Transports;
+namespace Openapi\Transports;
 
-use OpenApi\Interfaces\HttpTransportInterface;
+use Openapi\Interfaces\OpenapiHttpTransportInterface;
  
-final class CurlTransport implements HttpTransportInterface
+final class OpenapiCurlTransport implements OpenapiHttpTransportInterface
 {
     public function __construct(
         private ?string $token = null

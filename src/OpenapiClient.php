@@ -1,29 +1,34 @@
 <?php
 
-namespace OpenApi;
+namespace Openapi;
 
-use OpenApi\Interfaces\HttpTransportInterface;
-use OpenApi\Transports\CurlTransport;
+use Openapi\Interfaces\OpenapiHttpTransportInterface;
+use Openapi\Transports\OpenapiCurlTransport;
 use Psr\Http\Client\ClientInterface as PsrClientInterface;;
 
 
 /**
- * Generic HTTP client for OpenAPI services
+ * Generic HTTP client for Openapi services
  * Handles REST operations with Bearer token authentication
  */
-class Client
+class OpenapiClient
 {
     private string $token;
 
-    private HttpTransportInterface|PsrClientInterface $transport;
+    private OpenapiHttpTransportInterface|PsrClientInterface $transport;
+
+    private ?string $baseUrl = null;
 
     /**
      * Initialize client with Bearer token
      */
-    public function __construct(string $token, HttpTransportInterface|PsrClientInterface|null $transport = null)
+    public function __construct(?string $token = null, OpenapiHttpTransportInterface|PsrClientInterface|null $transport = null)
     {
-        $this->token = $token;
-        $this->transport = $transport ?? new CurlTransport($token);
+        $this->token = $token ?? getenv('OPEN_API_TOKEN') ;
+        if(getenv("OPENAPI_BASE_URL")){
+            $this->baseUrl = getenv("OPENAPI_BASE_URL");
+        }
+        $this->transport = $transport ?? new OpenapiCurlTransport($token);
     }
 
 
@@ -33,6 +38,12 @@ class Client
         mixed $payload = null,
         ?array $params = null
     ): string {
+        $isAbsolute = str_starts_with(strtolower($url), 'http');
+
+        // Wenn nicht absolut und baseUrl vorhanden -> Zusammenfügen
+        if (!$isAbsolute && !empty($this->baseUrl)) {
+            $url = rtrim($this->baseUrl, '/') . '/' . ltrim($url, '/');
+        }
         return $this->transport->request($method, $url, $payload, $params);
     }
 

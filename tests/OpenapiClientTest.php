@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use OpenApi\Client;
-use Tests\Transports\FakeTransport;
+use Openapi\OpenapiClient;
+use Tests\Transports\OpenapiFakeTransport;
 use PHPUnit\Framework\TestCase;
 
 final class ClientTest extends TestCase
 {
     public function test_it_uses_injected_transport_for_requests(): void
     {
-        $transport = new FakeTransport();
+        $transport = new OpenapiFakeTransport();
 
-        $client = new Client('test-token', $transport);
+        $client = new OpenapiClient('test-token', $transport);
 
         $response = $client->request(
             'POST',
@@ -34,10 +34,22 @@ final class ClientTest extends TestCase
 
     public function test_it_calls_transport_once_per_request(): void
     {
-        $transport = new FakeTransport();
-        $client = new Client('test-token', $transport);
+        $transport = new OpenapiFakeTransport();
+        $client = new OpenapiClient('test-token', $transport);
 
         $client->request('GET', 'https://example.com/one');
+        $client->request('GET', 'https://example.com/two');
+
+        $this->assertSame(2, $transport->callCount);
+        $this->assertSame('https://example.com/two', $transport->lastUrl);
+    }
+
+    public function test_it_use_dot_env_for_request(): void
+    {
+        $transport = new OpenapiFakeTransport();
+        $client = new OpenapiClient('test-token', $transport);
+
+        $client->request('GET', '/one');
         $client->request('GET', 'https://example.com/two');
 
         $this->assertSame(2, $transport->callCount);

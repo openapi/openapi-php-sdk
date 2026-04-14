@@ -21,7 +21,15 @@
     },
     "autoload": {
         "psr-4": {
-            "OpenApi\\": "src"
+            "Openapi\\": "src"
+        },
+        "files": [
+            "src/OpenapiBootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests"
         }
     },
     "scripts": {

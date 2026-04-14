@@ -1,8 +1,8 @@
 <?php
 
-namespace OpenApi\Interfaces;
+namespace Openapi\Interfaces;
 
-interface HttpTransportInterface
+interface OpenapiHttpTransportInterface
 {
     public function request(
         string $method,

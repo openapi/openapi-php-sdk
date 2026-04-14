@@ -1,16 +1,16 @@
 <?php
 
-use OpenApi\Exception;
+use Openapi\OpenapiException;
 use PHPUnit\Framework\TestCase;
 
-final class ExceptionTest extends TestCase
+final class OpenapiExceptionTest extends TestCase
 {
     public function testExceptionCreation(): void
     {
         $message = 'Test exception message';
         $code = 400;
         
-        $exception = new Exception($message, $code);
+        $exception = new OpenapiException($message, $code);
         
         $this->assertEquals($message, $exception->getMessage());
         $this->assertEquals($code, $exception->getCode());
@@ -18,7 +18,7 @@ final class ExceptionTest extends TestCase
 
     public function testSetServerResponse(): void
     {
-        $exception = new Exception('Test message');
+        $exception = new OpenapiException('Test message');
         
         $response = ['error' => 'Server error'];
         $headers = 'Content-Type: application/json';

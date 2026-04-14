@@ -1,10 +1,10 @@
 <?php
 namespace Tests\Transports;
 
-use OpenApi\Interfaces\HttpTransportInterface;
+use Openapi\Interfaces\OpenapiHttpTransportInterface;
 
 
-final class FakeTransport implements HttpTransportInterface
+final class OpenapiFakeTransport implements OpenapiHttpTransportInterface
 {
     public ?string $lastMethod = null;
     public ?string $lastUrl = null;

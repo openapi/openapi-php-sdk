@@ -2,10 +2,10 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use OpenApi\OauthClient;
+use OpenApi\OpenapiOauthClient;
 
 try {
-    $oauthClient = new OauthClient('<your_username>', '<your_apikey>', true);
+    $oauthClient = new OpenapiOauthClient('<your_username>', '<your_apikey>', true);
 
     $scopes = [
         'GET:test.imprese.openapi.it/advance',

@@ -1,11 +1,11 @@
 <?php
 
-namespace OpenApi\Cache;
+namespace Openapi\Cache;
 
 /**
  * Cache interface for SDK implementations
  */
-interface CacheInterface
+interface OpenapiCacheInterface
 {
     /**
      * Retrieve value from cache

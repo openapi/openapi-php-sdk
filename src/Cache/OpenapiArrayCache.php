@@ -1,12 +1,12 @@
 <?php
 
-namespace OpenApi\Cache;
+namespace Openapi\Cache;
 
 /**
  * In-memory cache implementation
  * Data is stored in PHP arrays and cleared at end of script execution
  */
-class ArrayCache implements CacheInterface
+class OpenapiArrayCache implements OpenapiCacheInterface
 {
     private array $cache = [];
     private array $expiry = [];
