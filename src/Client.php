@@ -21,6 +21,15 @@ class Client
         $this->transport = $transport ?? new CurlTransport($this->token);
     }
 
+    /**
+     * Execute HTTP request
+     *
+     * @param string $method HTTP method (GET, POST, PUT, DELETE, PATCH)
+     * @param string $url Target URL
+     * @param mixed $payload Request body (for POST/PUT/PATCH)
+     * @param array<string, scalar|null>|null $params Query parameters (for GET) or form data (for other methods)
+     * @return string Response body
+     */
     public function request(
         string $method,
         string $url,
@@ -34,6 +43,11 @@ class Client
         return $this->transport->request($method, $url, $payload, $params);
     }
 
+    /**
+     * Execute GET request
+     *
+     * @param array<string, scalar|null>|null $params Query parameters
+     */
     public function get(string $url, ?array $params = null): string
     {
         return $this->request('GET', $url, null, $params);

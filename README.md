@@ -6,13 +6,14 @@
   <h1>Openapi® client for PHP</h1>
   <h4>The perfect starting point to integrate <a href="https://openapi.com/">Openapi®</a> within your PHP project</h4>
 
-  [![Build Status](https://github.com/openapi/openapi-php-sdk/actions/workflows/php.yml/badge.svg)](https://github.com/openapi/openapi-php-sdk/actions/workflows/php.yml)
-  [![Packagist Version](https://img.shields.io/packagist/v/openapi/openapi-sdk)](https://packagist.org/packages/openapi/openapi-sdk)
-  [![PHP Version](https://img.shields.io/packagist/php-v/openapi/openapi-sdk)](https://packagist.org/packages/openapi/openapi-sdk)
-  [![License](https://img.shields.io/github/license/openapi/openapi-php-sdk?v=2)](LICENSE)
-  [![Downloads](https://img.shields.io/packagist/dt/openapi/openapi-sdk)](https://packagist.org/packages/openapi/openapi-sdk)
-  <br>
+[![Build Status](https://github.com/openapi/openapi-php-sdk/actions/workflows/php.yml/badge.svg)](https://github.com/openapi/openapi-php-sdk/actions/workflows/php.yml)
+[![Packagist Version](https://img.shields.io/packagist/v/openapi/openapi-sdk)](https://packagist.org/packages/openapi/openapi-sdk)
+[![PHP Version](https://img.shields.io/packagist/php-v/openapi/openapi-sdk)](https://packagist.org/packages/openapi/openapi-sdk)
+[![License](https://img.shields.io/github/license/openapi/openapi-php-sdk?v=2)](LICENSE)
+[![Downloads](https://img.shields.io/packagist/dt/openapi/openapi-sdk)](https://packagist.org/packages/openapi/openapi-sdk)
+<br>
 [![Linux Foundation Member](https://img.shields.io/badge/Linux%20Foundation-Silver%20Member-003778?logo=linux-foundation&logoColor=white)](https://www.linuxfoundation.org/about/members)
+
 </div>
 
 ## Overview
@@ -27,9 +28,10 @@ Before using the Openapi PHP Client, you will need an account at [Openapi](https
 
 - **Agnostic Design**: No API-specific classes, works with any Openapi service
 - **Minimal Dependencies**: Only requires PHP 8.0+ and cURL
-- **OAuth Support**: Built-in OAuth client for token management  
+- **OAuth Support**: Built-in OAuth client for token management
 - **HTTP Primitives**: GET, POST, PUT, DELETE, PATCH methods
 - **Clean Interface**: Similar to the Rust SDK design
+- **Static Analysis**: PHPStan level 6 configuration available via Composer
 
 ## What you can do
 
@@ -81,7 +83,7 @@ $client = new Client($token);
 $params = ['denominazione' => 'Stellantis', 'provincia' => 'TO'];
 $response = $client->get('https://test.company.openapi.com/IT-advanced', $params);
 
-// POST request  
+// POST request
 $payload = ['limit' => 10, 'query' => ['country_code' => 'IT']];
 $response = $client->post('https://test.postontarget.com/fields/country', $payload);
 
@@ -134,6 +136,17 @@ composer run test
 composer run test:unit
 ```
 
+## Static Analysis
+
+This SDK includes PHPStan as a Composer development dependency to help keep the codebase type-safe and maintainable.
+
+PHPStan is configured in `phpstan.neon` and currently runs at level 6.
+
+Run static analysis with:
+
+```bash
+composer run analyse
+```
 
 ## Contributing
 
@@ -165,9 +178,9 @@ Meet our partners using Openapi or contributing to this SDK:
 
 ## Our Commitments
 
-We believe in open source and we act on that belief. We became Silver Members 
-of the Linux Foundation because we wanted to formally support the ecosystem 
-we build on every day. Open standards, open collaboration, and open governance 
+We believe in open source and we act on that belief. We became Silver Members
+of the Linux Foundation because we wanted to formally support the ecosystem
+we build on every day. Open standards, open collaboration, and open governance
 are part of how we work and how we think about software.
 
 ## License
@@ -179,4 +192,3 @@ The MIT License is a permissive open-source license that allows you to freely us
 In short, you are free to use this SDK in your personal, academic, or commercial projects, with minimal restrictions. The project is provided "as-is", without any warranty of any kind, either expressed or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement.
 
 For more details, see the full license text at the [MIT License page](https://choosealicense.com/licenses/mit/).
-

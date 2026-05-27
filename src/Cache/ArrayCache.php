@@ -4,7 +4,13 @@ namespace Openapi\Cache;
 
 class ArrayCache implements CacheInterface
 {
+     /**
+     * @var array<string, mixed>
+     */
     private array $cache = [];
+    /**
+     * @var array<string, int>
+     */
     private array $expiry = [];
 
     public function get(string $key): mixed

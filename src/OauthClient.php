@@ -28,6 +28,9 @@ class OauthClient
         return $this->request('GET', $url);
     }
 
+    /**
+     * @param list<string> $scopes
+     */
     public function createToken(array $scopes, int $ttl = 3600): string
     {
         $body = [
@@ -56,6 +59,10 @@ class OauthClient
         return $this->request('GET', $this->url . '/counters/' . $period . '/' . $date);
     }
 
+    
+    /**
+     * @param array<string, mixed>|null $body
+     */
     private function request(string $method, string $url, ?array $body = null): string
     {
         $ch = curl_init();

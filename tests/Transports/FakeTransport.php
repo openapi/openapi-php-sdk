@@ -9,14 +9,17 @@ final class FakeTransport implements HttpTransportInterface
     public ?string $lastMethod = null;
     public ?string $lastUrl = null;
     public mixed $lastPayload = null;
-    public ?array $lastParams = null;
+     /**
+     * @var array<string, mixed>|string|null
+     */
+    public array|string|null $lastParams = null;
     public int $callCount = 0;
 
     public function request(
         string $method,
         string $url,
         mixed $payload = null,
-        ?array $params = null
+        array|string|null $params = null
     ): string {
         $this->callCount++;
         $this->lastMethod = $method;

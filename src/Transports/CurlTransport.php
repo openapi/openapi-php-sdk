@@ -14,7 +14,7 @@ final class CurlTransport implements HttpTransportInterface
         string $method,
         string $url,
         mixed $payload = null,
-        ?array $params = null
+        array|string|null $params = null
     ): string {
         if ($params && $method === 'GET') {
             $url .= '?' . http_build_query($params);
