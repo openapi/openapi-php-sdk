@@ -1,78 +1,112 @@
 {
-    "name": "openapi/openapi-sdk",
-    "description": "Minimal and agnostic PHP SDK for Openapi® (https://openapi.com)",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Altravia",
-            "email": "info@altravia.com",
-            "homepage": "https://www.altravia.com",
-            "role": "Maintainer"
-        },
-        {
-            "name": "Lorenzo Paderi",
-            "email": "l.paderi@altravia.com",
-            "homepage": "https://github.com/lpaderiAltravia",
-            "role": "Developer"
-        },
-        {
-            "name": "Mario Ugurcu",
-            "email": "mario.ugurcu@wum-studios.de",
-            "homepage": "https://github.com/Seraphim200001",
-            "role": "Contributor"
-        },
-        {
-            "name": "Francesco Bianco",
-            "email": "bianco@javanile.org",
-            "homepage": "https://github.com/francescobianco",
-            "role": "Contributor"
-        },
-        {
-            "name": "Claude Code (Anthropic)",
-            "email": "noreply@anthropic.com",
-            "homepage": "https://claude.ai/code",
-            "role": "AI Contributor"
-        }
-    ],
-    "keywords": [
-        "api", "rest", "http", "client", "sdk", "oauth", "oauth2", "token",
-        "sms", "pec", "email", "geocoding", "company", "business-registry",
-        "italy", "italian", "imprese", "visure", "catasto",
-        "laravel", "symfony", "codeigniter", "yii", "slim", "lumen",
-        "cakephp", "phalcon", "laminas", "zend", "october", "wordpress",
-        "php", "php8", "curl", "psr-18", "http-client", "guzzle"
-    ],
-    "minimum-stability": "stable",
-    "require": {
-        "php": ">=8.0.0",
-        "ext-curl": "*",
-        "ext-json": "*",
-        "psr/http-client": "^1.0"
+  "name": "openapi/openapi-sdk",
+  "description": "Minimal and agnostic PHP SDK for Openapi® (https://openapi.com)",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Altravia",
+      "email": "info@altravia.com",
+      "homepage": "https://www.altravia.com",
+      "role": "Maintainer"
     },
-    "require-dev": {
-        "symfony/dotenv": "^5.3",
-        "phpunit/phpunit": "^9.5",
-        "phpstan/phpstan": "^2.1"
+    {
+      "name": "Lorenzo Paderi",
+      "email": "l.paderi@altravia.com",
+      "homepage": "https://github.com/lpaderiAltravia",
+      "role": "Developer"
     },
-    "autoload": {
-        "psr-4": {
-            "Openapi\\": "src"
-        },
-        "files": [
-            "src/Bootstrap.php"
-        ]
+    {
+      "name": "Mario Ugurcu",
+      "email": "mario.ugurcu@wum-studios.de",
+      "homepage": "https://github.com/Seraphim200001",
+      "role": "Contributor"
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests"
-        }
+    {
+      "name": "Francesco Bianco",
+      "email": "bianco@javanile.org",
+      "homepage": "https://github.com/francescobianco",
+      "role": "Contributor"
     },
-    "scripts": {
-        "analyse": "vendor/bin/phpstan analyse -c phpstan.neon",
-        "test": "phpunit tests/",
-        "test:unit": "phpunit tests/ --testsuite=unit",
-        "example:token": "php examples/token_generation.php",
-        "example:api": "php examples/api_calls.php",
-        "example:complete": "php examples/complete_workflow.php"
+    {
+      "name": "Claude Code (Anthropic)",
+      "email": "noreply@anthropic.com",
+      "homepage": "https://claude.ai/code",
+      "role": "AI Contributor"
     }
+  ],
+  "keywords": [
+    "api",
+    "rest",
+    "http",
+    "client",
+    "sdk",
+    "oauth",
+    "oauth2",
+    "token",
+    "sms",
+    "pec",
+    "email",
+    "geocoding",
+    "company",
+    "business-registry",
+    "italy",
+    "italian",
+    "imprese",
+    "visure",
+    "catasto",
+    "laravel",
+    "symfony",
+    "codeigniter",
+    "yii",
+    "slim",
+    "lumen",
+    "cakephp",
+    "phalcon",
+    "laminas",
+    "zend",
+    "october",
+    "wordpress",
+    "php",
+    "php8",
+    "curl",
+    "psr-18",
+    "http-client",
+    "guzzle"
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=8.0.0",
+    "ext-curl": "*",
+    "ext-json": "*",
+    "psr/http-client": "^1.0"
+  },
+  "require-dev": {
+    "symfony/dotenv": "^5.3",
+    "phpunit/phpunit": "^9.5",
+    "phpstan/phpstan": "^2.1",
+    "squizlabs/php_codesniffer": "^4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Openapi\\": "src"
+    },
+    "files": [
+      "src/Bootstrap.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests"
+    }
+  },
+  "scripts": {
+    "analyse": "vendor/bin/phpstan analyse -c phpstan.neon",
+    "test": "phpunit tests/",
+    "test:unit": "phpunit tests/ --testsuite=unit",
+    "example:token": "php examples/token_generation.php",
+    "example:api": "php examples/api_calls.php",
+    "example:complete": "php examples/complete_workflow.php",
+    "cs": "phpcs",
+    "cs-fix": "phpcbf"
+  }
 }

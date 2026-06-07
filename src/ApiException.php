@@ -12,8 +12,12 @@ class ApiException extends \Exception
     /**
      * TODO: Utilize this method in Client and OauthClient to provide structured error context
      */
-    public function setServerResponse(mixed $response, mixed $headers = null, mixed $rawResponse = null, ?int $httpCode = null): void
-    {
+    public function setServerResponse(
+        mixed $response,
+        mixed $headers = null,
+        mixed $rawResponse = null,
+        ?int $httpCode = null
+    ): void {
         $this->serverResponse = $response;
         $this->headers = $headers;
         $this->rawResponse = $rawResponse;

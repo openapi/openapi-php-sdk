@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ruleset name="openapi-php-sdk">
+    <description>PSR-12 coding standard</description>
+
+    <file>src/</file>
+
+    <arg name="basepath" value="."/>
+    <arg name="colors"/>
+    <arg value="p"/>
+
+    <rule ref="PSR12"/>
+</ruleset>
