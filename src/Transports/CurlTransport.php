@@ -8,7 +8,8 @@ final class CurlTransport implements HttpTransportInterface
 {
     public function __construct(
         private ?string $token = null
-    ) {}
+    ) {
+    }
 
     public function request(
         string $method,

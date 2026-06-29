@@ -8,8 +8,8 @@ class OauthClient
     private string $username;
     private string $apikey;
 
-    const OAUTH_BASE_URL = 'https://oauth.openapi.it';
-    const TEST_OAUTH_BASE_URL = 'https://test.oauth.openapi.it';
+    public const OAUTH_BASE_URL = 'https://oauth.openapi.it';
+    public const TEST_OAUTH_BASE_URL = 'https://test.oauth.openapi.it';
 
     public function __construct(?string $username = null, ?string $apikey = null, bool $test = false)
     {
@@ -59,7 +59,7 @@ class OauthClient
         return $this->request('GET', $this->url . '/counters/' . $period . '/' . $date);
     }
 
-    
+
     /**
      * @param array<string, mixed>|null $body
      */
