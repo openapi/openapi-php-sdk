@@ -58,6 +58,9 @@ This is a minimal, agnostic PHP SDK for Openapi services with only essential HTT
   - `CacheInterface`: Contract for cache implementations
   - `ArrayCache`: In-memory cache implementation
 
+- **`TokenManager`** (`src/TokenManager.php`): Laravel-only, opt-in OAuth token provider. Caches tokens in a Laravel cache store (`Illuminate\Contracts\Cache\Repository`), uses atomic locks to prevent stampedes between workers (Octane), serves a still-valid token while one worker refreshes (stale-while-revalidate), and takes the real expiry from the `expire` field of the `/token` response.
+- **Laravel integration** (`src/Laravel/`, `config/openapi.php`): service provider (auto-discovered via `composer.json`) binding `OauthClient` and `TokenManager`; cache store configurable with `OPENAPI_CACHE_STORE` (default: the application's default store). `Client` and `OauthClient` remain framework-agnostic.
+
 ### Key Design Principles
 
 1. **Agnostic**: No API-specific classes - works with any Openapi service

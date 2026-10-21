@@ -84,7 +84,8 @@
     "symfony/dotenv": "^5.3",
     "phpunit/phpunit": "^9.5",
     "phpstan/phpstan": "^2.1",
-    "squizlabs/php_codesniffer": "^4.0"
+    "squizlabs/php_codesniffer": "^4.0",
+    "illuminate/cache": "^9.0 || ^10.0 || ^11.0 || ^12.0"
   },
   "autoload": {
     "psr-4": {
@@ -108,5 +109,15 @@
     "example:complete": "php examples/complete_workflow.php",
     "cs": "phpcs",
     "cs-fix": "phpcbf"
+  },
+  "suggest": {
+    "illuminate/cache": "Required to use TokenManager, which shares OAuth tokens across Laravel Octane workers through a cache store (use Redis or Memcached)"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Openapi\\Laravel\\OpenapiServiceProvider"
+      ]
+    }
   }
 }
