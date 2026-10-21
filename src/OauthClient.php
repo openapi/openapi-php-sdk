@@ -20,6 +20,16 @@ class OauthClient
             : (getenv('OPENAPI_OAUTH_URL') ?: self::OAUTH_BASE_URL);
     }
 
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    public function getBaseUrl(): string
+    {
+        return $this->url;
+    }
+
     public function getScopes(bool $limit = false): string
     {
         $params = ['limit' => $limit ? 1 : 0];

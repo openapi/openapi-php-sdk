@@ -93,6 +93,97 @@ $response = $client->delete($url);
 $response = $client->patch($url, $payload);
 ```
 
+## Shared token caching (Laravel Octane / multi-worker)
+
+By default every call to `OauthClient::createToken()` sends a new request to the OAuth server. When many
+processes do this at once (for example Laravel Octane/Swoole workers, each with its own memory), the OAuth
+server can answer with HTTP 429.
+
+`TokenManager` solves this by keeping the token in Laravel's cache, shared by all processes:
+
+- A fresh token is read from the cache. No lock and no OAuth request.
+- If no token exists, one worker takes an atomic lock (`Cache::lock()`) and requests it. The others wait, then read it from the cache.
+- If a token is close to expiry, one worker refreshes it while the others keep using the still-valid token (stale-while-revalidate).
+- If a refresh fails (for example with a 429) and the old token is still valid, the old token keeps being used.
+
+> **Opt-in, Laravel only.** `TokenManager` needs Laravel's cache (`illuminate/cache`) and is not used
+> automatically. `OauthClient` and `Client` work exactly as before and do not depend on Laravel, so plain PHP
+> and PHP-FPM users are unaffected. Existing code that calls `createToken()` directly keeps the 429 problem until
+> it switches to `TokenManager`.
+
+### Setup
+
+The package service provider (`Openapi\Laravel\OpenapiServiceProvider`) is auto-discovered. Optionally publish the config:
+
+```bash
+php artisan vendor:publish --tag=openapi-config
+```
+
+Set your credentials and a shared cache store in `.env`:
+
+```dotenv
+OPENAPI_OAUTH_USERNAME=...
+OPENAPI_OAUTH_APIKEY=...
+OPENAPI_OAUTH_TEST=false        # set to true to use the test OAuth server (required for test.* scopes)
+OPENAPI_CACHE_STORE=redis       # recommended under Octane; empty = the application's default cache store
+```
+
+### Usage
+
+```php
+use Openapi\Client;
+use Openapi\TokenManager;
+
+$scopes = ['GET:test.imprese.openapi.it/advance'];   // test scope: needs OPENAPI_OAUTH_TEST=true
+
+$token  = app(TokenManager::class)->getToken($scopes);
+$client = new Client($token);
+```
+
+Outside the service provider you can build it yourself with any Laravel cache repository:
+`new TokenManager($oauthClient, Cache::store('redis'))`.
+
+#### Cache store requirements
+
+Use a store that is shared between workers **and** supports atomic locks: `redis`, `memcached` or `database`.
+
+- `array` is per-process, so each worker would have its own copy and the problem is not fixed.
+- If `OPENAPI_CACHE_STORE` is empty, the application's default store is used. Make sure that default is a shared
+  store. With `file` (single server only) or `array`, workers do not share tokens reliably, so set
+  `OPENAPI_CACHE_STORE=redis` (or `memcached`) explicitly.
+- A store without lock support is rejected with an `InvalidArgumentException` when `TokenManager` is created.
+
+#### Octane: build the client per request
+
+A `Client` holds the token it was created with. Do not keep one in an Octane singleton, or it will keep using that
+token after it expires. Call `getToken()` on each request and create the `Client` from it.
+
+#### Token lifetime
+
+`getToken($scopes, $ttl = 3600)` asks the OAuth server for a token valid for `$ttl` seconds, but only when a new
+token is needed. The expiry the server reports in the `expire` field (a unix timestamp) is what the cache uses, so a
+token the server shortens is never served past its real expiry, and a token is never trusted for longer than the
+`$ttl` you asked for. If the server sends no usable `expire`, `$ttl` is used. Keep the clocks of your servers
+synchronised (NTP), since `expire` is compared with the local clock.
+
+A cached token is reused whatever `$ttl` is passed: tokens are cached per OAuth URL, username and set of scopes
+(scope order does not matter, and the API key is never part of the key).
+
+The refresh margin (`refresh_skew`) is capped at half of the token's lifetime, so short-lived tokens are cached
+and refreshed too, instead of being requested on every call.
+
+#### Configuration
+
+Options live under the `token` key of `config/openapi.php`:
+
+| Option | Default | Description |
+|---|---|---|
+| `store` | `null` (`OPENAPI_CACHE_STORE`) | Cache store name. `null` uses the application's default store. |
+| `prefix` | `openapi:token:` (`OPENAPI_CACHE_PREFIX`) | Prefix for cache keys. |
+| `refresh_skew` | `300` | Seconds before expiry at which a token starts being refreshed (capped at half of the token's lifetime). |
+| `lock_seconds` | `45` | Maximum lifetime of the lock (a safety net if a worker dies while holding it). Keep it above the OAuth request timeout (30 seconds). |
+| `lock_wait` | `15` | Seconds a worker waits for another worker's token request when no token exists yet. If it times out, an `ApiException` is thrown. |
+
 ## Architecture
 
 This SDK follows a minimal approach with only essential components:
@@ -101,6 +192,7 @@ This SDK follows a minimal approach with only essential components:
 - `Client`: Agnostic HTTP client for API calls
 - `Exception`: Error handling
 - `Cache\CacheInterface`: Optional caching interface
+- `TokenManager`: Laravel cache-backed, lock-protected token provider (opt-in)
 
 ## Requirements
 
